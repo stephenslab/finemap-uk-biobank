@@ -2,14 +2,15 @@
 
 Larger data files for this project cannot be committed to the git
 repository, so they are being stored separately on the CRI Cluster
-(gardner).
+("gardner").
 
 ## Summary data
 
 + **Gene ATLAS data.** We downloaded SNP association statistics for
 standing height from the [GeneATLAS][gene-atlas] website on May
-1, 2019. These are currently stored in the following directory on the
-CRI cluster:
+1, 2019. For full details about the data, see the
+[paper][gene-atlas-paper]. These are currently stored in the
+following directory on the CRI cluster:
 `/gpfs/data/stephens-lab/finemap-uk-biobank/data/gene-atlas`. There
 are four sets of association statistics depending on whether: they
 were computed for all SNPs, or only SNPs included on the genotype
