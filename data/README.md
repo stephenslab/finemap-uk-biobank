@@ -21,3 +21,12 @@ and PCs 1--20.
 
 [gene-atlas]:       http://geneatlas.roslin.ed.ac.uk
 [gene-atlas-paper]: https://doi.org/10.1038/s41588-018-0248-z
+
+## UK-BioBank Phenotypes
+
++ I extracted the following phenotypes from UK-BioBank data downloaded on `12-feb-2019`.
+
+  + **height_phenotypes**: ID, sex (31), height (50), UK Biobank assessment centre (54), self-reported ethnic background (21000), age (21022)
+  + **genetic_background**: ID, Genotype measurement batch (22000), Genetic sex (22001), Missingness (22005), Genetic ethnic grouping (22006)
+  + **genetic_relatedness**: ID, Genetic relatedness pairing (22011)
+  + **genetic_pc**: ID, Genetic principal components (22009)
