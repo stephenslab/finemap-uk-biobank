@@ -21,3 +21,7 @@ and PCs 1--20.
 
 [gene-atlas]:       http://geneatlas.roslin.ed.ac.uk
 [gene-atlas-paper]: https://doi.org/10.1038/s41588-018-0248-z
+
+## UK-BioBank Phenotypes
+
++ The [steps](height.md) to extract height related phenotypes.
