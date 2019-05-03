@@ -14,7 +14,7 @@ col_names  <- c("id","sex","height")
 # ---------
 out <- system.time(
   dat <- fread("ukb26140.csv.gz",sep = ",",header = TRUE,verbose = TRUE,
-               showProgress = TRUE,colClasses = "character",nrows = 10000))
+               showProgress = TRUE,colClasses = "character"))
 class(dat) <- "data.frame"
 
 # PREPARE DATA
