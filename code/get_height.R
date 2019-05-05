@@ -7,20 +7,20 @@ library(data.table)
 pheno.file <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                         "12-feb-2019","ukb26140.csv.gz")
 out.file   <- "height.csv"
-cols       <- c("eid","31-0.0","50-0.0")
-col_names  <- c("id","sex","height")
+cols       <- c("eid","31-0.0","50-0.0","54-0.0","21000-0.0","21022-0.0","22006-0.0","22001-0.0","22000-0.0","22005-0.0", paste0("22009-0.",1:40))
+col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age","ethnic_genetic","sex_genetic","genotype_measurement_batch","missingness",paste0("pc_genetic",1:40))
 
 # LOAD DATA
 # ---------
 out <- system.time(
-  dat <- fread("ukb26140.csv.gz",sep = ",",header = TRUE,verbose = TRUE,
+  dat <- fread("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes/12-feb-2019/ukb26140.csv.gz",sep = ",",header = TRUE,verbose = TRUE,
                showProgress = TRUE,colClasses = "character"))
 class(dat) <- "data.frame"
 
 # PREPARE DATA
 # ------------
 # Select the reequested columns.
-dat        <- dat[cols]
+dat        <- dat[,cols]
 names(dat) <- col_names
 
 # Convert all columns except the first one to numeric values, and set
