@@ -39,7 +39,8 @@ for (i in 2:n) {
 
 # Remove all rows in which one or more of the values are missing
 # (except for the NAs in the "relatedness_genetic" columns).
-rows <- which(rowSums(is.na(dat[,-c(51:55)])) == 0)
+cols <- which(!grepl("relatedness_genetic",names(dat)))
+rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
 
 # SUMMARIZE DATA
