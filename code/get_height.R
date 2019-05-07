@@ -19,7 +19,7 @@ col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age",
 # ---------
 out <- system.time(
   dat <- fread(pheno.file,sep = ",",header = TRUE,verbose = TRUE,
-               showProgress = TRUE,colClasses = "character"))
+               showProgress = TRUE,colClasses = "character",nrows = 100))
 class(dat) <- "data.frame"
 
 # PREPARE DATA
@@ -39,7 +39,11 @@ for (i in 2:n) {
 
 # Remove all rows in which one or more of the values are missing
 # (except for the NAs in the "relatedness_genetic" columns).
-rows <- which(rowSums(is.na(dat[,-c(51:55)])) == 0)
+#
+# When the "genetic ethnic grouping" column is included, this removes
+# any samples that are not marked as being "White British".
+cols <- which(!grepl("relatedness_genetic",names(dat)))
+rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
 
 # SUMMARIZE DATA
