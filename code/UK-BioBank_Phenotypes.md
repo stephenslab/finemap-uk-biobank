@@ -26,6 +26,8 @@ The extracted files are stored at `/gpfs/data/stephens-lab/finemap-uk-biobank/`.
     
     Missingness (22005-0.0)
     
+    Heterogeneity PCA corrected (22004-0.0)
+    
     Genetic principal components (22009-0.1 - 22009-0.40)
     
     Genetic relatedness pairing (22011-0.0 - 22011-0.4)
