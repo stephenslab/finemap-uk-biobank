@@ -8,18 +8,18 @@ pheno.file <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                         "12-feb-2019","ukb26140.csv.gz")
 out.file   <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
 cols       <- c("eid","31-0.0","50-0.0","54-0.0","21000-0.0","21022-0.0",
-                "22006-0.0","22001-0.0","22000-0.0","22005-0.0",
+                "22006-0.0","22001-0.0","22000-0.0","22005-0.0","22004-0.0",
                 paste0("22009-0.",1:40), paste0("22011-0.",0:4))
 col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age",
                 "ethnic_genetic","sex_genetic","genotype_measurement_batch",
-                "missingness",paste0("pc_genetic",1:40),
+                "missingness","heterozygosity_pca",paste0("pc_genetic",1:40),
                 paste0("relatedness_genetic",0:4))
 
 # LOAD DATA
 # ---------
 out <- system.time(
   dat <- fread(pheno.file,sep = ",",header = TRUE,verbose = TRUE,
-               showProgress = TRUE,colClasses = "character",nrows = 100))
+               showProgress = TRUE,colClasses = "character"))
 class(dat) <- "data.frame"
 
 # PREPARE DATA
