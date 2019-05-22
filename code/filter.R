@@ -21,8 +21,8 @@ dat = dat %>% filter(is.na(relatedness_genetic0))
 
 ### Remove individual with abnormal height
 ### remove individuals with height departing 10 standard deviations from their gender mean
-dat.m = dat %>% filter(sex == 1) %>% filter(height < (mean(height) + 10*sd(height)) & height > (mean(height) - 10*sd(height)))
-dat.f = dat %>% filter(sex == 0) %>% filter(height < (mean(height) + 10*sd(height)) & height > (mean(height) - 10*sd(height)))
+dat.m = dat %>% filter(sex == 1) %>% filter(height < (median(height) + 3*sd(height)) & height > (median(height) - 3*sd(height)))
+dat.f = dat %>% filter(sex == 0) %>% filter(height < (median(height) + 3*sd(height)) & height > (median(height) - 3*sd(height)))
 dat = rbind(dat.m, dat.f)
 
 # SUMMARIZE DATA
