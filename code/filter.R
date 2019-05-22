@@ -17,10 +17,12 @@ dat = dat %>% filter(missingness < 0.05)
 ### Remove outliers defined by UK BioBank when we have the data
 
 ### Remove related individuals
+### This removes 15802 individuals
 dat = dat %>% filter(is.na(relatedness_genetic0))
 
 ### Remove individual with abnormal height
 ### remove individuals with height departing 3 standard deviations from their gender median
+### This removes 1396 individuals
 dat.m = dat %>% filter(sex == 1) %>% filter(height < (median(height) + 3*sd(height)) & height > (median(height) - 3*sd(height)))
 dat.f = dat %>% filter(sex == 0) %>% filter(height < (median(height) + 3*sd(height)) & height > (median(height) - 3*sd(height)))
 dat = rbind(dat.m, dat.f)
@@ -30,8 +32,8 @@ dat = rbind(dat.m, dat.f)
 # Double-check that everything looks okay.
 summary(dat)
 
+### Remove redundant columns
 cols <- c(which(grepl("relatedness_genetic",names(dat))), which(grepl('sex_genetic', names(dat))), which(grepl('ethic', names(dat))))
-
 dat = dat[,-cols]
 
 # WRITE DATA TO FILE
