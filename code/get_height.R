@@ -94,8 +94,8 @@ dat <- dat %>% filter(is.na(relatedness_genetic0))
 cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
             nrow(dat)))
 
-### Remove individuals with "abnormal" height. This step should filter
-### out 1,372 rows.
+# Remove individuals with "abnormal" height. This step should filter
+# out 1,372 rows.
 fit  <- lm(height ~ sex,dat)
 y    <- resid(fit)
 rows <- which(y >= median(y) - 3*sd(y) & y <= median(y) + 3*sd(y))
