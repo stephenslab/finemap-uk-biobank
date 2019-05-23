@@ -45,8 +45,9 @@ out <- system.time(
   dat <- fread(input.file,sep = ",",header = TRUE,verbose = FALSE,
                showProgress = FALSE,colClasses = "character"))
 class(dat) <- "data.frame"
-cat(sprintf("Table imported with %d rows.\n",nrow(dat)))
-    
+cat(sprintf("Data loading step took %d seconds.\n",round(out["elapsed"])))
+cat(sprintf("Table contains %d rows.\n",nrow(dat)))
+
 # PREPARE DATA
 # ------------
 # Select the requested columns.
@@ -72,6 +73,35 @@ cols <- which(!grepl("relatedness_genetic",names(dat)))
 rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
 cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
+
+# Remove rows with mismatches between self-reported and genetic sex
+# This step should filter out 310 rows.
+dat <- dat %>% filter(sex == sex_genetic)
+cat(sprintf("After removing sex mismatches, %d rows remain.\n",nrow(dat)))
+
+# Remove individuals with more than 5% missing genotypes. This step
+# should filter out 198 rows.
+dat <- dat %>% filter(missingness < 0.05)
+cat(sprintf(paste("After removing samples with 5%% missing genotypes,",
+                  "%d rows remain.\n"),nrow(dat)))
+
+# Remove heterozygosity outliers as defined by UK BioBank.
+# TO DO.
+
+# Remove any individuals that have close relatives identified from the
+# genotype data. This step should filter out 15,802 rows.
+dat <- dat %>% filter(is.na(relatedness_genetic0))
+cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
+            nrow(dat)))
+
+### Remove individuals with "abnormal" height. This step should filter
+### out 1,372 rows.
+fit  <- lm(height ~ sex,dat)
+y    <- resid(fit)
+rows <- which(y >= median(y) - 3*sd(y) & y <= median(y) + 3*sd(y))
+dat  <- dat[rows,]
+cat(sprintf("After removing samples with abnormal height, %d rows remain.\n",
+            nrow(dat)))
 
 # SUMMARIZE DATA
 # --------------
