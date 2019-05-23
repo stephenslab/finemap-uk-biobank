@@ -1,12 +1,30 @@
+# TO DO: Briefly explain here what this script does, and how to use it.
+#
 # This should take about 1-2 hours to run, and require about 20 GB of
 # memory.
-library(data.table)
 
 # SCRIPT PARAMETERS
 # -----------------
-pheno.file <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
-                        "12-feb-2019","ukb26140.csv.gz")
-out.file   <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+input.file  <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
+                         "12-feb-2019","ukb26140.csv.gz")
+# output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+output.file <- "/scratch/pcarbone/height.csv"
+
+# The columns selected for subsequent analyses are as follows:
+#
+#   sex (31)
+#   height (50)
+#   UK Biobank assessment centre (54)
+#   self-reported ethnic background (21000)
+#   age (21022)
+#   genetic ethnic grouping (22006)
+#   genetic sex (22001)
+#   genotype measurement batch (22000)
+#   missingness (22005)
+#   heterogeneity, PCA corrected (22004)
+#   genetic PCs (22009-0.1 - 22009-0.40)
+#   genetic relatedness pairing (22011)
+#
 cols       <- c("eid","31-0.0","50-0.0","54-0.0","21000-0.0","21022-0.0",
                 "22006-0.0","22001-0.0","22000-0.0","22005-0.0","22004-0.0",
                 paste0("22009-0.",1:40), paste0("22011-0.",0:4))
@@ -15,10 +33,14 @@ col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age",
                 "missingness","heterozygosity_pca",paste0("pc_genetic",1:40),
                 paste0("relatedness_genetic",0:4))
 
+# SET UP ENVIRONMENT
+# ------------------
+library(data.table)
+
 # LOAD DATA
 # ---------
 out <- system.time(
-  dat <- fread(pheno.file,sep = ",",header = TRUE,verbose = TRUE,
+  dat <- fread(input.file,sep = ",",header = TRUE,verbose = TRUE,
                showProgress = TRUE,colClasses = "character"))
 class(dat) <- "data.frame"
 
@@ -38,7 +60,7 @@ for (i in 2:n) {
 }
 
 # Remove all rows in which one or more of the values are missing
-# (except for the NAs in the "relatedness_genetic" columns).
+# (aside from the in the "relatedness_genetic" columns).
 #
 # When the "genetic ethnic grouping" column is included, this removes
 # any samples that are not marked as being "White British".
@@ -53,4 +75,4 @@ summary(dat)
 
 # WRITE DATA TO FILE
 # ------------------
-write.csv(dat,out.file,row.names = FALSE,quote = FALSE)
+write.csv(dat,output.file,row.names = FALSE,quote = FALSE)
