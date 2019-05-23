@@ -35,18 +35,22 @@ col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age",
 
 # SET UP ENVIRONMENT
 # ------------------
-library(data.table)
+suppressMessages(library(data.table))
+suppressMessages(library(dplyr))
 
 # LOAD DATA
 # ---------
+cat("Reading data from CSV file.\n")
 out <- system.time(
-  dat <- fread(input.file,sep = ",",header = TRUE,verbose = TRUE,
-               showProgress = TRUE,colClasses = "character"))
+  dat <- fread(input.file,sep = ",",header = TRUE,verbose = FALSE,
+               showProgress = FALSE,colClasses = "character"))
 class(dat) <- "data.frame"
-
+cat(sprintf("Table imported with %d rows.\n",nrow(dat)))
+    
 # PREPARE DATA
 # ------------
-# Select the reequested columns.
+# Select the requested columns.
+cat("Preparing data.\n")
 dat        <- dat[,cols]
 names(dat) <- col_names
 
@@ -67,12 +71,14 @@ for (i in 2:n) {
 cols <- which(!grepl("relatedness_genetic",names(dat)))
 rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
+cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
 
 # SUMMARIZE DATA
 # --------------
-# This is to double-check that everything looks okay.
+# Double-check that everything looks okay.
 summary(dat)
 
 # WRITE DATA TO FILE
 # ------------------
+cat("Writing prepared data to CSV file.\n")
 write.csv(dat,output.file,row.names = FALSE,quote = FALSE)
