@@ -5,8 +5,7 @@
 # -----------------
 input.file  <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "12-feb-2019","ukb26140.csv.gz")
-output.file <- "/scratch/pcarbone/height.csv"
-# output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
 
 # The columns selected for subsequent analyses are as follows:
 #
