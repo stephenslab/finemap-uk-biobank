@@ -1,7 +1,5 @@
-# TO DO: Briefly explain here what this script does, and how to use it.
-#
-# This should take about 1-2 hours to run, and require about 20 GB of
-# memory.
+# Script to prepare the UK Biobank phenotype data for analyzing height
+# associations. This should take at most 1-2 hours to run.
 
 # SCRIPT PARAMETERS
 # -----------------
