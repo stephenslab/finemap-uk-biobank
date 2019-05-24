@@ -5,29 +5,28 @@
 # -----------------
 input.file  <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "12-feb-2019","ukb26140.csv.gz")
-output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+output.file <- "/scratch/pcarbone/height.csv"
+# output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
 
 # The columns selected for subsequent analyses are as follows:
 #
 #   sex (31)
 #   height (50)
 #   UK Biobank assessment centre (54)
-#   self-reported ethnic background (21000)
 #   age (21022)
 #   genetic ethnic grouping (22006)
 #   genetic sex (22001)
 #   genotype measurement batch (22000)
 #   missingness (22005)
-#   heterogeneity, PCA corrected (22004)
 #   genetic PCs (22009-0.1 - 22009-0.40)
 #   genetic relatedness pairing (22011)
 #
-cols       <- c("eid","31-0.0","50-0.0","54-0.0","21000-0.0","21022-0.0",
-                "22006-0.0","22001-0.0","22000-0.0","22005-0.0","22004-0.0",
+cols       <- c("eid","31-0.0","50-0.0","54-0.0","21022-0.0",
+                "22006-0.0","22001-0.0","22000-0.0","22005-0.0",
                 paste0("22009-0.",1:40), paste0("22011-0.",0:4))
-col_names  <- c("id","sex","height","assessment_centre","ethnic_self","age",
+col_names  <- c("id","sex","height","assessment_centre","age",
                 "ethnic_genetic","sex_genetic","genotype_measurement_batch",
-                "missingness","heterozygosity_pca",paste0("pc_genetic",1:40),
+                "missingness",paste0("pc_genetic",1:40),
                 paste0("relatedness_genetic",0:4))
 
 # SET UP ENVIRONMENT
@@ -101,7 +100,7 @@ cat(sprintf("After removing samples with abnormal height, %d rows remain.\n",
             nrow(dat)))
 
 # Finally, remove the columns that are no longer needed.
-cols.to.remove <- c("sex_genetic","ethnic_self","ethnic_genetic",
+cols.to.remove <- c("sex_genetic","ethnic_genetic",
                     paste0("relatedness_genetic",0:4))
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
