@@ -1,0 +1,105 @@
+---
+title: "Compare result against GeneATLAS"
+author: "Yuxin Zou"
+date: "6/14/2019"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+We compare association results from our processed data against GeneATLAS. Here we use phenotype height. I selected 1000 top SNPs and 1000 random SNPs in chr1 from GeneATLAS imputed and not-normalized (height) result.
+
+```{r eval=FALSE}
+# Run in CRI
+library(readr)
+library(dplyr)
+# READ associations
+result.file = '/gpfs/data/stephens-lab/finemap-uk-biobank/data/gene-atlas/height/imputed/not-normalized/imputed.allWhites.50-0.0.chr1.csv.gz'
+result        <- suppressMessages(read_delim(result.file, delim=' '))
+colnames(result) = c('SNP', 'ALLELE','iscores', 'NBETA', 'NSE', 'PV')
+
+# Select n most strongly associated SNPs, and n random SNPs
+set.seed(201906)
+n = 1000
+result.top = result %>% top_n(-n, PV)
+result.random = result %>% filter(!(SNP %in% result.top$SNP)) %>% sample_n(n, replace = F)
+
+result.choose = rbind(result.top, result.random)
+
+result.final = result.choose %>% distinct()
+
+saveRDS(result.final, '~/imputed.allWhites.chr1.2000.rds')
+write.table(result.final[,1], '~/imputed.allWhites.chr1.2000.txt', row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
+
+Using PLINK2, we get the genotypes from UK BioBank data. This step needs about 5 hrs to finish.
+```
+zcat /gpfs/data/stephens-lab/finemap-uk-biobank/height.csv.gz | awk 'BEGIN{FS=","} {print $1 OFS $1}' | tail -n +2 > height.id.txt
+
+plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample \
+--bgen /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr1_v3.bgen \
+--extract imputed.allWhites.chr1.2000.txt \
+--keep height.id.txt \
+--maf 0.01 \
+--make-pgen --threads 8 --memory 38000 \
+--out height.chr1.imputed.2000 > plink2.imputed.log
+
+plink2 --pfile height.chr1.imputed.2000 --threads 8 --export A-transpose --out height.chr1.imputed.2000
+
+gzip height.chr1.imputed.2000.traw
+```
+
+We filtered the SNPs using MAF 1%. There are 1211 SNPs and 274549 individuals.
+
+We performed linear model with the following covariates:
+
+1. sex
+2. age and $age^2$
+3. assessment_centre
+4. genotype_measurement_batch
+5. principal components 1–20
+
+```{r}
+res = readRDS('../data/height.chr1.imputed.2000.result.rds')
+geneatlas = readRDS('../data/imputed.allWhites.chr1.2000.rds')
+```
+
+## Top SNPs
+
+Comparing p values of top SNPs, the p values from our processed data tend to be larger.
+```{r}
+ids   <- intersect(rownames(res),geneatlas$SNP[1:1000])
+rows1 <- match(ids,rownames(res))
+rows2 <- match(ids,geneatlas$SNP)
+par(mfrow=c(1,2))
+{plot(geneatlas$PV[rows2], res[rows1,'pv'], xlab = 'GeneAtlas', ylab = 'result', main='p values')
+abline(0,1)}
+{plot(-log10(geneatlas$PV[rows2]), -log10(res[rows1,'pv']), xlab = 'GeneAtlas', ylab = 'result', main='-log10(p values)')
+abline(0,1)}
+```
+
+Plot of estimated coefficients:
+```{r}
+plot(geneatlas$NBETA[rows2], res[rows1,'beta'], xlab='GeneAtlas', ylab = 'result', main = 'beta')
+abline(0,1)
+```
+
+## Random SNPs
+
+Comparing p values of random SNPs, the p values vary a lot!
+```{r}
+ids   <- intersect(rownames(res),geneatlas$SNP[1001:2000])
+rows1 <- match(ids,rownames(res))
+rows2 <- match(ids,geneatlas$SNP)
+par(mfrow=c(1,2))
+{plot(geneatlas$PV[rows2], res[rows1,'pv'], xlab = 'GeneAtlas', ylab = 'result', main='p values')
+abline(0,1)}
+{plot(-log10(geneatlas$PV[rows2]), -log10(res[rows1,'pv']), xlab = 'GeneAtlas', ylab = 'result', main='-log10(p values)')
+abline(0,1)}
+
+```
+
+```{r}
+plot(geneatlas$NBETA[rows2], res[rows1,'beta'], xlab='GeneAtlas', ylab = 'result', main='beta')
+abline(0,1)
+```
