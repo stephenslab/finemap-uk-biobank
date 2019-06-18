@@ -7,7 +7,7 @@ input.file1  <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "12-feb-2019","ukb26140.csv.gz")
 input.file2 <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "11-jun-2019","ukb32141.csv.gz")
-output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv"
 
 # The columns selected for subsequent analyses are as follows:
 #
@@ -31,7 +31,7 @@ col_names  <- c("id","sex","height","assessment_centre","age",
                 "ethnic_genetic","sex_genetic","genotype_measurement_batch",
                 "missingness",paste0("pc_genetic",1:40),
                 paste0("relatedness_genetic",0:4),
-                "genetic_kinship", "outliers")
+                "kinship_genetic", "outliers")
 
 # SET UP ENVIRONMENT
 # ------------------
@@ -95,16 +95,16 @@ dat <- dat %>% filter(missingness < 0.05)
 cat(sprintf(paste("After removing samples with 5%% missing genotypes,",
                   "%d rows remain.\n"),nrow(dat)))
 
-# Remove any individuals that have close relatives identified from the
-# genotype data. This step should filter out 15,802 rows.
-dat <- dat %>% filter(is.na(relatedness_genetic0))
-cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
+# Remove any individuals have at leat one relative based on Kinship
+# This step should filter out 131,805 rows.
+dat <- dat %>% filter(kinship_genetic == 0)
+cat(sprintf("After removing relatedness individuals based on Kinship, %d rows remain.\n",
             nrow(dat)))
 
-# Remove any individuals have at leat one relative based on Kinship
-# This step should filter out 116,397 rows.
-dat <- dat %>% filter(genetic_kinship == 0)
-cat(sprintf("After removing relatedness individuals based on Kinship, %d rows remain.\n",
+# Remove any individuals that have close relatives identified from the
+# genotype data. This step should filter out 394 rows.
+dat <- dat %>% filter(is.na(relatedness_genetic0))
+cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
             nrow(dat)))
 
 # Remove individuals with "abnormal" height. This step should filter
