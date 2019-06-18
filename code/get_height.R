@@ -118,7 +118,7 @@ cat(sprintf("After removing samples with abnormal height, %d rows remain.\n",
 
 # Finally, remove the columns that are no longer needed.
 cols.to.remove <- c("sex_genetic","ethnic_genetic",
-                    paste0("relatedness_genetic",0:4), 'genetic_kinship', 'outliers')
+                    paste0("relatedness_genetic",0:4), 'kinship_genetic', 'outliers')
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
 
