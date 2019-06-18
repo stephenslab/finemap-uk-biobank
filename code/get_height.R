@@ -3,11 +3,11 @@
 
 # SCRIPT PARAMETERS
 # -----------------
-input.file1  <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
+input.file1 <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "12-feb-2019","ukb26140.csv.gz")
 input.file2 <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "11-jun-2019","ukb32141.csv.gz")
-output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
+output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv"
 
 # The columns selected for subsequent analyses are as follows:
 #
@@ -23,6 +23,7 @@ output.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/height.csv"
 #   genetic relatedness pairing (22011)
 #   genetic kinship (22021)
 #   outliers (22027)
+#
 cols       <- c("eid","31-0.0","50-0.0","54-0.0","21022-0.0",
                 "22006-0.0","22001-0.0","22000-0.0","22005-0.0",
                 paste0("22009-0.",1:40), paste0("22011-0.",0:4),
@@ -40,16 +41,23 @@ suppressMessages(library(dplyr))
 
 # LOAD DATA
 # ---------
-cat("Reading data from CSV file.\n")
-out <- system.time(
-  {dat1 <- fread(input.file1,sep = ",",header = TRUE,verbose = FALSE,
-               showProgress = FALSE,colClasses = "character");
+# After loading the two tables from the CSV files, the tables are
+# merged by the "eid" column. The second table has slightly fewer rows
+# than the first table, and the sample ids in the second table are a
+# subset of the ids in the first table.
+cat("Reading data from the CSV files.\n")
+out <- system.time({
+  dat1 <- fread(input.file1,sep = ",",header = TRUE,verbose = FALSE,
+                showProgress = FALSE,colClasses = "character");
   dat2 <- fread(input.file2,sep = ",",header = TRUE,verbose = FALSE,
-               showProgress = FALSE,colClasses = "character")})
-dat <- inner_join(dat1, dat2, by='eid')
-class(dat) <- "data.frame"
+                showProgress = FALSE,colClasses = "character")
+})
+class(dat1) <- "data.frame"
+class(dat2) <- "data.frame"
 cat(sprintf("Data loading step took %d seconds.\n",round(out["elapsed"])))
-cat(sprintf("Table contains %d rows.\n",nrow(dat)))
+dat <- inner_join(dat1,dat2,by = "eid")
+rm(dat1,dat2)
+cat(sprintf("Merged table contains %d rows.\n",nrow(dat)))
 
 # PREPARE DATA
 # ------------
@@ -58,8 +66,8 @@ cat("Preparing data.\n")
 dat        <- dat[,cols]
 names(dat) <- col_names
 
-# Convert all columns except the first one to numeric values, and set
-# all empty strings to NA.
+# Convert all columns except the first one (the first column contains
+# the sample ids) to numeric values, and set all empty strings to NA.
 n <- length(dat)
 for (i in 2:n) {
   x          <- dat[,i]
@@ -68,13 +76,14 @@ for (i in 2:n) {
 }
 
 # Remove all rows in which one or more of the values are missing
-# (aside from the in the "relatedness_genetic" columns, and "outlier column").
+# (aside from the in the "relatedness_genetic" columns, and "outlier
+# column").
 #
 # When the "genetic ethnic grouping" column is included, this removes
-# any samples that are not marked as being "White British".
-# The "outliers" have value 1 when it is an outlier, NA otherwise.
+# any samples that are not marked as being "White British". The
+# "outliers" have value 1 when it is an outlier, NA otherwise.
 cols <- which(grepl("relatedness_genetic",names(dat)))
-cols <- c(cols, which(grepl("outliers",names(dat))))
+cols <- c(cols,which(grepl("outliers",names(dat))))
 rows <- which(rowSums(is.na(dat[,-cols])) == 0)
 dat  <- dat[rows,]
 cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
@@ -84,8 +93,8 @@ cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
 dat <- dat %>% filter(sex == sex_genetic)
 cat(sprintf("After removing sex mismatches, %d rows remain.\n",nrow(dat)))
 
-# Remove missingness and heterozygosity outliers as defined by UK BioBank.
-# This step should filter out 723 rows. 
+# Remove "missingness" and "heterozygosity" outliers as defined by UK
+# Biobank. This step should filter out 723 rows.
 dat <- dat %>% filter(is.na(outliers))
 cat(sprintf("After removing outliers, %d rows remain.\n",nrow(dat)))
 
@@ -101,11 +110,11 @@ dat <- dat %>% filter(is.na(relatedness_genetic0))
 cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
             nrow(dat)))
 
-# Remove any individuals have at leat one relative based on Kinship
+# Remove any individuals have at leat one relative based on kinship
 # This step should filter out 116,397 rows.
 dat <- dat %>% filter(genetic_kinship == 0)
-cat(sprintf("After removing relatedness individuals based on Kinship, %d rows remain.\n",
-            nrow(dat)))
+cat(sprintf(paste("After removing relatedness individuals based on kinship,",
+                  "%d rows remain.\n",nrow(dat))))
 
 # Remove individuals with "abnormal" height. This step should filter
 # out 976 rows.
@@ -118,7 +127,8 @@ cat(sprintf("After removing samples with abnormal height, %d rows remain.\n",
 
 # Finally, remove the columns that are no longer needed.
 cols.to.remove <- c("sex_genetic","ethnic_genetic",
-                    paste0("relatedness_genetic",0:4), 'genetic_kinship', 'outliers')
+                    paste0("relatedness_genetic",0:4),
+                    "genetic_kinship","outliers")
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
 
