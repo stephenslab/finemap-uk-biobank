@@ -1,5 +1,7 @@
 # Script to prepare the UK Biobank phenotype data for analyzing height
-# associations. This should take at most 1-2 hours to run.
+# associations. This should take at most 1-2 hours to run, and may
+# require a good amount of memory (works well with about 24 GB,
+# although may not require this much).
 
 # SCRIPT PARAMETERS
 # -----------------
@@ -25,15 +27,13 @@ output.file <- file.path("/gpfs/data/stephens-lab/finemap-uk-biobank",
 #   genetic kinship (22021)
 #   outliers (22027)
 #
-cols       <- c("eid","31-0.0","50-0.0","54-0.0","21022-0.0",
-                "22006-0.0","22001-0.0","22000-0.0","22005-0.0",
-                paste0("22009-0.",1:40), paste0("22011-0.",0:4),
-                "22021-0.0", "22027-0.0")
-col_names  <- c("id","sex","height","assessment_centre","age",
-                "ethnic_genetic","sex_genetic","genotype_measurement_batch",
-                "missingness",paste0("pc_genetic",1:40),
-                paste0("relatedness_genetic",0:4),
-                "kinship_genetic", "outliers")
+cols      <- c("eid","31-0.0","50-0.0","54-0.0","21022-0.0","22006-0.0",
+               "22001-0.0","22000-0.0","22005-0.0",paste0("22009-0.",1:40),
+               paste0("22011-0.",0:4),"22021-0.0", "22027-0.0")
+col_names <- c("id","sex","height","assessment_centre","age","ethnic_genetic",
+               "sex_genetic","genotype_measurement_batch","missingness",
+               paste0("pc_genetic",1:40),paste0("relatedness_genetic",0:4),
+               "kinship_genetic", "outliers")
 
 # SET UP ENVIRONMENT
 # ------------------
@@ -76,16 +76,14 @@ for (i in 2:n) {
   dat[,i]    <- as.numeric(x)
 }
 
-# Remove all rows in which one or more of the values are missing
-# (aside from the in the "relatedness_genetic" columns, and "outlier
-# column").
+# Remove all rows in which one or more of the values are missing,
+# aside from the in the "outlier" and "relatedness_genetic" columns.
 #
 # When the "genetic ethnic grouping" column is included, this removes
 # any samples that are not marked as being "White British". The
 # "outliers" have value 1 when it is an outlier, NA otherwise.
-cols <- which(grepl("relatedness_genetic",names(dat)))
-cols <- c(cols,which(grepl("outliers",names(dat))))
-rows <- which(rowSums(is.na(dat[,-cols])) == 0)
+cols <- !(names(dat) == "outliers" | grepl("relatedness_genetic",names(dat)))
+rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
 cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
 
@@ -95,24 +93,21 @@ dat <- dat %>% filter(sex == sex_genetic)
 cat(sprintf("After removing sex mismatches, %d rows remain.\n",nrow(dat)))
 
 # Remove "missingness" and "heterozygosity" outliers as defined by UK
-# Biobank. This step should filter out 723 rows.
+# Biobank. This step should filter out 723 rows. Note that this step
+# will remove any samples in which the "missingness" column is greater
+# than 5%.
 dat <- dat %>% filter(is.na(outliers))
 cat(sprintf("After removing outliers, %d rows remain.\n",nrow(dat)))
 
-# Remove individuals with more than 5% missing genotypes. This step
-# should filter out 0 rows.
-dat <- dat %>% filter(missingness < 0.05)
-cat(sprintf(paste("After removing samples with 5%% missing genotypes,",
-                  "%d rows remain.\n"),nrow(dat)))
-
-# Remove any individuals have at leat one relative based on kinship.
-# This step should filter out 131,805 rows.
+# Remove any individuals have at leat one relative based on the
+# kinship calculations. This step should filter out 131,805 rows.
 dat <- dat %>% filter(kinship_genetic == 0)
 cat(sprintf(paste("After removing relatedness individuals based on kinship,",
                   "%d rows remain.\n"),nrow(dat)))
 
 # Remove any individuals that have close relatives identified from the
-# genotype data. This step should filter out 394 rows.
+# "relatendess" calculations that weren't already identified using the
+# kinship calculations. This step should filter out 394 rows.
 dat <- dat %>% filter(is.na(relatedness_genetic0))
 cat(sprintf("After removing relatedness individuals, %d rows remain.\n",
             nrow(dat)))
@@ -126,7 +121,8 @@ dat  <- dat[rows,]
 cat(sprintf("After removing samples with abnormal height, %d rows remain.\n",
             nrow(dat)))
 
-# Finally, remove the columns that are no longer needed.
+# Finally, remove the columns that are no longer needed for subsequent
+# analyses.
 cols.to.remove <- c("sex_genetic","ethnic_genetic",
                     paste0("relatedness_genetic",0:4),
                     "kinship_genetic","outliers")
