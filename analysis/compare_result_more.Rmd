@@ -1,0 +1,179 @@
+---
+title: "Compare result against GeneATLAS"
+author: "Yuxin Zou"
+date: "6/23/2019"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+We compare association results from our processed data against GeneATLAS and Neale. Here we use phenotype height. I selected 1000 top SNPs and 1000 null SNPs in chr1 from GeneATLAS imputed and not-normalized (height) result.
+
+```{r eval=FALSE}
+# Run in CRI
+library(readr)
+library(dplyr)
+# READ associations
+result.file = '/gpfs/data/stephens-lab/finemap-uk-biobank/data/gene-atlas/height/imputed/not-normalized/imputed.allWhites.50-0.0.chr1.csv.gz'
+result        <- suppressMessages(read_delim(result.file, delim=' '))
+colnames(result) = c('SNP', 'ALLELE','iscores', 'NBETA', 'NSE', 'PV')
+
+# Select n most strongly associated SNPs, and n random SNPs
+set.seed(201906)
+n = 1000
+result.top = result %>% top_n(-n, PV)
+result.null = result %>% filter(!(SNP %in% result.top$SNP)) %>% top_n(n, PV)
+
+result.choose = rbind(result.top, result.null)
+
+result.final = result.choose %>% distinct()
+
+saveRDS(result.final, '~/imputed.allWhites.chr1.2000.SN.rds')
+write.table(result.final[,1], '~/imputed.allWhites.chr1.2000.SN.txt', row.names = FALSE, col.names = FALSE, quote = FALSE)
+```
+
+Using PLINK2, we get the genotypes from UK BioBank data. This step needs about 5 hrs to finish.
+```
+zcat /gpfs/data/stephens-lab/finemap-uk-biobank/height.csv.gz | awk 'BEGIN{FS=","} {print $1 OFS $1}' | tail -n +2 > height.id.txt
+
+plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample \
+--bgen /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr1_v3.bgen \
+--extract imputed.allWhites.chr1.2000.SN.txt \
+--keep height.id.txt \
+--maf 0.01 \
+--make-pgen --threads 8 --memory 38000 \
+--out height.chr1.imputed.2000.SN > plink2.imputed.log
+
+plink2 --pfile height.chr1.imputed.2000.SN --threads 8 --export A-transpose --out height.chr1.imputed.2000.SN
+
+gzip height.chr1.imputed.2000.SN.traw
+```
+
+We filtered the SNPs using MAF 1%. There are 1173 SNPs and 274549 individuals.
+
+We performed linear model with the following covariates:
+
+1. sex
+2. age and $age^2$
+3. assessment_centre
+4. genotype_measurement_batch
+5. principal components 1–20
+
+```{r}
+res = read.delim('../data/height.chr1.imputed.2000.plink.height.glm.linear')
+geneatlas = readRDS('../data/imputed.allWhites.chr1.2000.SN.rds')
+```
+
+```{r eval=FALSE}
+# Neeale data
+neale.file = '/gpfs/data/stephens-lab/finemap-uk-biobank/data/summary/neale/50_irnt.gwas.imputed_v3.both_sexes.tsv.gz'
+neale       <- suppressMessages(read_delim(neale.file, delim='\t'))
+neale.pos = do.call(rbind, strsplit(neale$variant, "\\:"))
+snps.pos = which(neale.pos[,2] %in% res$POS)
+snps.chr = which(neale.pos[,1] == "1")
+snps = intersect(snps.pos, snps.chr)
+snps = match(neale.pos[snps,2], res$POS)
+snps.pos = as.numeric(neale.pos[snps,2])
+neale.choose = neale[snps,]
+neale.choose$POS = snps.pos
+# 1170 rows
+saveRDS(neale.choose, '~/imputed.allWhites.chr1.2000.neale.SN.rds')
+```
+
+```{r}
+neale = readRDS('../data/imputed.allWhites.chr1.2000.neale.SN.rds')
+```
+
+## Top SNPs
+
+Comparing p values of top SNPs, the p values from our processed data tend to be larger.
+
+### GeneATLAS
+```{r}
+ids   <- intersect(res$ID,geneatlas$SNP[1:1000])
+rows1 <- match(ids,res$ID)
+rows2 <- match(ids,geneatlas$SNP)
+res.strong = res[rows1,]
+par(mfrow=c(1,2))
+{plot(geneatlas$PV[rows2], res.strong$P, xlab = 'GeneAtlas', ylab = 'result', main='p values')
+abline(0,1)}
+{par(pty='s')
+plot(-log10(geneatlas$PV[rows2]), -log10(res.strong$P), xlab = 'GeneAtlas', ylab = 'result', main='-log10(p values)', xlim=c(20,150), ylim=c(20,150))
+abline(0,1)}
+```
+
+Plot of t statistics:
+```{r}
+par(pty='s')
+plot(geneatlas$NBETA[rows2]/geneatlas$NSE[rows2], res.strong$T_STAT, xlab='GeneAtlas', ylab = 'result', main = 't statistics', xlim=c(-30,30), ylim=c(-30,30))
+abline(0,-1)
+```
+
+### Neale
+
+Comparing with Neale's result
+```{r}
+par(mfrow=c(1,2))
+POS <- intersect(res.strong$POS, neale$POS)
+rows1 <- match(POS,res.strong$POS)
+rows2 <- match(POS,neale$POS)
+neale.strong = neale[rows2,]
+{plot(neale.strong$pval, res.strong$P[rows1], xlab = 'Neale', ylab = 'result', main='p values')
+abline(0,1)}
+{par(pty='s')
+plot(-log10(neale.strong$pval), -log10(res.strong$P[rows1]), xlab = 'Neale', ylab = 'result', main='-log10(p values)', xlim=c(20,110), ylim=c(20,110))
+abline(0,1)}
+```
+
+Plot of t statistics:
+```{r}
+par(pty='s')
+plot(neale.strong$tstat, res.strong$T_STAT[rows1], xlab='Neale', ylab = 'result', main = 't statistics', xlim=c(-20,20), ylim = c(-20,20))
+abline(0,-1)
+```
+
+## Null SNPs
+
+### GeneATLAS
+
+Comparing p values of null SNPs, the p values vary a lot!
+```{r}
+ids   <- intersect(res$ID,geneatlas$SNP[1001:2000])
+rows1 <- match(ids,res$ID)
+rows2 <- match(ids,geneatlas$SNP)
+res.null = res[rows1,]
+par(mfrow=c(1,2))
+{plot(geneatlas$PV[rows2], res.null$P, xlab = 'GeneAtlas', ylab = 'result', main='p values')
+abline(0,1)}
+{plot(-log10(geneatlas$PV[rows2]), -log10(res.null$P), xlab = 'GeneAtlas', ylab = 'result', main='-log10(p values)')
+abline(0,1)}
+```
+
+Plot of t statistics:
+```{r}
+par(pty='s')
+plot(geneatlas$NBETA[rows2]/geneatlas$NSE[rows2], res.null$T_STAT, xlab='GeneAtlas', ylab = 'result', main='t statistics', xlim=c(-2.5,2.5), ylim=c(-2.5,2.5))
+abline(0,1)
+```
+
+### Neale
+
+Comparing with Neale's result
+```{r}
+par(mfrow=c(1,2), pty='s')
+POS <- intersect(res.null$POS, neale$POS)
+rows1 <- match(POS,res.null$POS)
+rows2 <- match(POS,neale$POS)
+neale.null = neale[rows2,]
+{plot(neale.null$pval, res.null$P[rows1], xlab = 'Neale', ylab = 'result', main='p values')
+abline(0,1)}
+{plot(-log10(neale.null$pval), -log10(res.null$P[rows1]), xlab = 'Neale', ylab = 'result', main='-log10(p values)', xlim=c(0,2), ylim=c(0,2))
+abline(0,1)}
+```
+
+Plot of t statistics:
+```{r}
+par(pty='s')
+plot(neale.null$tstat, res.null$T_STAT[rows1], xlab='Neale', ylab = 'result', main = 't statistics', xlim=c(-2,2), ylim=c(-2,2))
+abline(0,-1)
+```
