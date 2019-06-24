@@ -7,7 +7,10 @@ output:
     code_folding: hide
 ---
 
-We compare association results from our processed data against GeneATLAS and Neale. Here we use phenotype height. I selected 1000 top SNPs and 1000 null SNPs in chr1 from GeneATLAS imputed and not-normalized (height) result.
+We compare association results from our processed data against
+GeneATLAS and Neale. Here we use phenotype height. I selected 1000 top
+SNPs and 1000 null SNPs in chr1 from GeneATLAS imputed and
+not-normalized (height) result.
 
 ```{r eval=FALSE}
 # Run in CRI
@@ -86,7 +89,8 @@ neale = readRDS('../data/imputed.allWhites.chr1.2000.neale.SN.rds')
 
 ## Top SNPs
 
-Comparing p values of top SNPs, the p values from our processed data tend to be larger.
+Comparing p values of top SNPs, the p values from our processed data
+tend to be larger.
 
 ### GeneATLAS
 ```{r}
