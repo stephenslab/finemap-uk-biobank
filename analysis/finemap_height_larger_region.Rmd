@@ -179,6 +179,12 @@ R = t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX)))
 ## Check summary stats
 
 Comparing with result from plink, the estimated t statistics agree.
+
+The PLINK command to get the summary statistics:
+```
+plink2 --linear hide-covar no-x-sex omit-ref --pfile height.chr3.140800000.141800000.0.01 --covar covar.height.txt --pheno pheno.height.txt --vif 100 --out height.chr3.140800000.141800000.0.01.plink2
+```
+
 ```{r}
 lm.res = read.delim('height.chr3.140800000.141800000.0.01.plink2.height.glm.linear')
 POS <- intersect(ss.dat$pos$POS, lm.res$POS)
