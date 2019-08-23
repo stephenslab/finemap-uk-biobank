@@ -179,12 +179,10 @@ R = t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX)))
 ## Check summary stats
 
 Comparing with result from plink, the estimated t statistics agree.
-
 The PLINK command to get the summary statistics:
 ```
 plink2 --linear hide-covar no-x-sex omit-ref --pfile height.chr3.140800000.141800000.0.01 --covar covar.height.txt --pheno pheno.height.txt --vif 100 --out height.chr3.140800000.141800000.0.01.plink2
 ```
-
 ```{r}
 lm.res = read.delim('height.chr3.140800000.141800000.0.01.plink2.height.glm.linear')
 POS <- intersect(ss.dat$pos$POS, lm.res$POS)
@@ -236,40 +234,135 @@ abline(0,1)
 We plot the p values from PLINK, and color points according to the correlations with rs2871960. The SNP rs2871960 is marked with diamond.
 
 ```{r}
+## Plot functions
 discrete_gradient_pal <- function(colours, bins = 5) {
- ramp <- scales::colour_ramp(colours)
- function(x) {
-   if (length(x) == 0) return(character())
-   i <- floor(x * bins)
-   i <- ifelse(i > bins-1, bins-1, i)
-   ramp(i/(bins-1))
- }
+  ramp <- scales::colour_ramp(colours)
+  
+  function(x) {
+    if (length(x) == 0) return(character())
+    
+    i <- floor(x * bins)
+    i <- ifelse(i > bins-1, bins-1, i)
+    ramp(i/(bins-1))
+  }
 }
+
 scale_colour_discrete_gradient <- function(..., colours, bins = 5, na.value = "grey50", guide = "colourbar", aesthetics = "colour", colors)  {
- colours <- if (missing(colours))
-   colors
- else colours
- continuous_scale(
-   aesthetics,
-   "discrete_gradient",
-   discrete_gradient_pal(colours, bins),
-   na.value = na.value,
-   guide = guide,
-   ...
- )
+  colours <- if (missing(colours)) 
+    colors
+  else colours
+  continuous_scale(
+    aesthetics,
+    "discrete_gradient",
+    discrete_gradient_pal(colours, bins),
+    na.value = na.value,
+    guide = guide,
+    ...
+  )
 }
 
-tmp = data.frame(POS = ss.dat$pos$POS, p = -log10(pval), ref = ss.dat$pos$POS == 141121814, r2 = R[which(ss.dat$pos$POS == 141121814),]^2)
+locus.zoom = function(z, gene.pos.map=NULL, ld, z.ref.name, title = NULL, title.size = 7, true = NULL, 
+                      y.height=c(5,2), y.lim=NULL){
+  tmp = data.frame(POS = 1:length(z), p = -log10(2*pnorm(-abs(z))), ref = names(z) == z.ref.name, 
+                   r2 = ld^2)
+  tmp$p[is.infinite(tmp$p)] = 300
+  pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
+    ylab("-log10(p)") + ggtitle(title) + 
+    scale_colour_discrete_gradient(
+      colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+      limits = c(0, 1),
+      breaks = c(0,0.2,0.4,0.6,0.8,1),
+      guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)
+    ) + 
+    scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+    theme_bw() + theme(axis.title.x=element_blank(),
+                       axis.text.x=element_blank(),
+                       plot.title = element_text(size=title.size))
+  if(!is.null(y.lim)){
+    pl_zoom = pl_zoom + ylim(y.lim[1], y.lim[2])
+  }
+  if(!is.null(true)){
+    tmp.true = data.frame(POS = which(true!=0), p = tmp$p[which(true!=0)], 
+                          ref = (names(z) == z.ref.name)[which(true!=0)],
+                          label = paste0('SNP',1:length(which(true!=0))))
+    pl_zoom = pl_zoom + geom_point(data=tmp.true, aes(x=POS, y=p), 
+                                   color='red', show.legend = FALSE, shape=1, stroke = 1) + 
+      geom_text(data=tmp.true, aes(x = POS-30, y=p+1, label=label), size=3, color='red')
+  }
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xmax = length(z))
+    g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = y.height, draw=FALSE)
+  }else{
+    g = pl_zoom
+  }
+  g
+}
 
-ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + ylab("-log10(p)") +
-   scale_colour_discrete_gradient(
-     colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
-     limits = c(0, 1),
-     breaks = c(0,0.2,0.4,0.6,0.8,1),
-     guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)
-   ) +
-   scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) +
-   theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+susie_plot_locuszoom = function(z, model, gene.pos.map = NULL, ld, z.ref.name, true = NULL, 
+                                title = NULL, title.size = 7, plotz = TRUE, y.lim=NULL, y.susie='PIP'){
+  if(plotz){
+    pl_zoom = locus.zoom(z, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim)
+  }
+  pip = model$pip
+  tmp = data.frame(POS = 1:length(pip), PIP = pip, p = -log10(2*pnorm(-abs(z))))
+  tmp$p[is.infinite(tmp$p)] = 300
+  if(y.susie == 'PIP'){
+    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) +
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+  }else if(y.susie == 'p'){
+    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
+      ylab("-log10(p)") + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+  }
+  
+  if(!is.null(true)){
+    if(y.susie == 'PIP'){
+      tmp.true = data.frame(POS = which(true!=0), PIP = pip[which(true!=0)])
+      pl_susie = pl_susie + geom_point(data=tmp.true, aes(x=POS, y=PIP), 
+                                       color='red', size=3, show.legend = FALSE)
+    }else if(y.susie == 'p'){
+      tmp.true = data.frame(POS = which(true!=0), p = tmp$p[which(true!=0)])
+      pl_susie = pl_susie + geom_point(data=tmp.true, aes(x=POS, y=p), 
+                                       color='red', size=3, show.legend = FALSE)
+    }
+  }
+  
+  model.cs = model$sets$cs
+  if(!is.null(model.cs)){
+    for(i in 1:length(model.cs)){
+      if(y.susie == 'PIP'){
+        tmp.cs = data.frame(POS = model.cs[[i]], PIP = pip[model.cs[[i]]])
+        pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP), 
+                                         color = i+3, size=3, show.legend = FALSE, shape=1, stroke = 1)
+      }else if(y.susie == 'p'){
+        tmp.cs = data.frame(POS = model.cs[[i]], p = tmp$p[model.cs[[i]]])
+        pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p), 
+                                         color = i+3, size=3, show.legend = FALSE, shape=1, stroke = 1)
+      }
+    }
+  }
+    
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xmax = length(z))
+    if(plotz){
+      g = egg::ggarrange(pl_zoom, pl_susie, pl_gene, nrow=3, heights = c(4,4,1.5), draw=FALSE)
+    }else{
+      g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(4,2), draw=FALSE)
+    }
+    
+  }else{
+    if(plotz){
+      g = egg::ggarrange(pl_zoom, pl_susie, nrow=2, heights = c(4,4), draw=FALSE)
+    }else{
+      g = pl_susie
+    }
+  }
+  g
+}
+```
+
+```{r}
+locus.zoom(z, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
 ```
 
 ## SuSiE
@@ -299,7 +392,8 @@ Fitting SuSiE model tooks 5685 seconds.
 
 ```{r}
 mod = readRDS('height.chr3.140800000.141800000.0.01.susie.model.rds')
-susie_plot(mod, y='PIP')
+susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
+susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', y.susie ='p')
 ```
 
 Fit susie bhat and rss model using LD matrix from LDstore and summary statistics from PLINK:
