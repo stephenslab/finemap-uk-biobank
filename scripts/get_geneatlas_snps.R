@@ -121,10 +121,19 @@ p1 <- ggplot(geneatlas,aes(x = NBETA/NSE,y = neale_tstat)) +
   geom_point(shape = 20,size = 2) +
   geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
               linetype = "dotted") +
-  theme_cowplot() +
   xlim(c(-23,31)) +
   ylim(c(-23,31)) +
+  theme_cowplot(font_size = 12) +
   labs(x = "GeneATLAS",y = "Neale lab",title = "t-statistics")
+
+p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
+  geom_point(shape = 20,size = 2) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  scale_x_continuous(limits = c(10^(-175),1),trans = "log10") +
+  scale_y_continuous(limits = c(10^(-175),1),trans = "log10") +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Neale lab",title = "p-values")
 
 plot_grid(p1,p2)
                            
