@@ -14,8 +14,8 @@ are as follows:
    containing the phenotype and covariate data from the UK Biobank
    source files.
 
-2. Run [get_geneatlas_snps.R](scripts/get_geneatlas_snps.R) and ... to
-   create tables containing independently computated summary
-   statistics. These are used to validate our association results.
+2. Run [get_geneatlas_snps.R](scripts/get_geneatlas_snps.R) to create
+   a table containing independently computed summary statistics. These
+   are used to validate our association results.
 
-3. 
+3. *Add third step here.*
