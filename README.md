@@ -13,3 +13,9 @@ are as follows:
 1. Run [get_pheno.R](scripts/get_pheno.R) to prepare a CSV file
    containing the phenotype and covariate data from the UK Biobank
    source files.
+
+2. Run [get_geneatlas_snps.R](scripts/get_geneatlas_snps.R) and ... to
+   create tables containing independently computated summary
+   statistics. These are used to validate our association results.
+
+3. 
