@@ -1,14 +1,17 @@
-# TO DO: Update this description.
-#
 # Create a table containing the top 1,000 GeneATLAS height
 # associations from chromosome 1, and an additional 1,000 "null" SNPs
 # (SNPs that are not strongly associated with height), and save this
-# table in a CSV file.
+# table in a CSV file. The height association statistics computed by
+# Benjamin Neale's lab are also included in this table.
+#
+# Note that only SNPs with minor allele frequencies greater than 1%
+# are used.
+#
 
 # SCRIPT PARAMETERS
 # -----------------
 # Select this many strongly associated SNPs, and this many SNPs that
-# are not strongly associated ("null" SNPs).
+# are not strongly associated ("null" SNPs).le
 n <- 1000
 
 # Select SNPs from this chromosome.
@@ -112,11 +115,9 @@ geneatlas <- rbind(geneatlas.top,geneatlas.null)
 cat("Writing association results for selected SNPs to file.\n")
 write.csv(geneatlas,out.file,row.names = FALSE,quote = FALSE)
 
-stop()
-
-# -----
-# TO DO: Draw a scatterplot
-# -----
+# PLOT GeneATLAS VS. NEALE ASSOCIATIONS
+# -------------------------------------
+# Create a scatterplot for the t-statistics.
 p1 <- ggplot(geneatlas,aes(x = NBETA/NSE,y = neale_tstat)) +
   geom_point(shape = 20,size = 2) +
   geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
@@ -126,6 +127,7 @@ p1 <- ggplot(geneatlas,aes(x = NBETA/NSE,y = neale_tstat)) +
   theme_cowplot(font_size = 12) +
   labs(x = "GeneATLAS",y = "Neale lab",title = "t-statistics")
 
+# Create a scatterplot for the p-values (on the log-scale).
 p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
   geom_point(shape = 20,size = 2) +
   geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
@@ -135,5 +137,6 @@ p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
   theme_cowplot(font_size = 12) +
   labs(x = "GeneATLAS",y = "Neale lab",title = "p-values")
 
+# Combine these two scatterplots into one figure.
 plot_grid(p1,p2)
                            
