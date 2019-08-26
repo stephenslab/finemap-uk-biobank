@@ -1,7 +1,10 @@
 # Script to prepare the UK Biobank phenotype data for analyzing height
-# associations. This should take at most 1-2 hours to run, and may
-# require a good amount of memory (works well with about 24 GB,
-# although may not require this much).
+# associations. There are multiple input files because we made
+# multiple requests for phenotype data. The output is a CSV file
+# containing data for the selected phenotypes and samples. This should
+# take at most 1-2 hours to run, and may require a good amount of
+# memory (works well with about 24 GB, although may not require this
+# much).
 
 # SCRIPT PARAMETERS
 # -----------------
