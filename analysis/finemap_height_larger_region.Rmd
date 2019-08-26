@@ -13,6 +13,7 @@ library(ggplot2)
 library(susieR)
 library(data.table)
 library(Matrix)
+library(gridExtra)
 ```
 
 ## Preparation
@@ -30,7 +31,7 @@ plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s48
 --chr 3 --from-bp 140800000 --to-bp 141800000 \
 --keep height.id.txt \
 --maf 0.01 minor \
---make-pgen --threads 8 --memory 38000 \
+--snps-only --make-pgen --threads 8 --memory 38000 \
 --out height.chr3.140800000.141800000.0.01 > height.chr3.140800000.141800000.0.01.plink2.log
 
 plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A --out height.chr3.140800000.141800000.0.01
@@ -38,7 +39,7 @@ plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A --out
 gzip height.chr3.140800000.141800000.0.01.raw
 ```
 
-There are 3556 variantes in the extracted file.
+There are 3106 variantes in the extracted file.
 
 Compute AF using plink2:
 ```
@@ -189,7 +190,7 @@ POS <- intersect(ss.dat$pos$POS, lm.res$POS)
 rows1 <- match(POS,ss.dat$pos$POS)
 rows2 <- match(POS,lm.res$POS)
 {par(pty='s')
-plot(-log10(lm.res$P[rows2]), -log10(pval[rows1]), xlab = 'PLINK2', ylab = 'result', main='-log10(p values)', xlim=c(0,300), ylim=c(0,300))
+plot(-log10(lm.res$P[rows2]), -log10(pval[rows1]), xlab = 'PLINK2', ylab = 'result', main='-log10(p values)', xlim=c(0,250), ylim=c(0,250))
 abline(0,1)}
 ```
 
@@ -199,7 +200,7 @@ plot(lm.res$T_STAT[rows2], z[rows1], xlab='PLINK2', ylab = 'result', main = 't s
 abline(0,-1)
 ```
 
-Comparing summary statistics with Neale's result, there is one point has high t statistics in our result. The SNP is rs10663136. The MAF in our result is 0.33179, but it is 0.00245 in Neale's result.
+Comparing summary statistics with Neale's result, the results agree well.
 
 ```{r eval=FALSE}
 library(readr)
@@ -385,15 +386,16 @@ saveRDS(mod,'height.chr3.140800000.141800000.0.01.susie.model.rds')
 Result:
 ```
 Resource List:     mem=32gb,walltime=36:00:00,nodes=1:ppn=10,neednodes=1:ppn=10
-Resources Used:    cput=01:05:36,vmem=47015084kb,walltime=01:36:01,mem=33554296kb,energy_used=0
+Resources Used:    cput=01:46:04,vmem=265663068kb,walltime=01:54:26,mem=33554012kb,energy_used=0
 
-Fitting SuSiE model tooks 5685 seconds.
+Fitting SuSiE model tooks 5699 seconds.
 ```
 
 ```{r}
 mod = readRDS('height.chr3.140800000.141800000.0.01.susie.model.rds')
-susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
-susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', y.susie ='p')
+p1 = susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
+p2 = susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', y.susie ='p')
+grid.arrange(p1, p2, ncol=2)
 ```
 
 Fit susie bhat and rss model using LD matrix from LDstore and summary statistics from PLINK:
@@ -406,8 +408,8 @@ susie_plot(mod_rss.ld, y='PIP', main='SuSiE rss LD')
 }
 ```
 
-The credible set contains 
+The first credible set contains 
 ```{r}
-ss.dat$pos[unlist(mod_bhat.ld$sets$cs)]
+ss.dat$pos[unlist(mod_bhat.ld$sets$cs$L1)]
 ```
 
