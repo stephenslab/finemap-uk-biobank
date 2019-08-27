@@ -7,7 +7,8 @@ analyses of UK Biobank data.
 
 All scripts implementing the data processing and analysis can be found
 in the [scripts](scripts) directory. The pipeline is currently
-illustrated for height, and can be adapted for other traits. The steps
+illustrated for fine-mapping standing height in a region on chromosome
+3 near gene *ZBTB38*, and can be adapted for other traits. The steps
 are as follows:
 
 1. Run R script [get_pheno.R](scripts/get_pheno.R) to prepare a CSV file
@@ -18,4 +19,8 @@ are as follows:
    to create a table containing independently computed summary
    statistics. These are used to validate our association results.
 
-3. Run bash script [get_geno.sh](scripts/get_geno.sh) ...
+3. Optionally, run [get_snps.R](scripts/get_snps.R) to generate a text
+   file containing the ids of the genetic variants within the selected
+   region.
+
+4. Run bash script [get_geno.sh](scripts/get_geno.sh) ...

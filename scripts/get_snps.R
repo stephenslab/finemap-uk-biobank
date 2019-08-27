@@ -1,4 +1,5 @@
-# TO DO: Explain here what this script does, and how to use it.
+# Script to generate a list of all the ids of the genotyped genetic
+# variants within a specified base-pair region on a chromosome.
 
 # SCRIPT PARAMETERS
 # -----------------
@@ -29,9 +30,10 @@ names(map) <- c("chr","id","cM","pos","A1","A2")
 cat("Getting SNPs within chosen region.\n")
 map <- subset(map,pos > start.pos & pos < stop.pos)
 map <- subset(map,!duplicated(id))
+cat(sprintf("%d SNPs are selected.\n",nrow(map)))
 
 # WRITE SNP IDs to FILE
 # ---------------------
 cat("Writing SNP ids to file.\n")
-write.table(map["id"],out.file,quote = FALSE,col.names = FALSE,
-            row.names = FALSE)
+write.table(map["id"],out.file,quote = FALSE,
+            col.names = FALSE,row.names = FALSE)
