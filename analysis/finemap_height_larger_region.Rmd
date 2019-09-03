@@ -31,7 +31,7 @@ plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s48
 --chr 3 --from-bp 140800000 --to-bp 141800000 \
 --keep height.id.txt \
 --maf 0.01 minor \
---snps-only --make-pgen --threads 8 --memory 38000 \
+--snps-only --max-alleles 2 --rm-dup exclude-all --make-pgen --threads 8 --memory 38000 \
 --out height.chr3.140800000.141800000.0.01 > height.chr3.140800000.141800000.0.01.plink2.log
 
 plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A --out height.chr3.140800000.141800000.0.01
@@ -39,7 +39,7 @@ plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A --out
 gzip height.chr3.140800000.141800000.0.01.raw
 ```
 
-There are 3106 variantes in the extracted file.
+There are 3094 variantes in the extracted file.
 
 Compute AF using plink2:
 ```
@@ -61,6 +61,7 @@ Load genotype matrix in R:
 ```{r eval=FALSE}
 library(data.table)
 library(readr)
+library(Matrix)
 geno.file = 'height.chr3.140800000.141800000.0.01.raw.gz'
 cat("Reading genotype data.\n")
 geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
@@ -146,7 +147,7 @@ R = chol(solve(A))
 W = R %*% t(Z) %*% X
 
 # Remove Covariates from X
-X   <- X - Z %*% crossprod(R,W)
+X   <- as.matrix(X - Z %*% crossprod(R,W))
 
 # Load LD matrix from raw genotype
 ld.matrix = as.matrix(fread('height.chr3.140800000.141800000.0.01.matrix'))
@@ -163,18 +164,19 @@ pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
 
 ## Save results
 save(X, y, pos, file = 'height.chr3.140800000.141800000.0.01.X.y.RData')
-save(XtX, Xty, pos, file = 'height.chr3.140800000.141800000.0.01.XtX.Xty.RData')
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2), n = length(y)), 'height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
 ```
 
 Get summary statistics:
 ```{r}
-ss.dat = readRDS('height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
+ss.dat = readRDS('../data/height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
 betas = ss.dat$Xty/diag(ss.dat$XtX)
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
 se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
 z = betas/se
 pval = 2*pnorm(-abs(z))
-R = t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX)))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
 ```
 
 ## Check summary stats
@@ -185,7 +187,7 @@ The PLINK command to get the summary statistics:
 plink2 --linear hide-covar no-x-sex omit-ref --pfile height.chr3.140800000.141800000.0.01 --covar covar.height.txt --pheno pheno.height.txt --vif 100 --out height.chr3.140800000.141800000.0.01.plink2
 ```
 ```{r}
-lm.res = read.delim('height.chr3.140800000.141800000.0.01.plink2.height.glm.linear')
+lm.res = read.delim('../data/height.chr3.140800000.141800000.0.01.plink2.height.glm.linear')
 POS <- intersect(ss.dat$pos$POS, lm.res$POS)
 rows1 <- match(POS,ss.dat$pos$POS)
 rows2 <- match(POS,lm.res$POS)
@@ -217,7 +219,7 @@ saveRDS(neale.choose, 'height.chr3.140800000.141800000.0.01.neale.rds')
 ```
 
 ```{r}
-neale.choose = readRDS('height.chr3.140800000.141800000.0.01.neale.rds')
+neale.choose = readRDS('../data/height.chr3.140800000.141800000.0.01.neale.rds')
 POS <- intersect(ss.dat$pos$POS, neale.choose$POS)
 rows1 <- match(POS,ss.dat$pos$POS)
 rows2 <- match(POS,neale.choose$POS)
@@ -386,13 +388,13 @@ saveRDS(mod,'height.chr3.140800000.141800000.0.01.susie.model.rds')
 Result:
 ```
 Resource List:     mem=32gb,walltime=36:00:00,nodes=1:ppn=10,neednodes=1:ppn=10
-Resources Used:    cput=01:46:04,vmem=265663068kb,walltime=01:54:26,mem=33554012kb,energy_used=0
+Resources Used:    cput=01:47:33,vmem=265658816kb,walltime=01:47:15,mem=33554400kb,energy_used=0
 
-Fitting SuSiE model tooks 5699 seconds.
+Fitting SuSiE model tooks 5267 seconds.
 ```
 
 ```{r}
-mod = readRDS('height.chr3.140800000.141800000.0.01.susie.model.rds')
+mod = readRDS('../data/height.chr3.140800000.141800000.0.01.susie.model.rds')
 p1 = susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
 p2 = susie_plot_locuszoom(z, mod, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', y.susie ='p')
 grid.arrange(p1, p2, ncol=2)
