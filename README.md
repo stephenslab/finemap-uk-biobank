@@ -21,6 +21,6 @@ are as follows:
 
 3. Optionally, run [get_snps.R](scripts/get_snps.R) to generate a text
    file containing the ids of the genetic variants within the selected
-   region.
+   region. (TO DO: Add association statistics to the output file.)
 
-4. Run bash script [get_geno.sh](scripts/get_geno.sh) ...
+5. Run bash script [get_geno.sh](scripts/get_geno.sh) ...
