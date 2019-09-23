@@ -3,3 +3,6 @@ to do
 
 + Modify get_snps.R so that it also retrieves association statistics
   for all SNPs in the selected region.
+
++ Add more info to region-variants-ZBTB38.txt.gz---position,
+  chromosome, etc.

@@ -1,8 +1,11 @@
 # Notes on data sets
 
-Larger data files for this project cannot be committed to the git
++ Larger data files for this project cannot be committed to the git
 repository, so they are being stored separately on the CRI Cluster
 ("gardner").
+
++ `seq_gene.md.gz` was downloaded from the NCBI FTP site
+  ftp://ftp.ncbi.nlm.nih.gov/refseq/H_sapiens/H_sapiens/ARCHIVE/BUILD.37.3/mapview on September 23, 2019.
 
 ## Summary data
 
