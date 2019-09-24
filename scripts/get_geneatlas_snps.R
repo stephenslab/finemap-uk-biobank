@@ -1,11 +1,11 @@
 # Create a table containing the top 1,000 GeneATLAS height
-# associations from chromosome 1, and an additional 1,000 "null" SNPs
-# (SNPs that are not strongly associated with height), and save this
-# table in a CSV file. The height association statistics computed by
-# Benjamin Neale's lab are also included in this table.
+# associations from a single chromosome, and an additional 1,000
+# "null" SNPs (SNPs that are not strongly associated with height), and
+# save this table in a CSV file. The height association statistics
+# computed by Benjamin Neale's lab are also included in this table.
 #
-# Note that only SNPs with minor allele frequencies greater than 1%
-# are used.
+# Note that SNPs with minor allele frequencies less than 1% are not
+# used.
 #
 
 # SCRIPT PARAMETERS
@@ -55,12 +55,12 @@ class(map) <- "data.frame"
 names(map) <- c("chr","SNP","cM","pos","A1","A2")
 map        <- map[c("chr","pos","SNP")]
 
-# Remove SNPs with multiple entries.
+# Remove any SNPs with multiple entries.
 rows <- which(duplicated(map$pos))
 snps <- map[rows,"pos"]
 map  <- subset(map,!is.element(pos,snps))
 
-# LOAD GeneATLAS ASSOCIATION RESULTS
+# LOAD GENEATLAS ASSOCIATION RESULTS
 # ----------------------------------
 # Load the summary statistics from the space-delimited text file.
 cat("Loading GeneATLAS association results.\n")
@@ -93,7 +93,7 @@ names(neale) <- c("minor_AF","neale_beta","neale_se","neale_tstat",
 geneatlas    <- merge(geneatlas,neale,by = "pos",sort = FALSE)
 geneatlas    <- geneatlas[c(3,1,2,4:13)]
 
-# Filter out SNPs with low minor allele frequencies.
+# Filter out SNPs with low (<1%) minor allele frequencies.
 geneatlas <- subset(geneatlas,minor_AF >= 0.01)
 
 # SELECT ASSOCIATION RESULTS
@@ -107,17 +107,21 @@ rows           <- which(geneatlas$PV > 1e-6)
 rows           <- sample(rows,n)
 geneatlas.null <- geneatlas[rows,]
 
-# Combine these into a single table.
+# Combine both sets of association statistics into a single table.
 geneatlas <- rbind(geneatlas.top,geneatlas.null)
+
+# Sort the table by chromosome base-pair position.
+rows      <- order(geneatlas$pos)
+geneatlas <- geneatlas[rows,]
 
 # WRITE RESULTS TO FILE
 # ---------------------
 cat("Writing association results for selected SNPs to file.\n")
 write.csv(geneatlas,out.file,row.names = FALSE,quote = FALSE)
 
-# PLOT GeneATLAS VS. NEALE ASSOCIATIONS
+# PLOT GENEATLAS VS. NEALE ASSOCIATIONS
 # -------------------------------------
-# Create a scatterplot for the t-statistics.
+# Create a scatterplot comparing the t-statistics.
 p1 <- ggplot(geneatlas,aes(x = NBETA/NSE,y = neale_tstat)) +
   geom_point(shape = 20,size = 2) +
   geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
@@ -127,7 +131,7 @@ p1 <- ggplot(geneatlas,aes(x = NBETA/NSE,y = neale_tstat)) +
   theme_cowplot(font_size = 12) +
   labs(x = "GeneATLAS",y = "Neale lab",title = "t-statistics")
 
-# Create a scatterplot for the p-values (on the log-scale).
+# Create a scatterplot comparing the p-values (on the logarithmic scale).
 p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
   geom_point(shape = 20,size = 2) +
   geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
@@ -138,5 +142,5 @@ p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
   labs(x = "GeneATLAS",y = "Neale lab",title = "p-values")
 
 # Combine these two scatterplots into one figure.
-plot_grid(p1,p2)
+print(plot_grid(p1,p2))
                            
