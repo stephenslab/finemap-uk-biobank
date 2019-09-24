@@ -86,9 +86,29 @@ map          <- map[c("chr","pos","id","ALLELE","NBETA","NSE","PV",
                       "neale_beta","neale_se","neale_tstat","neale_pval")]
 cat(sprintf("%d SNPs with association statistics are retained.\n",nrow(map)))
 
-# TO DO: Create a scatterplot comparing the t-statistics and the p-values.
+# PLOT GENEATLAS VS. NEALE ASSOCIATIONS
+# -------------------------------------
+# Create a scatterplot comparing the t-statistics.
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = neale_tstat)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-25,50)) +
+  ylim(c(-25,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Neale lab",title = "t-statistics")
+
+# Create a scatterplot comparing the p-values (on the logarithmic scale).
+p2 <- ggplot(map,aes(x = PV + 1e-175,y = neale_pval + 1e-175)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  scale_x_continuous(limits = c(10^(-175),1),trans = "log10") +
+  scale_y_continuous(limits = c(10^(-175),1),trans = "log10") +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Neale lab",title = "p-values")
 
 # WRITE SNP DATA to FILE
 # ----------------------
 cat("Writing SNP data to file.\n")
-write.table(map,out.file,quote = FALSE,row.names = FALSE)
+write.csv(map,out.file,quote = FALSE,row.names = FALSE)

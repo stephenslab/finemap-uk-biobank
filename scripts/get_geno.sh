@@ -11,13 +11,12 @@
 # -----------------
 # TO DO: Explain what each of these script parameters are for.
 PHENO_FILE=/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz
-PHENO_SAMPLE_FILE=ids
 PLINK2_EXEC=/gpfs/data/xhe-lab/uk-biobank/tools/plink2
 LDSTORE_EXEC=ldstore
 BGEN_FILE=/gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr3_v3.bgen
 GENO_SAMPLE_FILE=/gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample
-SNPID_FILE=../data/region-variants-ZBTB38.txt.gz
-PLINK_OUTPUT=ukb-imp-chr3-height-ZBTB38
+SNP_FILE=../data/region-variants-ZBTB38.csv.gz
+PLINK_OUTPUT=ukb-imp-height-ZBTB38
 CHR=3
 
 # EXTRACT SAMPLE IDs
@@ -28,6 +27,10 @@ echo "Extracting sample ids from phenotype file."
 zcat $PHENO_FILE | tail -n +2 | cut -d "," -f 1 > temp
 paste -d " "  temp temp > ids
 
+# EXTRACT SNPs
+# ------------
+zcat $SNP_FILE | tail -n +2 | cut -d " "
+
 # EXTRACT GENOTYPES
 # -----------------
 # Create a PLINK binary file (.pgen) containing the genotypes for the
@@ -36,9 +39,9 @@ paste -d " "  temp temp > ids
 # than 1%.
 echo "Extracting genotype data for selected SNPs to PLINK binary file."
 $PLINK2_EXEC --sample $GENO_SAMPLE_FILE --bgen $BGEN_FILE --chr $CHR \
-  --keep $PHENO_SAMPLE_FILE --extract $SNPID_FILE --maf 0.01 minor \
-  --snps-only --max-alleles 2 --rm-dup exclude-all --make-pgen \
-  --threads 8 --memory 38000 --out $PLINK_OUTPUT
+  --keep ids --extract $SNPID_FILE --maf 0.01 minor --snps-only
+  --max-alleles 2 --rm-dup exclude-all --make-pgen --threads 8 \
+  --memory 38000 --out $PLINK_OUTPUT
  
 # plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A \
 #        --out height.chr3.140800000.141800000.0.01
