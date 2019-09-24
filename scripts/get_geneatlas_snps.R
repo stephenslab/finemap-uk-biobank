@@ -143,4 +143,3 @@ p2 <- ggplot(geneatlas,aes(x = PV,y = neale_pval)) +
 
 # Combine these two scatterplots into one figure.
 print(plot_grid(p1,p2))
-                           
