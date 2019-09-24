@@ -1,8 +1,7 @@
 # Script to generate a list of all the ids of the genotyped genetic
-# variants within a specified base-pair region on a chromosome.
-#
-# TO DO: Update this description.
-#
+# variants within a specified base-pair region on a chromosome, and
+# combine this list with other pertinent info, such as base-pair
+# position and GeneATLAS association statistics.
 
 # SCRIPT PARAMETERS
 # -----------------
