@@ -288,7 +288,6 @@ plot_geneName = function(dat, xrange){
                        axis.ticks = element_blank(),
                        axis.text.y=element_blank(),
                        plot.title=element_text(size=11),
-                       # axis.title=element_text(size=7),
                        panel.grid.major = element_blank(),
                        panel.grid.minor = element_blank())
   pl
@@ -327,7 +326,6 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, ld=NULL, z.ref.name=NULL,
   pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = 'darkblue') + 
     ylab("-log10(p value)") + ggtitle(title) + 
     theme_bw() + theme(axis.title.x=element_blank(),
-                       axis.text.x=element_blank(),
                        plot.title = element_text(size=title.size))
   if(!is.null(ld) && !is.null(z.ref.name)){
     tmp$ref = names(z) == z.ref.name
@@ -342,7 +340,6 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, ld=NULL, z.ref.name=NULL,
       ) + 
       scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
       theme_bw() + theme(axis.title.x=element_blank(),
-                         axis.text.x=element_blank(),
                          plot.title = element_text(size=title.size))
   }
   
@@ -375,12 +372,24 @@ susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, ld, z.ref.na
   pip = model$pip
   tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
   if(y.susie == 'PIP'){
-    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) +
-      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+    if(plotz){
+      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+    }else{
+      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+        theme_bw() + theme(axis.title.x=element_blank())
+    }
   }else if(y.susie == 'p'){
-    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
-      ylab("-log10(p)") + 
-      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+    if(plotz){
+      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
+        ylab("-log10(p)") + 
+        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+    }else{
+      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
+        ylab("-log10(p)") + 
+        theme_bw() + theme(axis.title.x=element_blank())
+    }
+    
   }
   
   if(!is.null(true)){
@@ -469,6 +478,25 @@ grid.arrange(p_bhat, p_rss, ncol=2)
 
 The first credible set contains 
 ```{r}
-ss.dat$pos[unlist(mod_bhat.ld$sets$cs$L1)]
+cs1 = ss.dat$pos[unlist(mod_bhat.ld$sets$cs$L1),]
+cs1$gene = sapply(cs1$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  gene.pos.map$geneName[id]
+})
+cs1
 ```
+
+The second credible set contains 
+```{r}
+cs2 = ss.dat$pos[unlist(mod_bhat.ld$sets$cs$L2),]
+cs2$gene = sapply(cs2$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  paste(gene.pos.map$geneName[id], collapse = ' ')
+})
+cs2
+```
+
+
+
+
 
