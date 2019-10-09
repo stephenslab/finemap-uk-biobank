@@ -26,9 +26,9 @@ plot_geneName = function(dat, xrange){
   
   dat$mean = rowMeans(dat[,c('start', 'end')])
   
-  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2], ymin = -lines-0.2)) + 
+  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2], ymin = -lines-0.4)) + 
     geom_rect(aes(xmin = start, xmax = end, ymin = -lines-0.05, ymax = -lines+0.05), fill='blue') +
-    geom_text(aes(x = mean, y=-lines-0.3, label=geneName), size=2.5) + xlab('base-pair position') + ylab('Gene') + 
+    geom_text(aes(x = mean, y=-lines-0.2, label=geneName), size=2) + xlab('base-pair position') + ylab('Gene') + 
     theme_bw() + theme(axis.text.x=element_blank(),
                        axis.ticks = element_blank(),
                        axis.text.y=element_blank(),
@@ -87,7 +87,7 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL,
     tmp$ref = names(z) == z.ref.name
     tmp$r2 = ld^2
     pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
-      ylab("-log10(p)") + ggtitle(title) + 
+      ylab("-log10(p value)") + ggtitle(title) + 
       scale_colour_discrete_gradient(
         colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
         limits = c(0, 1.01),
@@ -152,12 +152,12 @@ susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, z.ref.name, 
   }else if(y.susie == 'p'){
     if(plotz){
       pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
-        ylab("-log10(p)") + 
+        ylab("-log10(p value)") + 
         theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
       pl_susie = pl_susie + geom_hline(yintercept=-log10(5e-08), linetype='dashed', color = 'red')
     }else{
       pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
-        ylab("-log10(p)") + 
+        ylab("-log10(p value)") + 
         theme_bw() + theme(axis.title.x=element_blank())
     }
     

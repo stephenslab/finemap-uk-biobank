@@ -23,7 +23,7 @@ library(readr)
 We extract SNPs on chr 3 from 140,800,000 to 141,800,000 with MAF > 0.01. 
 We choose this region based on result from http://big.stats.ox.ac.uk/pheno/biobank_50.
 
-The code below are executed in CRI to extract SNPs. The code to get phenotype height is [code](../code/get_height.R)
+The code below are executed in CRI to extract SNPs. The code to get phenotype height is [code](../scripts/get_pheno.R)
 
 ```
 zcat /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz | awk 'BEGIN{FS=","} {print $1 OFS $1}' | tail -n +2 > height.id.txt
@@ -166,7 +166,7 @@ pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
 
 ## Save results
 save(X, y, pos, file = 'height.chr3.140800000.141800000.0.01.X.y.RData')
-saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2), n = length(y)), 'height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2), n = length(y), pos=pos), 'height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
 ```
 
 Get summary statistics:
@@ -259,6 +259,9 @@ We plot the p values from PLINK, and color points according to the correlations 
 
 ```{r}
 ## Plot functions
+#' plot gene name annotations
+#' @param dat a matrix of gene names with 'start' and 'end' base-pair position
+#' @param xrange range of x axis, base-pair position
 plot_geneName = function(dat, xrange){
   ngene = 2:nrow(dat)
   line = 1
@@ -319,7 +322,18 @@ scale_colour_discrete_gradient <- function(..., colours, bins = 5, na.value = "g
   )
 }
 
-locus.zoom = function(z, pos, gene.pos.map=NULL, ld=NULL, z.ref.name=NULL, 
+#' Locuszoom plot
+#' @param z a vector of z scores with SNP names
+#' @param pos base-pair positions
+#' @param gene.pos.map a matrix of gene names with 'start' and 'end' base-pair position
+#' @param z.ref.name the reference SNP
+#' @param ld correlations between teh reference SNP and the rests
+#' @param title title of the plot
+#' @param title.size the size of the title
+#' @param true the true value
+#' @param y.height height of -log10(p) plot and height of the gene name annotation plot
+#' @param y.lim range of y axis
+locus.zoom = function(z, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
                       title = NULL, title.size = 7, true = NULL, 
                       y.height=c(5,1.5), y.lim=NULL){
   tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
@@ -364,8 +378,22 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, ld=NULL, z.ref.name=NULL,
   g
 }
 
-susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, ld, z.ref.name, true = NULL, 
-                                title = NULL, title.size = 7, plotz = TRUE, y.lim=NULL, y.susie='PIP'){
+#' SuSiE plot with Locuszoom plot
+#' @param z a vector of z scores with SNP names
+#' @param model the fitted SuSiE model
+#' @param pos base-pair positions
+#' @param gene.pos.map a matrix of gene names with 'start' and 'end' base-pair position
+#' @param z.ref.name the reference SNP
+#' @param ld correlations between teh reference SNP and the rests
+#' @param title title of the plot
+#' @param title.size the size of the title
+#' @param true the true value
+#' @param plotz whether to plot locuszoom plot
+#' @param y.lim range of y axis
+#' @param y.susie the y axis of the SuSiE plot, 'PIP' or 'p', 'p' refers to -log10(p)
+susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, z.ref.name, ld, 
+                                title = NULL, title.size = 7, true = NULL, 
+                                plotz = TRUE, y.lim=NULL, y.susie='PIP'){
   if(plotz){
     pl_zoom = locus.zoom(z, pos = pos, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim)
   }
@@ -404,10 +432,10 @@ susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, ld, z.ref.na
       tmp.cs = tmp[model.cs[[i]],]
       if(y.susie == 'PIP'){
         pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP), 
-                                       color = i+3, size=3, show.legend = FALSE, shape=1, stroke = 1)
+                                       color = i+4, size=3, show.legend = FALSE, shape=1, stroke = 1)
       }else if(y.susie == 'p'){
         pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p), 
-                                       color = i+3, size=3, show.legend = FALSE, shape=1, stroke = 1)
+                                       color = i+4, size=3, show.legend = FALSE, shape=1, stroke = 1)
       }
     }
   }
@@ -472,7 +500,7 @@ Fit susie bhat and rss model using LD matrix from LDstore and summary statistics
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = ss.dat$yty/(ss.dat$n-1))
 mod_rss.ld = susie_rss(z = z, R = R)
 p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', title = 'SuSiE bhat')
-p_rss = susie_plot_locuszoom(z, mod_rss.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', title = 'SuSiE bhat')
+p_rss = susie_plot_locuszoom(z, mod_rss.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', title = 'SuSiE RSS')
 grid.arrange(p_bhat, p_rss, ncol=2)
 ```
 
