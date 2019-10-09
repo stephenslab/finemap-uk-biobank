@@ -1,5 +1,5 @@
 ---
-title: "Finemap Height chr3 1Mb"
+title: "Fine-mapping Height chr3 1Mb"
 author: "Yuxin Zou"
 date: "8/15/2019"
 output: 

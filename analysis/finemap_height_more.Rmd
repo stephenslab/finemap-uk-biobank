@@ -1,5 +1,5 @@
 ---
-title: "Finemap Height More Regions"
+title: "Fine-mapping Height on More Regions"
 author: "Yuxin Zou"
 date: "10/06/2019"
 output: 
