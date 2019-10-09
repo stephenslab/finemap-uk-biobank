@@ -31,5 +31,11 @@ are as follows:
    selected genetic variants, such as base-pair positions, SNP variant
    ids, and association statistics.
 
-3. **Prepare genotype data.** Run bash script
-   [get_geno.sh](scripts/get_geno.sh) ...
+3. **Prepare genotype data and SuSiE sufficient statistics** Run bash script
+   [prepare.region.sh](scripts/prepare.region.sh) to create an RDS file 
+   containing sufficient statistics using the genetype data and height. The 
+   script requires 4 input: chromosome number, start base-pair position, stop 
+   base-pair position, region name. For example,
+   ```
+   scripts/prepare.region.sh 3 140.8e6 141.8e6 ZBTB38
+   ```
