@@ -111,8 +111,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'EFEMP1 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'EFEMP1 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'EFEMP1 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'EFEMP1 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -174,8 +174,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ZBTB38 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ZBTB38 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ZBTB38 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ZBTB38 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -237,8 +237,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -300,8 +300,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HHIP SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HHIP SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HHIP SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HHIP SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -363,8 +363,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'GNA12 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'GNA12 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'GNA12 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'GNA12 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -426,8 +426,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'CDK6 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'CDK6 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'CDK6 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'CDK6 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -489,8 +489,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HMGA2 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HMGA2 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HMGA2 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'HMGA2 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -551,8 +551,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'DLEU1 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'DLEU1 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'DLEU1 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'DLEU1 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -614,8 +614,8 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ADAMTS17 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ADAMTS17 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ADAMTS17 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'ADAMTS17 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -676,7 +676,7 @@ SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'UQCC1 SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'UQCC1 SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'UQCC1 SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'UQCC1 SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```

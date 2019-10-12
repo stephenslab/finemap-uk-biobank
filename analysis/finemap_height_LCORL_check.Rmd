@@ -25,7 +25,7 @@ knitr::read_chunk("../scripts/plots.R")
 ```
 
 ```{r}
-locus.zoom.cs = function(z, cs, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab=NULL){
+locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab=NULL){
   if(is.null(y.lab)){
     y.lab = '-log10(p value)'
   }
@@ -37,23 +37,27 @@ locus.zoom.cs = function(z, cs, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL
   tmp$CS = as.factor(tmp$CS)
   pl_zoom = ggplot(tmp, aes(x = POS, y = log10p, shape = CS, color = r2, size=CS)) + 
     geom_point() + ylab(y.lab) + 
-    scale_colour_discrete_gradient(
-        colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
-        limits = c(0, 1.01),
-        breaks = c(0,0.2,0.4,0.6,0.8,1),
-        guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)) +
-    scale_shape_manual(values = c(4, 16), guide=FALSE) + 
+    scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+                          values = seq(0,1,0.2), breaks=seq(0,1,0.2)) + 
+    # scale_colour_discrete_gradient(
+    #     colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+    #     limits = c(0, 1.01),
+    #     breaks = c(0,0.2,0.4,0.6,0.8,1),
+    #     guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)) +
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
     scale_size_manual(values=c(1.5,4), guide=FALSE) + 
     ggtitle(title) + 
-    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=title.size))
+    theme_bw() + theme(axis.title.x=element_blank(), axis.text=element_text(size=15),
+                       axis.title.y=element_text(size=12),
+                       plot.title = element_text(size=title.size))
   tmp.sub = tmp[cs,]
   pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color='black', stroke=0.1)
   if(!is.null(xrange)){
     pl_zoom = pl_zoom + xlim(xrange[1], xrange[2])
   }
   
-  pl_gene = plot_geneName(gene.pos.map, xrange = xrange)
-  g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1.5), draw=FALSE)
+  pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr = chr)
+  g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
   g
 }
 ```
@@ -92,10 +96,10 @@ gene.pos.map = gene.pos.map[-c(3, 10),]
 
 SuSiE result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
-mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
+mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE)
 z.max = which.max(abs(z))
-pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat')
-p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat', y.susie = 'p')
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = 4, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat')
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = 4, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL SuSiE bhat', y.susie = 'p')
 grid.arrange(pip_bhat, p_bhat, ncol=2)
 ```
 
@@ -104,14 +108,128 @@ For 1Mb region about LCORL, SuSiE found 2 CSs. The average correlation between S
 round(mean(abs(R[mod_bhat.ld$sets$cs$L1, mod_bhat.ld$sets$cs$L2])), 4)
 ```
 
-## Removing effect of CS1
+Zoom in plot
+```{r}
+p1 = susie_plot_locuszoom(z, mod_bhat.ld, pos=ss.dat$pos$POS/1e6, chr=4, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = 'LCORL Credible Sets', y.susie = 'p', plotz=FALSE, xrange=c(17.7, 18.1), title.size = 20)
+p1
+# pdf('GitHub/finemap-uk-biobank/LCORL_CSs.pdf', height=5, width=8)
+# p1
+# dev.off()
+```
 
-CS1:
+## CS 1
+
+1. Removing effect of top SNP in CS 2
+
+```{r eval=FALSE}
+library(data.table)
+library(readr)
+library(Matrix)
+geno.file = 'height.LCORL.0.01.raw.gz'
+cat("Reading genotype data.\n")
+geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
+class(geno) <- "data.frame"
+
+# Extract the genotypes.
+X <- as(as.matrix(geno[-(1:6)]),'dgCMatrix')
+
+pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
+out.pheno.file <- "pheno.height.txt"
+out.covar.file <- "covar.removeCS2.height.txt"
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat("Reading phenotype data.\n")
+pheno        <- suppressMessages(read_csv(pheno.file))
+class(pheno) <- "data.frame"
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread('height.LCORL.0.01.psam')
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,1420], data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+colnames(Z)[150] = 'X1420'
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
+                                "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
+                                "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20", "X1420"))
+Z[,cols] = scale(Z[,cols])
+Z[,'age2'] = Z[,'age']^2
+# Save phenotype file
+pheno.table = data.frame(FID = pheno$id, IID = pheno$id, height = pheno$height)
+write.table(pheno.table, file = out.pheno.file, quote = FALSE, row.names = FALSE)
+# Save covariates file
+IID = pheno$id
+FID = pheno$id
+cov.table = cbind(FID, IID, Z)
+write.table(cov.table, file= out.covar.file, quote=FALSE, row.names = FALSE)
+```
+
+```
+plink2 --linear hide-covar no-x-sex omit-ref --pfile height.LCORL.0.01 --covar covar.removeCS2.height.txt --pheno pheno.height.txt --vif 100 --out height.LCORL.0.01.removeCS2.plink2
+```
 
 ```{r warning=FALSE}
-z.max = which.max(abs(z))
-locus.zoom.cs(z, cs = mod_bhat.ld$sets$cs$L1, ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), xrange=c(17.7,18.1), title = 'LCORL CS1')
+lm.res = read.delim('../data/height.LCORL.0.01.removeCS2.plink2.height.glm.linear')
+lm.res.t = lm.res$T_STAT
+names(lm.res.t) = lm.res$ID
+z.max = which(names(lm.res.t) == names(which.max(abs(lm.res.t[mod_bhat.ld$sets$cs$L1]))))
+locus.zoom.cs(lm.res.t, cs = mod_bhat.ld$sets$cs$L1, pos=lm.res$POS/1e6, chr=4, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(17.7, 18.1), title='LCORL CS1', y.lab = '-log10(p value condition on CS2)')
 ```
+
+2. Remove effect of all SNPs based on weights in other CSs
+```{r}
+XtXr = mod_bhat.ld$XtXr - ss.dat$XtX %*% (mod_bhat.ld$alpha[1,] * mod_bhat.ld$mu[1,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat.ld$alpha[-1,]*mod_bhat.ld$mu[-1,])/mod_bhat.ld$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS1 = betas/se
+names(z.CS1) = colnames(R)
+z.cs1.max = which.max(abs(z.CS1))
+p2 = locus.zoom.cs(z.CS1, mod_bhat.ld$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=4, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(17.7, 18.1), title='LCORL Credible Set 1', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p2
+# pdf('GitHub/finemap-uk-biobank/LCORL_CS1.pdf', height=5, width=8)
+# p2
+# dev.off()
+```
+
+```{r}
+tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat.ld$alpha[1,]/(1-mod_bhat.ld$alpha[1,])))
+tmp$CS = rep(4, length(z))
+tmp$CS[mod_bhat.ld$sets$cs$L1] = 16
+tmp$CS = as.factor(tmp$CS)
+pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
+  geom_point() + ylab('log posterior odd') + 
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle('LCORL Credible Set 1') + 
+    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
+tmp.sub = tmp[mod_bhat.ld$sets$cs$L1,]
+pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
+pl_zoom = pl_zoom + xlim(17.7, 18.1)
+pl_gene = plot_geneName(gene.pos.map, xrange = c(17.7, 18.1), chr=4)
+g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
+g
+```
+
+## CS 2
+
+1. Removing effect of top SNP in CS 1
 
 ```{r eval=FALSE}
 library(data.table)
@@ -178,13 +296,50 @@ plink2 --linear hide-covar no-x-sex omit-ref --pfile height.LCORL.0.01 --covar c
 lm.res = read.delim('../data/height.LCORL.0.01.removeCS1.plink2.height.glm.linear')
 lm.res.t = lm.res$T_STAT
 names(lm.res.t) = lm.res$ID
-z.max = which.max(abs(lm.res.t))
-locus.zoom.cs(lm.res.t, cs = mod_bhat.ld$sets$cs$L2, pos=lm.res$POS/1e6, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(17.7, 18.1), title='LCORL CS2', y.lab = '-log10(p value condition on CS1)')
+z.max = which(names(lm.res.t) == names(which.max(abs(lm.res.t[mod_bhat.ld$sets$cs$L2]))))
+locus.zoom.cs(lm.res.t, cs = mod_bhat.ld$sets$cs$L2, pos=lm.res$POS/1e6, chr=4, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(17.7, 18.1), title='LCORL CS2', y.lab = '-log10(p value condition on CS1)')
+```
+
+2. Remove effect of all SNPs based on weights in other CSs
+```{r}
+XtXr = mod_bhat.ld$XtXr - ss.dat$XtX %*% (mod_bhat.ld$alpha[2,] * mod_bhat.ld$mu[2,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat.ld$alpha[-2,]*mod_bhat.ld$mu[-2,])/mod_bhat.ld$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS2 = betas/se
+names(z.CS2) = colnames(R)
+z.cs2.max = which.max(abs(z.CS2))
+p3 = locus.zoom.cs(z.CS2, mod_bhat.ld$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=4, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(17.7, 18.1), title='LCORL Credible Set 2', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p3
+# pdf('GitHub/finemap-uk-biobank/LCORL_CS2.pdf', height=5, width=8)
+# p3
+# dev.off()
+```
+
+```{r}
+tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat.ld$alpha[2,]/(1-mod_bhat.ld$alpha[2,])))
+tmp$CS = rep(4, length(z))
+tmp$CS[mod_bhat.ld$sets$cs$L2] = 16
+tmp$CS = as.factor(tmp$CS)
+pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
+  geom_point() + ylab('log posterior odd') + 
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle('LCORL Credible Set 2') + 
+    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
+tmp.sub = tmp[mod_bhat.ld$sets$cs$L2,]
+pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
+pl_zoom = pl_zoom + xlim(17.7, 18.1)
+pl_gene = plot_geneName(gene.pos.map, xrange = c(17.7, 18.1), chr=4)
+g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
+g
 ```
 
 ## Simulation under the estimated model
 
-In the following simulation, we treat rs6824748 and rs2610989 as true signals. The effect sizes are simulated using the estiamted prior variance. We use the fitted residual variance in the simulation. The response y is simulated from
+In the following simulation, we treat rs6824748 and rs2610989 as true signals. The effect sizes are from estimated model. We use the fitted residual variance in the simulation. The response y is simulated from
 $$
 y \sim N_n(Xb, \sigma^2 I)
 $$
@@ -258,16 +413,14 @@ rss = c(ss.dat$yty) - betas * ss.dat$Xty
 se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)))
-V = mod_bhat.ld$V[1:2]
 sigma2 = mod_bhat.ld$sigma2
+b2 = c(mod_bhat.ld$mu[1, 1351], mod_bhat.ld$mu[2, 1420])
+Xb = as.vector(X[, c(1351, 1420)] %*% b2)
 
 n = nrow(X)
 result = vector("list", 1000)
 set.seed(201910)
 for(i in 1:1000){
-  ## generate true effects
-  b = c(rnorm(1, 0, sqrt(V[1])), rnorm(1, 0, sqrt(V[2])))
-  Xb = as.vector(X[, c(1351, 1420)] %*% b)
   ## generate y
   y = Xb + rnorm(n, 0, sqrt(sigma2))
   
@@ -291,16 +444,14 @@ Load simulation results:
 result = readRDS('../data/height.LCORL.0.01.simulation1000.rds')
 ```
 
-In 1000 runs, the number of CSs are 
+In 1000 simulations, 994 runs have 2 CSs. The rest 6 runs have 3 CSs.
 ```{r}
 table(sapply(result, function(mod) length(mod$sets$cs)))
 ```
 
-699 runs contain rs6824748 in the CSs, 556 runs contain rs2610989 in the CSs. 
+906 runs contain both true signals.
 ```{r}
-contain.true = sapply(result, function(mod) 1351 %in% unlist(mod$sets$cs))
-sum(contain.true)
-contain.true = sapply(result, function(mod) 1420 %in% unlist(mod$sets$cs))
+contain.true = sapply(result, function(mod) all(c(1351, 1420) %in% unlist(mod$sets$cs)))
 sum(contain.true)
 ```
 
