@@ -194,7 +194,7 @@ locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L1, pos=lm.res$POS/1e6, chr=3, gen
 ```
 
 2. Remove effect of all SNPs based on weights in other CSs
-```{r eval=FALSE}
+```{r}
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[1,] * mod_bhat$mu[1,]) 
 Xtr = ss.dat$Xty - XtXr
 betas = Xtr/diag(ss.dat$XtX)
@@ -305,7 +305,7 @@ locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L2, pos=lm.res$POS/1e6, chr=3, gen
 ```
 
 2. Remove effect of all SNPs based on weights in other CSs
-```{r eval=FALSE}
+```{r}
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[2,] * mod_bhat$mu[2,]) 
 Xtr = ss.dat$Xty - XtXr
 betas = Xtr/diag(ss.dat$XtX)
