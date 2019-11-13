@@ -1,5 +1,5 @@
 ---
-title: "Fine-mapping Height chr3 1Mb"
+title: "Fine-mapping Height ZBTB38 1Mb"
 author: "Yuxin Zou"
 date: "8/15/2019"
 output: 
@@ -20,43 +20,46 @@ library(readr)
 
 ## Preparation
 
-We extract SNPs on chr 3 from 140,800,000 to 141,800,000 with MAF > 0.01. 
+We extract SNPs on chr 3 from 140,800,000 to 141,800,000 with MAF > 0.01 and inputation score > 0.9. 
 We choose this region based on result from http://big.stats.ox.ac.uk/pheno/biobank_50.
 
 The code below are executed in CRI to extract SNPs. The code to get phenotype height is [code](../scripts/get_pheno.R)
 
 ```
 zcat /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz | awk 'BEGIN{FS=","} {print $1 OFS $1}' | tail -n +2 > height.id.txt
+zcat /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_mfi_chr3_v3.txt.gz | awk '($6 < 0.01 || $8 < 0.9){print $2}' > ukb_mfi_chr3_v3_exclude_id.txt
 
 plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample \
 --bgen /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr3_v3.bgen \
 --chr 3 --from-bp 140800000 --to-bp 141800000 \
 --keep height.id.txt \
+--exclude ukb_mfi_chr3_v3_exclude_id.txt \
 --maf 0.01 minor \
 --snps-only --max-alleles 2 --rm-dup exclude-all --make-pgen --threads 8 --memory 38000 \
---out height.chr3.140800000.141800000.0.01 > height.chr3.140800000.141800000.0.01.plink2.log
+--out height.ZBTB38 > height.ZBTB38.plink2.log
 
-plink2 --pfile height.chr3.140800000.141800000.0.01 --threads 8 --export A --out height.chr3.140800000.141800000.0.01
+plink2 --pfile height.ZBTB38 --threads 8 --export A --out height.ZBTB38
 
-gzip height.chr3.140800000.141800000.0.01.raw
+gzip height.ZBTB38.raw
 ```
 
-There are 3094 variantes in the extracted file.
+There are 2896 variantes in the extracted file.
 
 Compute AF using plink2:
 ```
-plink2 --pfile height.chr3.140800000.141800000.0.01 --freq --out height.chr3.140800000.141800000.0.01
+plink2 --pfile height.ZBTB38 --freq --out height.ZBTB38
 ```
 
 Transform pgen file to bgen and compute LD matrix using LDstore:
 
 Note that `bgen-1.3` is not supported by LD store.
 ```
-plink2 --pfile height.chr3.140800000.141800000.0.01 --recode bgen-1.2 --out height.chr3.140800000.141800000.0.01
+plink2 --pfile height.ZBTB38 --recode bgen-1.2 --out height.ZBTB38
 
-ldstore --bgen height.chr3.140800000.141800000.0.01.bgen --bcor height.chr3.140800000.141800000.0.01.bcor --n-threads 10 --accuracy high --ld-thold 0 --variant-window-size 1000000 --n-variants-chunk 5792
-ldstore --bcor height.chr3.140800000.141800000.0.01.bcor --merge 10
-ldstore --bcor height.chr3.140800000.141800000.0.01.bcor --matrix height.chr3.140800000.141800000.0.01.matrix
+ldstore --bgen height.ZBTB38.bgen --bcor height.ZBTB38.bcor --n-threads 10 --accuracy high --ld-thold 0
+ldstore --bcor height.ZBTB38.bcor --merge 10
+ldstore --bcor height.ZBTB38.bcor --matrix height.ZBTB38.matrix
+rm height.${regionname}.bcor_*
 ```
 
 Load genotype matrix in R:
@@ -64,7 +67,7 @@ Load genotype matrix in R:
 library(data.table)
 library(readr)
 library(Matrix)
-geno.file = 'height.chr3.140800000.141800000.0.01.raw.gz'
+geno.file = 'height.ZBTB38.raw.gz'
 cat("Reading genotype data.\n")
 geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
 class(geno) <- "data.frame"
@@ -99,7 +102,7 @@ pheno$assessment_centre = factor(pheno$assessment_centre)
 pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
 pheno$age2 = pheno$age^2
 # match individual order with genotype file
-ind = fread('height.chr3.140800000.141800000.0.01.psam')
+ind = fread('height.ZBTB38.psam')
 match.idx = match(ind$IID, pheno$id)
 pheno = pheno[match.idx,]
 
@@ -111,6 +114,7 @@ Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_b
 
 # Remove intercept
 Z = Z[,-1]
+Z = scale(Z, center=TRUE, scale=FALSE)
 # standardize quantitative columns
 cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
                                 "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
@@ -152,7 +156,7 @@ W = R %*% t(Z) %*% X
 X   <- as.matrix(X - Z %*% crossprod(R,W))
 
 # Load LD matrix from raw genotype
-ld.matrix = as.matrix(fread('height.chr3.140800000.141800000.0.01.matrix'))
+ld.matrix = as.matrix(fread('height.ZBTB38.matrix'))
 # X'X
 XtX = ld.matrix*(nrow(X)-1) - crossprod(W)
 rownames(XtX) = colnames(XtX) = colnames(X)
@@ -160,18 +164,18 @@ rownames(XtX) = colnames(XtX) = colnames(X)
 Xty = as.vector(y %*% X)
 
 ## SNP info
-maf <- read.delim('height.chr3.140800000.141800000.0.01.afreq')
-pos <- fread('height.chr3.140800000.141800000.0.01.pvar')
+maf <- read.delim('height.ZBTB38.afreq')
+pos <- fread('height.ZBTB38.pvar')
 pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
 
 ## Save results
-save(X, y, pos, file = 'height.chr3.140800000.141800000.0.01.X.y.RData')
-saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2), n = length(y), pos=pos), 'height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
+save(X, y, pos, file = 'height.ZBTB38.X.y.RData')
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2), n = length(y), pos=pos), 'height.ZBTB38.XtX.Xty.rds')
 ```
 
 Get summary statistics:
 ```{r}
-ss.dat = readRDS('../data/height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
+ss.dat = readRDS('../data/height.ZBTB38.XtX.Xty.rds')
 betas = ss.dat$Xty/diag(ss.dat$XtX)
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
 se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
@@ -205,10 +209,10 @@ gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
 Comparing with result from plink, the estimated t statistics agree.
 The PLINK command to get the summary statistics:
 ```
-plink2 --linear hide-covar no-x-sex omit-ref --pfile height.chr3.140800000.141800000.0.01 --covar covar.height.txt --pheno pheno.height.txt --vif 100 --out height.chr3.140800000.141800000.0.01.plink2
+plink2 --linear hide-covar no-x-sex omit-ref --pfile height.ZBTB38 --covar covar.height.txt --pheno pheno.height.txt --vif 100 --out height.ZBTB38.plink2
 ```
 ```{r}
-lm.res = read.delim('../data/height.chr3.140800000.141800000.0.01.plink2.height.glm.linear')
+lm.res = read.delim('../data/height.ZBTB38.plink2.height.glm.linear')
 POS <- intersect(ss.dat$pos$POS, lm.res$POS)
 rows1 <- match(POS,ss.dat$pos$POS)
 rows2 <- match(POS,lm.res$POS)
@@ -230,17 +234,17 @@ library(readr)
 neale.file = '/gpfs/data/stephens-lab/finemap-uk-biobank/data/summary/neale/50_raw.gwas.imputed_v3.both_sexes.tsv.gz'
 neale       <- suppressMessages(read_delim(neale.file, delim='\t'))
 neale.pos = do.call(rbind, strsplit(neale$variant, "\\:"))
-ss.dat = readRDS('height.chr3.140800000.141800000.0.01.XtX.Xty.rds')
+ss.dat = readRDS('height.ZBTB38.XtX.Xty.rds')
 snps.pos = which(neale.pos[,2] %in% ss.dat$pos$POS)
 snps.chr = which(neale.pos[,1] == "3")
 snps = intersect(snps.pos, snps.chr)
 neale.choose = neale[snps,]
 neale.choose$POS = as.numeric(neale.pos[snps,2])
-saveRDS(neale.choose, 'height.chr3.140800000.141800000.0.01.neale.rds')
+saveRDS(neale.choose, 'height.ZBTB38.neale.rds')
 ```
 
 ```{r}
-neale.choose = readRDS('../data/height.chr3.140800000.141800000.0.01.neale.rds')
+neale.choose = readRDS('../data/height.ZBTB38.neale.rds')
 POS <- intersect(ss.dat$pos$POS, neale.choose$POS)
 rows1 <- match(POS,ss.dat$pos$POS)
 rows2 <- match(POS,neale.choose$POS)
@@ -471,13 +475,13 @@ The following code is submited on CRI.
 ```{r eval=FALSE}
 library(susieR)
 library(Matrix)
-load('height.chr3.140800000.141800000.0.01.X.y.RData')
+load('height.ZBTB38.X.y.RData')
 
 X = as.matrix(X)
 time_mod = system.time(mod <- susie(X=X, Y=y, verbose=T))
 cat(sprintf("Fitting SuSiE model tooks %d seconds.\n",round(time_mod["elapsed"])))
 
-saveRDS(mod,'height.chr3.140800000.141800000.0.01.susie.model.rds')
+saveRDS(mod,'height.ZBTB38.susie.model.rds')
 ```
 
 Result:
@@ -489,7 +493,7 @@ Fitting SuSiE model tooks 5267 seconds.
 ```
 
 ```{r fig.align='center', fig.width=30, fig.height=15}
-mod = readRDS('../data/height.chr3.140800000.141800000.0.01.susie.model.rds')
+mod = readRDS('../data/height.ZBTB38.susie.model.rds')
 p1 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C')
 p2 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', y.susie ='p')
 grid.arrange(p1, p2, ncol=2)
@@ -497,8 +501,8 @@ grid.arrange(p1, p2, ncol=2)
 
 Fit susie bhat and rss model using LD matrix from LDstore and summary statistics from PLINK:
 ```{r fig.align='center', fig.width=30, fig.height=15}
-mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = ss.dat$yty/(ss.dat$n-1))
-mod_rss.ld = susie_rss(z = z, R = R)
+mod_bhat.ld = susie_bhat(bhat = as.vector(betas), shat = as.vector(se), R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty)/(ss.dat$n-1))
+mod_rss.ld = susie_rss(z = as.vector(z), R = R)
 p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', title = 'SuSiE bhat')
 p_rss = susie_plot_locuszoom(z, mod_rss.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = 'rs2871960_C', title = 'SuSiE RSS')
 grid.arrange(p_bhat, p_rss, ncol=2)

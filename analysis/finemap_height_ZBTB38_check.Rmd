@@ -64,7 +64,7 @@ locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld
 
 Get summary statistics:
 ```{r}
-ss.dat = readRDS('../data/height.ZBTB38.0.01.XtX.Xty.rds')
+ss.dat = readRDS('../data/height.ZBTB38.XtX.Xty.rds')
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * as.vector(ss.dat$Xty)
 se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
@@ -94,7 +94,7 @@ gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
 gene.pos.map = gene.pos.map[-c(4, 9, 10, 15),]
 ```
 
-SuSiE result:
+SuSiE bhat result:
 ```{r fig.align='center', fig.width=30, fig.height=15}
 mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE)
 z.max = which.max(abs(z))
@@ -103,9 +103,9 @@ p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos
 grid.arrange(p1, p2, ncol=2)
 ```
 
-For 1Mb region about ZBTB38, SuSiE found 2 CSs. The SNP with the strongest marginal p value in CS1 is rs2871960 (p = 7.200e-207). For CS2, the SNP with the strongest marginal p value is rs11919556 (p = 0.0213).
+For 1Mb region about ZBTB38, SuSiE found 2 CSs. The SNP with the strongest marginal p value in CS1 is rs2871960 (p = 1.8670e-207). For CS2, the SNP with the strongest marginal p value is rs11919556 (p = 0.0211).
 
-The correlation between rs2871960 and rs11919556 is `r R[945,978]`. The average correlation between SNPs in CS1 and CS2 is
+The correlation between rs2871960 and rs11919556 is `r R[865,896]`. The average correlation between SNPs in CS1 and CS2 is
 ```{r}
 round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)
 ```
@@ -127,7 +127,7 @@ p1
 library(data.table)
 library(readr)
 library(Matrix)
-geno.file = 'height.ZBTB38.0.01.raw.gz'
+geno.file = 'height.ZBTB38.raw.gz'
 cat("Reading genotype data.\n")
 geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
 class(geno) <- "data.frame"
@@ -158,26 +158,58 @@ Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_b
                    pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
                    pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
                    pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
-                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,978], data = pheno)
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,896], data = pheno)
 
 # Remove intercept
 Z = Z[,-1]
-colnames(Z)[150] = 'X978'
+colnames(Z)[150] = 'X896'
+Z = scale(Z, center=T, scale=F)
 # standardize quantitative columns
 cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
                                 "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
                                 "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
-                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20", "X978"))
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20", "X896"))
 Z[,cols] = scale(Z[,cols])
 Z[,'age2'] = Z[,'age']^2
-# Save phenotype file
-pheno.table = data.frame(FID = pheno$id, IID = pheno$id, height = pheno$height)
-write.table(pheno.table, file = out.pheno.file, quote = FALSE, row.names = FALSE)
-# Save covariates file
-IID = pheno$id
-FID = pheno$id
-cov.table = cbind(FID, IID, Z)
-write.table(cov.table, file= out.covar.file, quote=FALSE, row.names = FALSE)
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center scale X
+cm = Matrix::colMeans(X, na.rm = TRUE)
+csd = susieR:::compute_colSds(X)
+csd[csd == 0] = 1
+X = as.matrix(t((t(X) - cm) / csd))
+
+A   <- crossprod(Z) # Z'Z
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A)) # R'R = (Z'Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ'X
+S = R %*% crossprod(Z, y) # RZ'y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread(paste0('height.ZBTB38.matrix')))
+# X'X
+XtX = ld.matrix*(nrow(X)-1) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X'y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0('height.ZBTB38.removeCS2.XtX.Xty.rds'))
+
+# # Save phenotype file
+# pheno.table = data.frame(FID = pheno$id, IID = pheno$id, height = pheno$height)
+# write.table(pheno.table, file = out.pheno.file, quote = FALSE, row.names = FALSE)
+# # Save covariates file
+# IID = pheno$id
+# FID = pheno$id
+# cov.table = cbind(FID, IID, Z)
+# write.table(cov.table, file= out.covar.file, quote=FALSE, row.names = FALSE)
 ```
 
 ```
@@ -186,11 +218,22 @@ plink2 --linear hide-covar no-x-sex omit-ref --pfile height.ZBTB38.0.01 --covar 
 
 After removing the effect of rs11919556 (p = 0.0213),
 ```{r warning=FALSE}
-lm.res = read.delim('../data/height.ZBTB38.0.01.removeCS2.plink2.height.glm.linear')
-lm.res.t = lm.res$T_STAT
-names(lm.res.t) = lm.res$ID
-z.max = which.max(abs(lm.res.t))
-locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L1, pos=lm.res$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS1', y.lab = '-log10(p value condition on CS2)')
+ss.dat = readRDS('../data/height.ZBTB38.removeCS2.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.max = which.max(abs(z))
+locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS1', y.lab = '-log10(p value condition on CS2)')
+
+# lm.res = read.delim('../data/height.ZBTB38.0.01.removeCS2.plink2.height.glm.linear')
+# lm.res.t = lm.res$T_STAT
+# names(lm.res.t) = lm.res$ID
+# z.max = which.max(abs(lm.res.t))
+# locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L1, pos=lm.res$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS1', y.lab = '-log10(p value condition on CS2)')
 ```
 
 2. Remove effect of all SNPs based on weights in other CSs
@@ -238,7 +281,7 @@ g
 library(data.table)
 library(readr)
 library(Matrix)
-geno.file = 'height.ZBTB38.0.01.raw.gz'
+geno.file = 'height.ZBTB38.raw.gz'
 cat("Reading genotype data.\n")
 geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
 class(geno) <- "data.frame"
@@ -261,7 +304,7 @@ pheno$assessment_centre = factor(pheno$assessment_centre)
 pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
 pheno$age2 = pheno$age^2
 # match individual order with genotype file
-ind = fread('height.ZBTB38.0.01.psam')
+ind = fread('height.ZBTB38.psam')
 match.idx = match(ind$IID, pheno$id)
 pheno = pheno[match.idx,]
 
@@ -269,39 +312,82 @@ Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_b
                    pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
                    pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
                    pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
-                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,945], data = pheno)
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,865], data = pheno)
 
 # Remove intercept
 Z = Z[,-1]
-colnames(Z)[150] = 'X945'
+colnames(Z)[150] = 'X865'
+Z = scale(Z, center=T, scale = F)
 # standardize quantitative columns
 cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
                                 "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
                                 "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
-                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20", "X945"))
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20", "X865"))
 Z[,cols] = scale(Z[,cols])
 Z[,'age2'] = Z[,'age']^2
-# Save phenotype file
-pheno.table = data.frame(FID = pheno$id, IID = pheno$id, height = pheno$height)
-write.table(pheno.table, file = out.pheno.file, quote = FALSE, row.names = FALSE)
-# Save covariates file
-IID = pheno$id
-FID = pheno$id
-cov.table = cbind(FID, IID, Z)
-write.table(cov.table, file= out.covar.file, quote=FALSE, row.names = FALSE)
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center scale X
+cm = Matrix::colMeans(X, na.rm = TRUE)
+csd = susieR:::compute_colSds(X)
+csd[csd == 0] = 1
+X = as.matrix(t((t(X) - cm) / csd))
+
+A   <- crossprod(Z) # Z'Z
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A)) # R'R = (Z'Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ'X
+S = R %*% crossprod(Z, y) # RZ'y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread(paste0('height.ZBTB38.matrix')))
+# X'X
+XtX = ld.matrix*(nrow(X)-1) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X'y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0('height.ZBTB38.removeCS1.XtX.Xty.rds'))
+
+# # Save phenotype file
+# pheno.table = data.frame(FID = pheno$id, IID = pheno$id, height = pheno$height)
+# write.table(pheno.table, file = out.pheno.file, quote = FALSE, row.names = FALSE)
+# # Save covariates file
+# IID = pheno$id
+# FID = pheno$id
+# cov.table = cbind(FID, IID, Z)
+# write.table(cov.table, file= out.covar.file, quote=FALSE, row.names = FALSE)
 ```
 
 ```
 plink2 --linear hide-covar no-x-sex omit-ref --pfile height.ZBTB38.0.01 --covar covar.removeCS1.height.txt --pheno pheno.height.txt --vif 100 --out height.ZBTB38.0.01.removeCS1.plink2
 ```
 
-After removing the effect of rs2871960 (p = 7.200e-207), the conditional p value for rs11919556 becomes 4.289e-06, and it becomes the strongest one among all SNPs!
+After removing the effect of rs2871960 (p = 7.200e-207), the conditional p value for rs11919556 becomes 4.279e-06, and it becomes the strongest one among all SNPs!
 ```{r warning=FALSE}
-lm.res = read.delim('../data/height.ZBTB38.0.01.removeCS1.plink2.height.glm.linear')
-lm.res.t = lm.res$T_STAT
-names(lm.res.t) = lm.res$ID
-z.max = which.max(abs(lm.res.t))
-locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L2, pos=lm.res$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS2', y.lab = '-log10(p value condition on CS1)')
+ss.dat = readRDS('../data/height.ZBTB38.removeCS1.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.max = which.max(abs(z))
+locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS2', y.lab = '-log10(p value condition on CS1)')
+
+# lm.res = read.delim('../data/height.ZBTB38.removeCS1.plink2.height.glm.linear')
+# lm.res.t = lm.res$T_STAT
+# names(lm.res.t) = lm.res$ID
+# z.max = which.max(abs(lm.res.t))
+# locus.zoom.cs(lm.res.t, cs = mod_bhat$sets$cs$L2, pos=lm.res$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = lm.res$ID[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title='ZBTB38 CS2', y.lab = '-log10(p value condition on CS1)')
 ```
 
 2. Remove effect of all SNPs based on weights in other CSs
