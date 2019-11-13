@@ -9,7 +9,7 @@ library(Matrix)
 
 # phenotpe file and genotype file names
 pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
-geno.file = paste0('height.', region.name, '.0.01.raw.gz')
+geno.file = paste0('height.', region.name, '.raw.gz')
 
 # Read genotype data
 cat("Reading genotype data.\n")
@@ -27,7 +27,7 @@ pheno$assessment_centre = factor(pheno$assessment_centre)
 pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
 pheno$age2 = pheno$age^2
 ## match individual order with genotype file
-ind = fread(paste0('height.', region.name, '.0.01.psam'))
+ind = fread(paste0('height.', region.name, '.psam'))
 match.idx = match(ind$IID, pheno$id)
 pheno = pheno[match.idx,]
 
@@ -37,9 +37,9 @@ Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_b
                    pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
                    pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
                    pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20, data = pheno)
-
 ## Remove intercept
 Z = Z[,-1]
+Z = scale(Z, center=TRUE, scale=FALSE)
 ## standardize quantitative columns
 cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
                                 "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
@@ -47,6 +47,8 @@ cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3",
                                 "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20"))
 Z[,cols] = scale(Z[,cols])
 Z[,'age2'] = Z[,'age']^2
+
+print(dim(Z))
 
 # Compute XtX and Xty
 y = pheno$height
@@ -67,7 +69,7 @@ W = R %*% crossprod(Z, X) # RZ'X
 S = R %*% crossprod(Z, y) # RZ'y
 
 # Load LD matrix from raw genotype
-ld.matrix = as.matrix(fread(paste0('height.', region.name, '.0.01.matrix')))
+ld.matrix = as.matrix(fread(paste0('height.', region.name, '.matrix')))
 # X'X
 XtX = ld.matrix*(nrow(X)-1) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
 rownames(XtX) = colnames(XtX) = colnames(X)
@@ -76,11 +78,11 @@ Xty = as.vector(y %*% X)
 Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
 
 ## SNP info
-maf <- read.delim(paste0('height.', region.name, '.0.01.afreq'))
-pos <- fread(paste0('height.', region.name, '.0.01.pvar'))
+maf <- read.delim(paste0('height.', region.name, '.afreq'))
+pos <- fread(paste0('height.', region.name, '.pvar'))
 pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
 
 ## Save results
 saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos), 
-        paste0('height.', region.name, '.0.01.XtX.Xty.rds'))
+        paste0('height.', region.name, '.XtX.Xty.rds'))
 

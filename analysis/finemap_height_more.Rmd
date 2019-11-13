@@ -26,7 +26,7 @@ knitr::read_chunk("../scripts/plots.R")
 ```{r plots}
 ```
 
-We extract SNPs in 10 distinct regions with MAF > 0.01. 
+We extract SNPs in 10 distinct regions with MAF > 0.01 and inputation score greater than 0.9. 
 We choose this region based on result from http://big.stats.ox.ac.uk/pheno/biobank_50.
 
 | Region   | CHR | FROM (Mb) | TO (Mb) |
@@ -71,7 +71,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-EFEMP1.csv')
+map = fread('../data/region-variants-EFEMP1.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -120,7 +120,7 @@ grid.arrange(pip_bhat, p_bhat, ncol=2)
 
 Get summary statistics:
 ```{r}
-file = dir("../data/", pattern="height.ZBTB38.*XtX")
+file = dir("../data/", pattern="height.ZBTB38.XtX")
 ss.dat = readRDS(paste0('../data/', file))
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -134,7 +134,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-ZBTB38.csv')
+map = fread('../data/region-variants-ZBTB38.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -183,7 +183,7 @@ grid.arrange(pip_bhat, p_bhat, ncol=2)
 
 Get summary statistics:
 ```{r}
-file = dir("../data/", pattern="height.LCORL.*XtX")
+file = dir("../data/", pattern="height.LCORL.XtX")
 ss.dat = readRDS(paste0('../data/', file))
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -197,7 +197,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-LCORL.csv')
+map = fread('../data/region-variants-LCORL.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -260,7 +260,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-HHIP.csv')
+map = fread('../data/region-variants-HHIP.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -323,7 +323,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-GNA12.csv')
+map = fread('../data/region-variants-GNA12.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -386,7 +386,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-CDK6.csv')
+map = fread('../data/region-variants-CDK6.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -449,7 +449,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-HMGA2.csv')
+map = fread('../data/region-variants-HMGA2.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -512,7 +512,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-DLEU1.csv')
+map = fread('../data/region-variants-DLEU1.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -574,7 +574,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-ADAMTS17.csv')
+map = fread('../data/region-variants-ADAMTS17.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
@@ -637,7 +637,7 @@ print(paste0(length(z), ' SNPs included'))
 
 Comparing with Neale and GeneATLAS results:
 ```{r fig.align='center', fig.height=5, fig.width=10}
-map = fread('../data/region-variants-UQCC1.csv')
+map = fread('../data/region-variants-UQCC1.csv.gz')
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
 p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
