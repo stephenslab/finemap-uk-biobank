@@ -1,3 +1,13 @@
+#!/usr/bin/env Rscript
+arg = commandArgs(trailingOnly = TRUE)
+chr = as.numeric(arg[1])
+start.pos = as.numeric(arg[2])
+stop.pos = as.numeric(arg[3])
+region.name = as.character(arg[4])
+
+print(arg)
+
+print(chr)
 # Script to generate a list of all the ids of the genotyped genetic
 # variants within a specified base-pair region on a chromosome, and
 # combine this list with other pertinent info, such as base-pair
@@ -7,18 +17,15 @@
 # -----------------
 # This region on chromosome 3 contains one of the strongest
 # associations for standing height; see http://big.stats.ox.ac.uk.
-chr       <- 3
 bim.file  <- file.path("/gpfs/data/pierce-lab/uk-biobank-genotypes",
-                       "ukb_imp_chr3_v3.bim.gz")
-out.file  <- "../data/region-variants-ZBTB38.csv"
-start.pos <- 140.8e6
-stop.pos  <- 141.8e6
+                       paste0("ukb_imp_chr",chr,"_v3.bim.gz"))
+out.file  <- paste0("../data/region-variants-",region.name,".csv")
 
 # These files contain the GeneATLAS and Neale lab association results.
 geneatlas.file <-
   file.path("/gpfs/data/stephens-lab/finemap-uk-biobank/data/summary",
             "gene-atlas/height/imputed/not-normalized",
-            "imputed.allWhites.50-0.0.chr3.csv.gz")
+            paste0("imputed.allWhites.50-0.0.chr", chr,".csv.gz"))
 neale.file <-
   file.path("/gpfs/data/stephens-lab/finemap-uk-biobank/data/summary/neale",
             "50_irnt.gwas.imputed_v3.both_sexes.tsv.gz")
