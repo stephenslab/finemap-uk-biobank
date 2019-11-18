@@ -2,9 +2,6 @@
 title: "Fine-mapping Height on More Regions (SuSiE-bhat without standardize)"
 author: "Yuxin Zou"
 date: "10/06/2019"
-output: 
-  html_document:
-    code_folding: hide
 ---
 
 Load packages
@@ -78,7 +75,7 @@ print(paste0(length(z), ' SNPs included'))
 ```
 
 Comparing with Neale and GeneATLAS results:
-```{r fig.align='center', fig.height=5, fig.width=10}
+```{r fig.align='center', fig.height=3, fig.width=6}
 map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
 z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
 map = merge(map, z.table, by='id', all = TRUE)
@@ -112,11 +109,10 @@ gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
 colnames(gene.pos.map) = c('geneName', 'start', 'end')
 gene.pos.map = as.data.frame(gene.pos.map)
 gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
-# gene.pos.map = gene.pos.map[-10,]
 ```
 
 SuSiE result:
-```{r fig.align='center', fig.width=45, fig.height=15}
+```{r fig.align='center', fig.height=15, fig.width=45}
 mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
 z.max = which.max(abs(z))
 pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE bhat'))
