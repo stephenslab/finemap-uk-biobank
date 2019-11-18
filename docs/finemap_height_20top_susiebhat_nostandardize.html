@@ -25,6 +25,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -167,6 +168,14 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 
@@ -306,6 +315,14 @@ div.section {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
 
 
 <h1 class="title toc-ignore">Fine-mapping Height on More Regions (SuSiE-bhat without standardize)</h1>
@@ -426,10 +443,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5atargetblankc5e5bffa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5a" target="_blank">c5e5bff</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree236c86b150afb2c9afab07e1a7447309c3a6748ctargetblank236c86ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/236c86b150afb2c9afab07e1a7447309c3a6748c" target="_blank">236c86b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5atargetblankc5e5bffa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree236c86b150afb2c9afab07e1a7447309c3a6748ctargetblank236c86ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -440,6 +457,8 @@ Ignored files:
 
 Untracked files:
     Untracked:  analysis/finemap_height_20top_susiebhat_standardize.Rmd
+    Untracked:  analysis/finemap_height_20top_susierss.Rmd
+    Untracked:  analysis/finemap_height_20top_susierss_lambda.Rmd
     Untracked:  data/height.ACAN.XtX.Xty.rds
     Untracked:  data/height.ADAMTS10.XtX.Xty.rds
     Untracked:  data/height.ADAMTS17.XtX.Xty.rds
@@ -465,7 +484,10 @@ Untracked files:
     Untracked:  data/height.ZBTB38.susie.model.rds
 
 Unstaged changes:
+    Modified:   analysis/_site.yml
     Deleted:    analysis/finemap_height_more.Rmd
+    Deleted:    analysis/finemap_height_more_rss.Rmd
+    Deleted:    analysis/finemap_height_more_rss_lambda.Rmd
     Modified:   scripts/plots.R
     Modified:   scripts/prepare.region.sh
     Modified:   scripts/prepare.susieinput.R
@@ -507,6 +529,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/236c86b150afb2c9afab07e1a7447309c3a6748c/analysis/finemap_height_20top_susiebhat_nostandardize.Rmd" target="_blank">236c86b</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_20top_susiebhat_nostandardize.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/66068f63e8188cff3810b46a67315ef3ce88b091/docs/finemap_height_20top_susiebhat_nostandardize.html" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -956,7 +1012,44 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   theme_cowplot(font_size = 12) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-5-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -966,8 +1059,7 @@ plot.genes &lt;- subset(genes,
 gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
 colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
 gene.pos.map = as.data.frame(gene.pos.map)
-gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
-# gene.pos.map = gene.pos.map[-10,]</code></pre>
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)</code></pre>
 <p>SuSiE result:</p>
 <pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
 z.max = which.max(abs(z))
@@ -976,6 +1068,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-7-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-7-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="zbtb38" class="section level2">
 <h2>ZBTB38</h2>
@@ -1014,6 +1143,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-9-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1033,6 +1199,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-11-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-11-1">
+Past versions of unnamed-chunk-11-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-11-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="hhip" class="section level2">
 <h2>HHIP</h2>
@@ -1071,6 +1274,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-13-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1090,6 +1330,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-15-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-15-1">
+Past versions of unnamed-chunk-15-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-15-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-15-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="lcorl" class="section level2">
 <h2>LCORL</h2>
@@ -1128,6 +1405,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-17-1">
+Past versions of unnamed-chunk-17-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-17-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-17-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1147,6 +1461,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-19-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-19-1">
+Past versions of unnamed-chunk-19-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-19-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-19-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="efemp1" class="section level2">
 <h2>EFEMP1</h2>
@@ -1185,6 +1536,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-21-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-21-1">
+Past versions of unnamed-chunk-21-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-21-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-21-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1204,6 +1592,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-23-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-23-1">
+Past versions of unnamed-chunk-23-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-23-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-23-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="kdm2a" class="section level2">
 <h2>KDM2A</h2>
@@ -1242,6 +1667,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-25-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-25-1">
+Past versions of unnamed-chunk-25-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-25-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-25-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1261,6 +1723,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-27-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-27-1">
+Past versions of unnamed-chunk-27-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-27-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-27-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="hmga2" class="section level2">
 <h2>HMGA2</h2>
@@ -1299,6 +1798,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-29-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-29-1">
+Past versions of unnamed-chunk-29-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-29-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-29-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1318,6 +1854,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-31-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-31-1">
+Past versions of unnamed-chunk-31-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-31-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-31-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cables1" class="section level2">
 <h2>CABLES1</h2>
@@ -1356,6 +1929,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-33-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-33-1">
+Past versions of unnamed-chunk-33-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-33-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-33-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1375,6 +1985,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-35-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-35-1">
+Past versions of unnamed-chunk-35-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-35-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-35-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="adamts10" class="section level2">
 <h2>ADAMTS10</h2>
@@ -1413,6 +2060,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-37-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-37-1">
+Past versions of unnamed-chunk-37-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-37-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-37-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1432,6 +2116,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-39-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-39-1">
+Past versions of unnamed-chunk-39-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-39-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-39-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="gna12" class="section level2">
 <h2>GNA12</h2>
@@ -1470,6 +2191,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-41-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-41-1">
+Past versions of unnamed-chunk-41-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-41-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-41-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1489,6 +2247,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-43-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-43-1">
+Past versions of unnamed-chunk-43-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-43-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-43-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="adamts17" class="section level2">
 <h2>ADAMTS17</h2>
@@ -1527,6 +2322,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-45-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-45-1">
+Past versions of unnamed-chunk-45-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-45-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-45-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1546,6 +2378,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-47-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-47-1">
+Past versions of unnamed-chunk-47-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-47-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-47-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cdk6" class="section level2">
 <h2>CDK6</h2>
@@ -1584,6 +2453,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-49-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-49-1">
+Past versions of unnamed-chunk-49-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-49-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-49-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1603,6 +2509,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-51-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-51-1">
+Past versions of unnamed-chunk-51-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-51-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-51-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="mtmr11" class="section level2">
 <h2>MTMR11</h2>
@@ -1641,6 +2584,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-53-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-53-1">
+Past versions of unnamed-chunk-53-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-53-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-53-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1660,6 +2640,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-55-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-55-1">
+Past versions of unnamed-chunk-55-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-55-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-55-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="adamtsl3" class="section level2">
 <h2>ADAMTSL3</h2>
@@ -1698,6 +2715,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-57-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-57-1">
+Past versions of unnamed-chunk-57-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-57-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-57-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1717,6 +2771,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-59-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-59-1">
+Past versions of unnamed-chunk-59-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-59-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-59-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="dleu1" class="section level2">
 <h2>DLEU1</h2>
@@ -1755,6 +2846,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-61-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-61-1">
+Past versions of unnamed-chunk-61-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-61-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-61-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1773,6 +2901,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-63-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-63-1">
+Past versions of unnamed-chunk-63-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-63-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-63-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="acan" class="section level2">
 <h2>ACAN</h2>
@@ -1811,6 +2976,43 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-65-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-65-1">
+Past versions of unnamed-chunk-65-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-65-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-65-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
 stop.pos  &lt;- max(ss.dat$pos$POS)
 plot.genes &lt;- subset(genes,
@@ -1830,6 +3032,43 @@ p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = un
 z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
 grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-67-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-67-1">
+Past versions of unnamed-chunk-67-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-67-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/66068f63e8188cff3810b46a67315ef3ce88b091/docs/figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-67-1.png" target="_blank">66068f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
