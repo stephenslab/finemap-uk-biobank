@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Yuxin Zou" />
+
+<meta name="date" content="2019-10-06" />
+
+<title>Fine-mapping Height on More Regions (SuSiE-bhat without standardize)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">finemap-uk-biobank</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Fine-mapping Height on More Regions (SuSiE-bhat without standardize)</h1>
+<h4 class="author"><em>Yuxin Zou</em></h4>
+<h4 class="date"><em>10/06/2019</em></h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-11-17
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>finemap-uk-biobank/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191114code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191114)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191114code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191114)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5atargetblankc5e5bffa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5a" target="_blank">c5e5bff</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5atargetblankc5e5bffa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    analysis/figure/
+
+Untracked files:
+    Untracked:  analysis/finemap_height_20top_susiebhat_standardize.Rmd
+    Untracked:  data/height.ACAN.XtX.Xty.rds
+    Untracked:  data/height.ADAMTS10.XtX.Xty.rds
+    Untracked:  data/height.ADAMTS17.XtX.Xty.rds
+    Untracked:  data/height.ADAMTSL3.XtX.Xty.rds
+    Untracked:  data/height.CABLES1.XtX.Xty.rds
+    Untracked:  data/height.CDK6.XtX.Xty.rds
+    Untracked:  data/height.DLEU1.XtX.Xty.rds
+    Untracked:  data/height.EFEMP1.XtX.Xty.rds
+    Untracked:  data/height.GDF5.XtX.Xty.rds
+    Untracked:  data/height.GNA12.XtX.Xty.rds
+    Untracked:  data/height.HHIP.XtX.Xty.rds
+    Untracked:  data/height.HMGA2.XtX.Xty.rds
+    Untracked:  data/height.KDM2A.XtX.Xty.rds
+    Untracked:  data/height.LCORL.XtX.Xty.rds
+    Untracked:  data/height.MTMR11.XtX.Xty.rds
+    Untracked:  data/height.UQCC1.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.0.01.simulation1000.rds
+    Untracked:  data/height.ZBTB38.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.neale.rds
+    Untracked:  data/height.ZBTB38.plink2.height.glm.linear
+    Untracked:  data/height.ZBTB38.removeCS1.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.removeCS2.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.susie.model.rds
+
+Unstaged changes:
+    Deleted:    analysis/finemap_height_more.Rmd
+    Modified:   scripts/plots.R
+    Modified:   scripts/prepare.region.sh
+    Modified:   scripts/prepare.susieinput.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/c5e5bff1eebb1d2028864e4dfe4e00a04c0cfc5a/analysis/finemap_height_20top_susiebhat_nostandardize.Rmd" target="_blank">c5e5bff</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_20top_susiebhat_nostandardize.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>Load packages</p>
+<pre class="r"><code>library(dplyr)
+library(ggplot2)
+library(susieR)
+library(data.table)
+library(Matrix)
+library(gridExtra)
+library(readr)
+library(cowplot)</code></pre>
+<pre class="r"><code>knitr::read_chunk(&quot;scripts/plots.R&quot;)</code></pre>
+<pre class="r"><code>library(ggplot2)
+
+#&#39; plot gene name annotations
+#&#39; @param dat a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param xrange range of x axis, base-pair position
+plot_geneName = function(dat, xrange, chr){
+  ngene = 2:nrow(dat)
+  line = 1
+  dat$lines = NA
+  dat$lines[1] = 1
+  gene.end = dat[1, &#39;end&#39;]
+  while(length(ngene) != 0){
+    id = which(dat[ngene, &#39;start&#39;] &gt; gene.end + 0.02)[1]
+    if(!is.na(id)){
+      dat$lines[ngene[id]] = line
+      gene.end = dat[ngene[id],&#39;end&#39;]
+      ngene = ngene[-id]
+    }else{
+      line = line + 1
+      dat$lines[ngene[1]] = line
+      gene.end = dat[ngene[1],&#39;end&#39;]
+      ngene = ngene[-1]
+    }
+  }
+  
+  dat$start = pmax(dat$start, xrange[1])
+  dat$end = pmin(dat$end, xrange[2])
+  dat$mean = rowMeans(dat[,c(&#39;start&#39;, &#39;end&#39;)])
+  
+  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2])) + xlim(xrange[1], xrange[2]) + ylim(min(-dat$lines-0.6), -0.8) + 
+    geom_rect(aes(xmin = start, xmax = end, ymin = -lines-0.05, ymax = -lines+0.05), fill=&#39;blue&#39;) +
+    geom_text(aes(x = mean, y=-lines-0.4, label=geneName), size=4) + 
+                xlab(paste0(&#39;base-pair position (Mb) on chromosome &#39;, chr)) + ylab(&#39;Gene&#39;) + 
+    theme_bw() + theme(axis.text.x=element_blank(),
+                       axis.ticks = element_blank(),
+                       axis.text.y=element_blank(),
+                       axis.title = element_text(size=15),
+                       plot.title=element_text(size=11),
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank())
+  pl
+}
+
+discrete_gradient_pal &lt;- function(colours, bins = 5) {
+  ramp &lt;- scales::colour_ramp(colours)
+  
+  function(x) {
+    if (length(x) == 0) return(character())
+    
+    i &lt;- floor(x * bins)
+    i &lt;- ifelse(i &gt; bins-1, bins-1, i)
+    ramp(i/(bins-1))
+  }
+}
+
+scale_colour_discrete_gradient &lt;- function(..., colours, bins = 5, na.value = &quot;grey50&quot;, guide = &quot;colourbar&quot;, aesthetics = &quot;colour&quot;, colors)  {
+  colours &lt;- if (missing(colours)) 
+    colors
+  else colours
+  continuous_scale(
+    aesthetics,
+    &quot;discrete_gradient&quot;,
+    discrete_gradient_pal(colours, bins),
+    na.value = na.value,
+    guide = guide,
+    ...
+  )
+}
+
+#&#39; Locuszoom plot
+#&#39; @param z a vector of z scores with SNP names
+#&#39; @param pos base-pair positions
+#&#39; @param gene.pos.map a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param z.ref.name the reference SNP
+#&#39; @param ld correlations between teh reference SNP and the rests
+#&#39; @param title title of the plot
+#&#39; @param title.size the size of the title
+#&#39; @param true the true value
+#&#39; @param y.height height of -log10(p) plot and height of the gene name annotation plot
+#&#39; @param y.lim range of y axis
+locus.zoom = function(z, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
+                      title = NULL, title.size = 10, true = NULL, 
+                      y.height=c(5,1.5), y.lim=NULL, y.type=&#39;logp&#39;,xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  
+  if(!is.null(ld) &amp;&amp; !is.null(z.ref.name)){
+    tmp$ref = names(z) == z.ref.name
+    tmp$r2 = ld^2
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;z score&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }
+  }else{
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;z scores&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }
+  }
+  
+  if(!is.null(y.lim)){
+    pl_zoom = pl_zoom + ylim(y.lim[1], y.lim[2])
+  }
+  # pl_zoom = pl_zoom + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
+  if(!is.null(true)){
+    tmp.true = data.frame(POS = which(true!=0), p = tmp$p[which(true!=0)], 
+                          ref = (names(z) == z.ref.name)[which(true!=0)],
+                          label = paste0(&#39;SNP&#39;,1:length(which(true!=0))))
+    pl_zoom = pl_zoom + geom_point(data=tmp.true, aes(x=POS, y=p), 
+                                   color=&#39;red&#39;, show.legend = FALSE, shape=1, stroke = 1) + 
+      geom_text(data=tmp.true, aes(x = POS-30, y=p+1, label=label), size=3, color=&#39;red&#39;)
+  }
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+    g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = y.height, draw=FALSE)
+  }else{
+    g = pl_zoom
+  }
+  g
+}
+
+#&#39; SuSiE plot with Locuszoom plot
+#&#39; @param z a vector of z scores with SNP names
+#&#39; @param model the fitted SuSiE model
+#&#39; @param pos base-pair positions
+#&#39; @param gene.pos.map a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param z.ref.name the reference SNP
+#&#39; @param ld correlations between teh reference SNP and the rests
+#&#39; @param title title of the plot
+#&#39; @param title.size the size of the title
+#&#39; @param true the true value
+#&#39; @param plot.locuszoom whether to plot locuszoom plot
+#&#39; @param y.lim range of y axis
+#&#39; @param y.susie the y axis of the SuSiE plot, &#39;PIP&#39; or &#39;p&#39; or &#39;z&#39;, &#39;p&#39; refers to -log10(p)
+susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.name, ld, 
+                                title = NULL, title.size = 10, true = NULL, 
+                                plot.locuszoom = TRUE, y.lim=NULL, y.susie=&#39;PIP&#39;, xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  if(plot.locuszoom){
+    if(y.susie == &#39;z&#39;){
+      y.type = &#39;z&#39;
+    }else{
+      y.type = &#39;logp&#39;
+    }
+    pl_zoom = locus.zoom(z, pos = pos, chr = chr, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim, y.type=y.type, xrange=xrange)
+  }
+  pip = model$pip
+  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  if(y.susie == &#39;PIP&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+      xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
+  }else if(y.susie == &#39;p&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;-log10(p value)&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+      # pl_susie = pl_susie + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
+    }
+  }else if(y.susie == &#39;z&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = z)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;z scores&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
+  }
+  
+  if(!is.null(true)){
+    tmp.true = data.frame(POS = pos[which(true!=0)], PIP = pip[which(true!=0)])
+    pl_susie = pl_susie + geom_point(data=tmp.true, aes(x=POS, y=PIP), 
+                                     color=&#39;red&#39;, size=3, show.legend = FALSE)
+  }
+  
+  model.cs = model$sets$cs
+  if(!is.null(model.cs)){
+    tmp$CS = numeric(length(z))
+    for(i in 1:length(model.cs)){
+      tmp$CS[model.cs[[i]]] = gsub(&#39;L&#39;, &#39;CS&#39;, names(model.cs)[i])
+    }
+    tmp.cs = tmp[unlist(model.cs),]
+    tmp.cs$CS = factor(tmp.cs$CS)
+    levels(tmp.cs$CS) = paste0(&#39;CS&#39;, 1:length(model.cs))
+    colors = c(&#39;red&#39;, &#39;cyan&#39;, &#39;green&#39;, &#39;orange&#39;, &#39;dodgerblue&#39;, &#39;violet&#39;, &#39;gold&#39;,
+               &#39;#FF00FF&#39;, &#39;forestgreen&#39;, &#39;#7A68A6&#39;)
+    if(y.susie == &#39;PIP&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP, color=CS), 
+                                       size=3, shape=1, stroke = 2) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;p&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;z&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=z, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
+    }
+  }
+  
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+    if(plot.locuszoom){
+      g = egg::ggarrange(pl_zoom, pl_susie, pl_gene, nrow=3, heights = c(4,4,1.5), draw=FALSE)
+    }else{
+      g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
+    }
+    
+  }else{
+    if(plot.locuszoom){
+      g = egg::ggarrange(pl_zoom, pl_susie, nrow=2, heights = c(4,4), draw=FALSE)
+    }else{
+      g = pl_susie
+    }
+  }
+  g
+}</code></pre>
+<p>We extract the 16 GWAS regions chosen from GWAS for height. We select 20 top hits and exclude 4 hits on chr6. The region is +- 500kb around the top hit. We exclude SNPs with MAF &lt; 0.01, or inputation score less than 0.9.</p>
+<p>We choose this region based on result from <a href="http://big.stats.ox.ac.uk/pheno/biobank_50" class="uri">http://big.stats.ox.ac.uk/pheno/biobank_50</a>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>CHR</th>
+<th align="right">FROM (Mb)</th>
+<th align="right">TO (Mb)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GDF5</td>
+<td>20</td>
+<td align="right">33.525756</td>
+<td align="right">34.525756</td>
+</tr>
+<tr class="even">
+<td>ZBTB38</td>
+<td>3</td>
+<td align="right">140.621814</td>
+<td align="right">141.621814</td>
+</tr>
+<tr class="odd">
+<td>HHIP</td>
+<td>4</td>
+<td align="right">145.066477</td>
+<td align="right">146.066477</td>
+</tr>
+<tr class="even">
+<td>LCORL</td>
+<td>4</td>
+<td align="right">17.497066</td>
+<td align="right">18.497066</td>
+</tr>
+<tr class="odd">
+<td>EFEMP1</td>
+<td>2</td>
+<td align="right">55.606928</td>
+<td align="right">56.606928</td>
+</tr>
+<tr class="even">
+<td>KDM2A</td>
+<td>11</td>
+<td align="right">66.524534</td>
+<td align="right">67.524534</td>
+</tr>
+<tr class="odd">
+<td>HMGA2</td>
+<td>12</td>
+<td align="right">65.871880</td>
+<td align="right">66.871880</td>
+</tr>
+<tr class="even">
+<td>CABLES1</td>
+<td>18</td>
+<td align="right">20.224810</td>
+<td align="right">21.224810</td>
+</tr>
+<tr class="odd">
+<td>ADAMTS10</td>
+<td>19</td>
+<td align="right">8.170147</td>
+<td align="right">9.170147</td>
+</tr>
+<tr class="even">
+<td>GNA12</td>
+<td>7</td>
+<td align="right">2.302522</td>
+<td align="right">3.302522</td>
+</tr>
+<tr class="odd">
+<td>ADAMTS17</td>
+<td>15</td>
+<td align="right">100.192953</td>
+<td align="right">101.192953</td>
+</tr>
+<tr class="even">
+<td>CDK6</td>
+<td>7</td>
+<td align="right">91.750140</td>
+<td align="right">92.750140</td>
+</tr>
+<tr class="odd">
+<td>MTMR11</td>
+<td>1</td>
+<td align="right">149.406413</td>
+<td align="right">150.406413</td>
+</tr>
+<tr class="even">
+<td>ADAMTSL3</td>
+<td>15</td>
+<td align="right">84.080582</td>
+<td align="right">85.080582</td>
+</tr>
+<tr class="odd">
+<td>DLEU1</td>
+<td>13</td>
+<td align="right">50.606788</td>
+<td align="right">51.606788</td>
+</tr>
+<tr class="even">
+<td>ACAN</td>
+<td>15</td>
+<td align="right">88.897827</td>
+<td align="right">89.897827</td>
+</tr>
+</tbody>
+</table>
+<p>The code to get phenotype height is <a href="scripts/get_pheno.R">get_height</a>. The code to compute summary statistics is in <a href="scripts/prepare.region.sh">prepare</a>.</p>
+<p>Get gene data</p>
+<pre class="r"><code>genes        &lt;- read_delim(&quot;data/seq_gene.md.gz&quot;,delim = &quot;\t&quot;,quote = &quot;&quot;)
+class(genes) &lt;- &quot;data.frame&quot;
+genes        &lt;- subset(genes,
+                       group_label == &quot;GRCh37.p5-Primary Assembly&quot; &amp;
+                       feature_type == &quot;GENE&quot;)</code></pre>
+<div id="gdf5" class="section level2">
+<h2>GDF5</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;GDF5&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2331 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-5-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+# gene.pos.map = gene.pos.map[-10,]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-7-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="zbtb38" class="section level2">
+<h2>ZBTB38</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;ZBTB38&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2701 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-9-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(5,10,11,16),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-11-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hhip" class="section level2">
+<h2>HHIP</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;HHIP&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;1743 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-13-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2, 4),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-15-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="lcorl" class="section level2">
+<h2>LCORL</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;LCORL&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2846 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-17-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3, 10),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-19-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="efemp1" class="section level2">
+<h2>EFEMP1</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;EFEMP1&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;3710 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-21-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(10),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-23-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="kdm2a" class="section level2">
+<h2>KDM2A</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;KDM2A&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;1758 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-25-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2, 16, 44, 45),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-27-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="hmga2" class="section level2">
+<h2>HMGA2</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;HMGA2&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2109 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-29-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1, 5, 11),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-31-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cables1" class="section level2">
+<h2>CABLES1</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;CABLES1&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2166 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-33-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-35-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adamts10" class="section level2">
+<h2>ADAMTS10</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;ADAMTS10&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;3161 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-37-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2,8,10,24),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-39-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="gna12" class="section level2">
+<h2>GNA12</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;GNA12&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;4206 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-41-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3,4,6,15),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-43-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adamts17" class="section level2">
+<h2>ADAMTS17</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;ADAMTS17&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;4859 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-45-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(4,5,12),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-47-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="cdk6" class="section level2">
+<h2>CDK6</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;CDK6&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;1816 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-49-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2,7,13),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-51-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="mtmr11" class="section level2">
+<h2>MTMR11</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;MTMR11&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;1080 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-53-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1,3,4,8,17,30),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-55-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="adamtsl3" class="section level2">
+<h2>ADAMTSL3</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;ADAMTSL3&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2259 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-57-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3,4,6:12,14,16),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-59-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="dleu1" class="section level2">
+<h2>DLEU1</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;DLEU1&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2500 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-61-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-63-1.png" width="4320" style="display: block; margin: auto;" /></p>
+</div>
+<div id="acan" class="section level2">
+<h2>ACAN</h2>
+<p>Get summary statistics:</p>
+<pre class="r"><code>region.name = &#39;ACAN&#39;
+file = dir(&quot;data/&quot;, pattern=paste0(&quot;height.&quot;,region.name,&#39;.XtX&#39;))
+ss.dat = readRDS(paste0(&#39;data/&#39;, file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), &#39; SNPs included&#39;))</code></pre>
+<pre><code>[1] &quot;2846 SNPs included&quot;</code></pre>
+<p>Comparing with Neale and GeneATLAS results:</p>
+<pre class="r"><code>map = fread(paste0(&#39;data/region-variants-&#39;, region.name, &#39;.csv.gz&#39;))
+z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
+map = merge(map, z.table, by=&#39;id&#39;, all = TRUE)
+p1 &lt;- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;GeneATLAS&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = &quot;dodgerblue&quot;,
+              linetype = &quot;dotted&quot;) +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
+gridExtra::grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-65-1.png" width="960" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(13,20),]</code></pre>
+<p>SuSiE result:</p>
+<pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = FALSE)
+z.max = which.max(abs(z))
+pip_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;))
+p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;p&#39;)
+z_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,&#39; SuSiE bhat&#39;), y.susie = &#39;z&#39;)
+grid.arrange(pip_bhat, p_bhat, z_bhat, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_20top_susiebhat_nostandardize.Rmd/unnamed-chunk-67-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Scientific Linux 7.4 (Nitrogen)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.2.19-el7-x86_64/lib/libopenblas_haswellp-r0.2.19.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] cowplot_0.9.4     readr_1.3.1       gridExtra_2.3     Matrix_1.2-15    
+[5] data.table_1.12.0 susieR_0.8.1.0545 ggplot2_3.1.1     dplyr_0.8.0.1    
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1        pillar_1.3.1      compiler_3.5.1   
+ [4] later_0.7.5       git2r_0.26.1      plyr_1.8.4       
+ [7] workflowr_1.5.0   R.methodsS3_1.7.1 R.utils_2.7.0    
+[10] tools_3.5.1       digest_0.6.18     evaluate_0.12    
+[13] tibble_2.0.1      gtable_0.2.0      lattice_0.20-38  
+[16] egg_0.4.5         pkgconfig_2.0.2   rlang_0.3.1      
+[19] yaml_2.2.0        withr_2.1.2       stringr_1.3.1    
+[22] knitr_1.20        hms_0.4.2         fs_1.3.1         
+[25] rprojroot_1.3-2   grid_3.5.1        tidyselect_0.2.5 
+[28] glue_1.3.0        R6_2.3.0          rmarkdown_1.10   
+[31] purrr_0.3.2       magrittr_1.5      whisker_0.3-2    
+[34] backports_1.1.2   scales_1.0.0      promises_1.0.1   
+[37] htmltools_0.3.6   assertthat_0.2.1  colorspace_1.4-0 
+[40] httpuv_1.4.5      labeling_0.3      stringi_1.2.4    
+[43] lazyeval_0.2.1    munsell_0.5.0     crayon_1.3.4     
+[46] R.oo_1.22.0      </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
