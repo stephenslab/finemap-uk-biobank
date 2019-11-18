@@ -1,0 +1,1096 @@
+---
+title: "Fine-mapping Height on More Regions (SuSiE-RSS)"
+author: "Yuxin Zou"
+date: "10/06/2019"
+---
+
+Load packages
+```{r warning=FALSE, message=FALSE}
+library(dplyr)
+library(ggplot2)
+library(susieR)
+library(data.table)
+library(Matrix)
+library(gridExtra)
+library(readr)
+library(cowplot)
+```
+
+```{r}
+knitr::read_chunk("scripts/plots.R")
+```
+
+```{r plots}
+```
+
+We extract the 16 GWAS regions chosen from GWAS for height. We select 20 top hits and exclude 4 hits on chr6. The region is +- 500kb around the top hit. We exclude SNPs with MAF < 0.01, or inputation score less than 0.9.
+
+We choose this region based on result from http://big.stats.ox.ac.uk/pheno/biobank_50.
+
+| Region   | CHR | FROM (Mb)  | TO (Mb)    |
+|----------|-----|-----------:|-----------:|
+| GDF5     | 20  | 33.525756  | 34.525756  |
+| ZBTB38   | 3   | 140.621814 | 141.621814 |
+| HHIP     | 4   | 145.066477 | 146.066477 |
+| LCORL    | 4   | 17.497066  | 18.497066  |
+| EFEMP1   | 2   | 55.606928  | 56.606928  |
+| KDM2A    | 11  | 66.524534  | 67.524534  |
+| HMGA2    | 12  | 65.871880  | 66.871880  |
+| CABLES1  | 18  | 20.224810  | 21.224810  |
+| ADAMTS10 | 19  | 8.170147   | 9.170147   |
+| GNA12    | 7   | 2.302522   | 3.302522   |
+| ADAMTS17 | 15  | 100.192953 | 101.192953 |
+| CDK6     | 7   | 91.750140  | 92.750140  |
+| MTMR11   | 1   | 149.406413 | 150.406413 |
+| ADAMTSL3 | 15  | 84.080582  | 85.080582  |
+| DLEU1    | 13  | 50.606788  | 51.606788  |
+| ACAN     | 15  | 88.897827  | 89.897827  |
+
+The code to get phenotype height is [get_height](scripts/get_pheno.R). The code to compute summary statistics is in [prepare](scripts/prepare.region.sh).
+
+Get gene data
+```{r warning=FALSE, message=FALSE}
+genes        <- read_delim("data/seq_gene.md.gz",delim = "\t",quote = "")
+class(genes) <- "data.frame"
+genes        <- subset(genes,
+                       group_label == "GRCh37.p5-Primary Assembly" &
+                       feature_type == "GENE")
+```
+
+## GDF5
+
+Get summary statistics:
+```{r}
+region.name = 'GDF5'
+file = dir("data/", pattern=paste0("height.",region.name))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## ZBTB38
+
+Get summary statistics:
+```{r}
+region.name = 'ZBTB38'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(5,10,11,16),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## HHIP
+
+Get summary statistics:
+```{r}
+region.name = 'HHIP'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2, 4),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## LCORL
+
+Get summary statistics:
+```{r}
+region.name = 'LCORL'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3, 10),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## EFEMP1
+
+Get summary statistics:
+```{r}
+region.name = 'EFEMP1'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(10),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## KDM2A
+
+Get summary statistics:
+```{r}
+region.name = 'KDM2A'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2, 16, 44, 45),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## HMGA2
+
+Get summary statistics:
+```{r}
+region.name = 'HMGA2'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1, 5, 11),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## CABLES1
+
+Get summary statistics:
+```{r}
+region.name = 'CABLES1'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## ADAMTS10
+
+Get summary statistics:
+```{r}
+region.name = 'ADAMTS10'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2,8,10,24),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## GNA12
+
+Get summary statistics:
+```{r}
+region.name = 'GNA12'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3,4,6,15),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## ADAMTS17
+
+Get summary statistics:
+```{r}
+region.name = 'ADAMTS17'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(4,5,12),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## CDK6
+
+Get summary statistics:
+```{r}
+region.name = 'CDK6'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(2,7,13),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## MTMR11
+
+Get summary statistics:
+```{r}
+region.name = 'MTMR11'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1,3,4,8,17,30),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## ADAMTSL3
+
+Get summary statistics:
+```{r}
+region.name = 'ADAMTSL3'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(3,4,6:12,14,16),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## DLEU1
+
+Get summary statistics:
+```{r}
+region.name = 'DLEU1'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
+
+## ACAN
+
+Get summary statistics:
+```{r}
+region.name = 'ACAN'
+file = dir("data/", pattern=paste0("height.",region.name,'.XtX'))
+ss.dat = readRDS(paste0('data/', file))
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+print(paste0(length(z), ' SNPs included'))
+```
+
+Comparing with Neale and GeneATLAS results:
+```{r fig.align='center', fig.height=5, fig.width=10}
+map = fread(paste0('data/region-variants-', region.name, '.csv.gz'))
+z.table = data.frame('id' = gsub('_.*$', '', names(z)), 'z' = z)
+map = merge(map, z.table, by='id', all = TRUE)
+p1 <- ggplot(map,aes(x = NBETA/NSE,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "GeneATLAS",y = "Our result",title = "t-statistics")
+p2 <- ggplot(map,aes(x = neale_tstat,y = z)) +
+  geom_point(shape = 20,size = 2,na.rm = TRUE) +
+  geom_abline(intercept = 0,slope = 1,color = "dodgerblue",
+              linetype = "dotted") +
+  xlim(c(-50,50)) +
+  ylim(c(-50,50)) +
+  theme_cowplot(font_size = 12) +
+  labs(x = "Neale lab",y = "Our result",title = "t-statistics")
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r}
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == unique(ss.dat$pos$`#CHROM`) &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(13,20),]
+```
+
+SuSiE result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_rss = susie_rss(z = z, R = R)
+z.max = which.max(abs(z))
+pip_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'))
+p_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'p')
+z_rss = susie_plot_locuszoom(z, mod_rss, pos = ss.dat$pos$POS/1e6, chr = unique(ss.dat$pos$`#CHROM`), gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), title = paste0(region.name,' SuSiE RSS'), y.susie = 'z')
+grid.arrange(pip_rss, p_rss, z_rss, ncol=3)
+```
