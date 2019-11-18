@@ -1,0 +1,403 @@
+---
+title: "Fine-mapping Height CABLES1 -- SuSiE check"
+author: "Yuxin Zou"
+date: "11/18/2019"
+---
+
+We perform some check for the SuSiE result on region around CABLES1
+
+Load pacakges:
+```{r message=FALSE}
+library(readr)
+library(dplyr)
+library(gridExtra)
+library(susieR)
+```
+Load plotting functions:
+```{r}
+knitr::read_chunk("scripts/plots.R")
+```
+
+```{r plots}
+```
+
+```{r}
+locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab='-log10(p value)', y.type = 'logp'){
+
+  tmp = data.frame(POS = pos, log10p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  tmp$ref = names(z) == z.ref.name
+  tmp$r2 = ld^2
+  tmp$CS = rep(4, length(z))
+  tmp$CS[cs] = 16
+  tmp$CS = as.factor(tmp$CS)
+  if(y.type == 'logp'){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = log10p, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }else if(y.type == 'z'){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }
+  pl_zoom = pl_zoom + scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+                          values = seq(0,1,0.2), breaks=seq(0,1,0.2)) + 
+    # scale_colour_discrete_gradient(
+    #     colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+    #     limits = c(0, 1.01),
+    #     breaks = c(0,0.2,0.4,0.6,0.8,1),
+    #     guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)) +
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle(title) + 
+    theme_bw() + theme(axis.title.x=element_blank(), axis.text=element_text(size=15),
+                       axis.title.y=element_text(size=12),
+                       plot.title = element_text(size=title.size))
+  tmp.sub = tmp[cs,]
+  if(y.type == 'log10p'){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color='black', stroke=0.1)
+  }else if(y.type == 'z'){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=z), shape=1, size=4, color='black', stroke=0.1)
+  }
+  
+  if(!is.null(xrange)){
+    pl_zoom = pl_zoom + xlim(xrange[1], xrange[2])
+  }
+  
+  pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+  g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
+  g
+}
+```
+
+Get summary statistics:
+```{r}
+ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * as.vector(ss.dat$Xty)
+se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+```
+
+Get gene data:
+```{r warning=FALSE, message=FALSE}
+genes        <- read_delim("data/seq_gene.md.gz",delim = "\t",quote = "")
+class(genes) <- "data.frame"
+genes        <- subset(genes,
+                       group_label == "GRCh37.p5-Primary Assembly" &
+                       feature_type == "GENE")
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == 18 &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+gene.pos.map = gene.pos.map[-c(1),]
+```
+
+SuSiE bhat result:
+```{r fig.align='center', fig.width=45, fig.height=15}
+mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize=FALSE)
+z.max = which.max(abs(z))
+p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
+p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie ='p')
+p3 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie ='z')
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+For 1Mb region about CABLES1, SuSiE found 2 CSs. The SNP with the strongest marginal p value in CS1 is rs7235010 (p = 1.3394e-113). For CS2, the SNP with the strongest marginal p value is rs12327253 (p = 0.1015).
+
+The correlation between rs2871960 and rs11919556 is `r R[1293,1281]`. The average correlation between SNPs in CS1 and CS2 is
+```{r}
+round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)
+```
+
+Zoom in plot:
+```{r}
+p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title='CABLES1 Credible Sets', plot.locuszoom = FALSE, y.susie = 'p', xrange=c(20.5, 21), title.size = 20)
+p1
+# pdf('GitHub/finemap-uk-biobank/CABLES1_CSs.pdf', height = 5, width=8)
+# p1
+# dev.off()
+```
+
+## CS 1
+
+1. Removing effect of top SNP in CS 2
+
+```{r eval=FALSE}
+library(data.table)
+library(readr)
+library(Matrix)
+geno.file = 'height.CABLES1.raw.gz'
+cat("Reading genotype data.\n")
+geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
+class(geno) <- "data.frame"
+
+# Extract the genotypes.
+X <- as(as.matrix(geno[-(1:6)]),'dgCMatrix')
+
+pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
+out.pheno.file <- "pheno.height.txt"
+out.covar.file <- "covar.removeCS2.height.txt"
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat("Reading phenotype data.\n")
+pheno        <- suppressMessages(read_csv(pheno.file))
+class(pheno) <- "data.frame"
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread('height.CABLES1.psam')
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,1281], data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+colnames(Z)[150] = 'X'
+Z = scale(Z, center=T, scale=F)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
+                                "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
+                                "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20"))
+Z[,cols] = scale(Z[,cols])
+Z[,'age2'] = Z[,'age']^2
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center X
+X = scale(X, center=T, scale=FALSE)
+xtxdiag = colSums(X^2)
+
+A   <- crossprod(Z) # Z'Z
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A)) # R'R = (Z'Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ'X
+S = R %*% crossprod(Z, y) # RZ'y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread(paste0('height.CABLES1.matrix')))
+# X'X
+XtX = sqrt(xtxdiag) * t(ld.matrix*sqrt(xtxdiag)) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X'y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
+
+## SNP info
+maf <- read.delim('height.CABLES1.afreq')
+pos <- fread('height.CABLES1.pvar')
+pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0('height.CABLES1.removeCS2.XtX.Xty.rds'))
+```
+
+After removing the effect of rs12327253 (p = 0.1015),
+```{r warning=FALSE, fig.align='center', fig.height=15, fig.width=30}
+ss.dat = readRDS('output/height.CABLES1.removeCS2.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.max = which.max(abs(z))
+p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS1', y.lab = '-log10(p value condition on CS2)')
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS1', y.lab = 'z scores condition on CS2)', y.type = 'z')
+grid.arrange(p1, p2, ncol=2)
+```
+
+2. Remove effect of all SNPs based on weights in other CSs
+```{r}
+ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
+XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[1,] * mod_bhat$mu[1,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat$alpha[-1,]*mod_bhat$mu[-1,])/mod_bhat$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS1 = betas/se
+names(z.CS1) = colnames(R)
+z.cs1.max = which.max(abs(z.CS1))
+p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p2
+# pdf('GitHub/finemap-uk-biobank/CABLES1_CS1.pdf', height=5, width=8)
+# p2
+# dev.off()
+```
+
+```{r}
+tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[1,]/(1-mod_bhat$alpha[1,])))
+tmp$CS = rep(4, length(z))
+tmp$CS[mod_bhat$sets$cs$L1] = 16
+tmp$CS = as.factor(tmp$CS)
+pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
+  geom_point() + ylab('log posterior odd') + 
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle('CABLES1 Credible Set 1') + 
+    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
+tmp.sub = tmp[mod_bhat$sets$cs$L1,]
+pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
+pl_zoom = pl_zoom + xlim(20.5, 21)
+pl_gene = plot_geneName(gene.pos.map, xrange = c(20.5, 21), chr=3)
+g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
+g
+```
+
+## CS 2
+
+1. Removing effect of top SNP in CS 1
+
+```{r eval=FALSE}
+library(data.table)
+library(readr)
+library(Matrix)
+geno.file = 'height.CABLES1.raw.gz'
+cat("Reading genotype data.\n")
+geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
+class(geno) <- "data.frame"
+
+# Extract the genotypes.
+X <- as(as.matrix(geno[-(1:6)]),'dgCMatrix')
+
+pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
+out.pheno.file <- "pheno.height.txt"
+out.covar.file <- "covar.removeCS1.height.txt"
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat("Reading phenotype data.\n")
+pheno        <- suppressMessages(read_csv(pheno.file))
+class(pheno) <- "data.frame"
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread('height.CABLES1.psam')
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,1293], data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+colnames(Z)[150] = 'X'
+Z = scale(Z, center=T, scale = F)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
+                                "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
+                                "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20"))
+Z[,cols] = scale(Z[,cols])
+Z[,'age2'] = Z[,'age']^2
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center X
+X = scale(X, center=TRUE, scale = FALSE)
+xtxdiag = colSums(X^2)
+
+A   <- crossprod(Z) # Z'Z
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A)) # R'R = (Z'Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ'X
+S = R %*% crossprod(Z, y) # RZ'y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread('height.CABLES1.matrix'))
+# X'X
+XtX = sqrt(xtxdiag) * t(ld.matrix*sqrt(xtxdiag)) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X'y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0('height.CABLES1.removeCS1.XtX.Xty.rds'))
+```
+
+After removing the effect of rs7235010 (p = 1.3394e-113), the conditional p value for rs57772091 becomes 1.9404e-08!
+```{r warning=FALSE, fig.align='center', fig.height=15, fig.width=30}
+ss.dat = readRDS('output/height.CABLES1.removeCS1.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.max = which.max(abs(z))
+p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS2', y.lab = '-log10(p value condition on CS1)')
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS2', y.lab = 'z scores condition on CS1)', y.type = 'z')
+grid.arrange(p1, p2, ncol=2)
+```
+
+2. Remove effect of all SNPs based on weights in other CSs
+```{r}
+ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
+XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[2,] * mod_bhat$mu[2,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat$alpha[-2,]*mod_bhat$mu[-2,])/mod_bhat$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS2 = betas/se
+names(z.CS2) = colnames(R)
+z.cs2.max = which.max(abs(z.CS2))
+p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p3
+# pdf('GitHub/finemap-uk-biobank/CABLES1_CS2.pdf', height=5, width=8)
+# p3
+# dev.off()
+```
+
+```{r}
+tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[2,]/(1-mod_bhat$alpha[2,])))
+tmp$CS = rep(4, length(z))
+tmp$CS[mod_bhat$sets$cs$L2] = 16
+tmp$CS = as.factor(tmp$CS)
+pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
+  geom_point() + ylab('log posterior odd') + 
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle('CABLES1 Credible Set 2') + 
+    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
+tmp.sub = tmp[mod_bhat$sets$cs$L2,]
+pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
+pl_zoom = pl_zoom + xlim(20.5, 21)
+pl_gene = plot_geneName(gene.pos.map, xrange = c(20.25, 21), chr=3)
+g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
+g
+```
