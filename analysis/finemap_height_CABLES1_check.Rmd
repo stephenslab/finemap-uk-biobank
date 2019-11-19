@@ -103,7 +103,7 @@ gene.pos.map = gene.pos.map[-c(1),]
 ```
 
 SuSiE bhat result: the top panel shows the r2 with respect to the top hit (diamond shape); the lower panel plots the credible sets in PIP, -log10(p value) and z scores.
-```{r CABLES1_bhat_nostandardize_results, fig.align='center', fig.width=45, fig.height=15}
+```{r CABLES1_bhat_nostandardize_results, warning=FALSE, fig.align='center', fig.width=45, fig.height=15}
 mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize=FALSE)
 z.max = which.max(abs(z))
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
@@ -120,7 +120,7 @@ round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)
 ```
 
 Zoom in plot:
-```{r CABLES1_bhat_nostandardize_results_CSszoomin, fig.align='center', fig.height=8, fig.width=10}
+```{r CABLES1_bhat_nostandardize_results_CSszoomin, warning=FALSE, fig.align='center', fig.height=8, fig.width=10}
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title='CABLES1 Credible Sets', plot.locuszoom = FALSE, y.susie = 'p', xrange=c(20.5, 21), title.size = 20)
 p1
 ```
@@ -343,7 +343,7 @@ saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y),
 ```
 
 After removing the effect of rs7235010 (p = 1.3394e-113), the conditional p value for rs57772091 becomes 1.9404e-08!
-```{r CABLES1_bhat_nostandardize_CS2_1, warning=FALSE, fig.align='center', fig.height=8, fig.width=10}
+```{r CABLES1_bhat_nostandardize_CS2_1, warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
 ss.dat = readRDS('output/height.CABLES1.removeCS1.XtX.Xty.rds')
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -367,7 +367,7 @@ The residuals after removing the effects from CSs other than CS2 is
 r = y - \mathbf{X} \sum_{l\neq 2}^{L}\hat{\mathbf{b}}_{l}.
 \]
 
-```{r warning=FALSE, fig.align='center', fig.height=8, fig.width=10}
+```{r warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
 ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[2,] * mod_bhat$mu[2,]) 
 Xtr = ss.dat$Xty - XtXr
@@ -381,6 +381,6 @@ names(z.CS2) = colnames(R)
 z.cs2.max = which.max(abs(z.CS2))
 p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
 p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = 'z scores condition on other CSs', title.size = 20, y.type='z')
-p3
+grid.arrange(p3, p4, ncol=2)
 ```
 
