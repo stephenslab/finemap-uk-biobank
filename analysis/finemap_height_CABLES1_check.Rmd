@@ -125,6 +125,26 @@ p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.po
 p1
 ```
 
+The first credible set contains 
+```{r}
+cs1 = ss.dat$pos[unlist(mod_bhat$sets$cs$L1),]
+cs1$gene = sapply(cs1$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  gene.pos.map$geneName[id]
+})
+cs1
+```
+
+The second credible set contains 
+```{r}
+cs2 = ss.dat$pos[unlist(mod_bhat$sets$cs$L2),]
+cs2$gene = sapply(cs2$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  gene.pos.map$geneName[id]
+})
+cs2
+```
+
 ## CS 1
 
 * Option 1. We remove effect of top SNP in CS 2.
