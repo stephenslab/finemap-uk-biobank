@@ -443,16 +443,17 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreea056f4265db41c530122f504ec63799d80f72e4ctargetblanka056f42a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/a056f4265db41c530122f504ec63799d80f72e4c" target="_blank">a056f42</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree45127db2b222101d6f9a59f53e50413c45fb6eb5targetblank45127dba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/45127db2b222101d6f9a59f53e50413c45fb6eb5" target="_blank">45127db</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreea056f4265db41c530122f504ec63799d80f72e4ctargetblanka056f42a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree45127db2b222101d6f9a59f53e50413c45fb6eb5targetblank45127dba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Untracked files:
+    Untracked:  analysis/finemap_height_GDF5_check.Rmd
     Untracked:  data/height.ACAN.XtX.Xty.rds
     Untracked:  data/height.ADAMTS10.XtX.Xty.rds
     Untracked:  data/height.ADAMTS17.XtX.Xty.rds
@@ -477,6 +478,7 @@ Untracked files:
     Untracked:  data/height.ZBTB38.susie.model.rds
     Untracked:  output/height.CABLES1.removeCS1.XtX.Xty.rds
     Untracked:  output/height.CABLES1.removeCS2.XtX.Xty.rds
+    Untracked:  output/height.GDF5.removeCS1.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.plink2.height.glm.linear
     Untracked:  output/height.ZBTB38.susie.model.rds
 
@@ -525,6 +527,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/45127db2b222101d6f9a59f53e50413c45fb6eb5/analysis/finemap_height_CABLES1_check.Rmd" target="_blank">45127db</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_CABLES1_check.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/finemap_height_CABLES1_check.html" target="_blank">3db8ace</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -848,7 +884,7 @@ susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.n
                        axis.title.y=element_text(size=12),
                        plot.title = element_text(size=title.size))
   tmp.sub = tmp[cs,]
-  if(y.type == &#39;log10p&#39;){
+  if(y.type == &#39;logp&#39;){
     pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
   }else if(y.type == &#39;z&#39;){
     pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=z), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
@@ -888,14 +924,14 @@ colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
 gene.pos.map = as.data.frame(gene.pos.map)
 gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)
 gene.pos.map = gene.pos.map[-c(1),]</code></pre>
-<p>SuSiE bhat result:</p>
+<p>SuSiE bhat result: the top panel shows the r2 with respect to the top hit (diamond shape); the lower panel plots the credible sets in PIP, -log10(p value) and z scores.</p>
 <pre class="r"><code>mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize=FALSE)
 z.max = which.max(abs(z))
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
 p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie =&#39;p&#39;)
 p3 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie =&#39;z&#39;)
 grid.arrange(p1, p2, p3, ncol=3)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-6-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_results-1.png" width="4320" style="display: block; margin: auto;" /></p>
 <p>For 1Mb region about CABLES1, SuSiE found 2 CSs. The SNP with the strongest marginal p value in CS1 is rs7235010 (p = 1.3394e-113). For CS2, the SNP with the strongest marginal p value is rs12327253 (p = 0.1015).</p>
 <p>The correlation between rs2871960 and rs11919556 is 0.3082546. The average correlation between SNPs in CS1 and CS2 is</p>
 <pre class="r"><code>round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)</code></pre>
@@ -906,15 +942,15 @@ grid.arrange(p1, p2, p3, ncol=3)</code></pre>
 <pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
 <pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
 <pre class="r"><code>p1</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_results_CSszoomin-1.png" width="960" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># pdf(&#39;GitHub/finemap-uk-biobank/CABLES1_CSs.pdf&#39;, height = 5, width=8)
 # p1
 # dev.off()</code></pre>
 <div id="cs-1" class="section level2">
 <h2>CS 1</h2>
-<ol style="list-style-type: decimal">
-<li>Removing effect of top SNP in CS 2</li>
-</ol>
+<ul>
+<li>Option 1. We remove effect of top SNP in CS 2.</li>
+</ul>
 <pre class="r"><code>library(data.table)
 library(readr)
 library(Matrix)
@@ -995,7 +1031,7 @@ pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
 
 saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
         paste0(&#39;height.CABLES1.removeCS2.XtX.Xty.rds&#39;))</code></pre>
-<p>After removing the effect of rs12327253 (p = 0.1015),</p>
+<p>After removing the effect of rs12327253 (p = 0.1015), the p values and z scores are plotted below. The color is correspongding to LD, the shape is corresponding to CS. The SNP in CS is labeled with filled circle.</p>
 <pre class="r"><code>ss.dat = readRDS(&#39;output/height.CABLES1.removeCS2.XtX.Xty.rds&#39;)
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -1006,13 +1042,18 @@ R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$
 names(z) = rownames(R)
 z.max = which.max(abs(z))
 p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS1&#39;, y.lab = &#39;-log10(p value condition on CS2)&#39;)
-p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS1&#39;, y.lab = &#39;z scores condition on CS2)&#39;, y.type = &#39;z&#39;)
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS1&#39;, y.lab = &#39;z scores condition on CS2&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="2880" style="display: block; margin: auto;" /></p>
-<ol start="2" style="list-style-type: decimal">
-<li>Remove effect of all SNPs based on weights in other CSs</li>
-</ol>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS1_2-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Option 2. We remove effect of all other CSs.</li>
+</ul>
+<p>Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.</p>
+<p>The residuals after removing the effects from CSs other than CS1 is <span class="math display">\[
+r = y - \mathbf{X} \sum_{l=2}^{L}\hat{\mathbf{b}}_{l}.
+\]</span></p>
 <pre class="r"><code>ss.dat = readRDS(&#39;data/height.CABLES1.XtX.Xty.rds&#39;)
+# remove 1-st effect from fitted values
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[1,] * mod_bhat$mu[1,]) 
 Xtr = ss.dat$Xty - XtXr
 betas = Xtr/diag(ss.dat$XtX)
@@ -1022,41 +1063,56 @@ se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS1 = betas/se
 names(z.CS1) = colnames(R)
 z.cs1.max = which.max(abs(z.CS1))
-p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title=&#39;CABLES1 Credible Set 1&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)</code></pre>
-<pre><code>Warning: Removed 1129 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
-<pre class="r"><code>p2</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" /></p>
+p1 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title=&#39;CABLES1 Credible Set 1&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
+p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title=&#39;CABLES1 Credible Set 1&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
+grid.arrange(p1, p2, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">3db8ace</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># pdf(&#39;GitHub/finemap-uk-biobank/CABLES1_CS1.pdf&#39;, height=5, width=8)
 # p2
 # dev.off()</code></pre>
-<pre class="r"><code>tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[1,]/(1-mod_bhat$alpha[1,])))
-tmp$CS = rep(4, length(z))
-tmp$CS[mod_bhat$sets$cs$L1] = 16
-tmp$CS = as.factor(tmp$CS)
-pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
-  geom_point() + ylab(&#39;log posterior odd&#39;) + 
-    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
-    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
-    ggtitle(&#39;CABLES1 Credible Set 1&#39;) + 
-    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
-tmp.sub = tmp[mod_bhat$sets$cs$L1,]
-pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
-pl_zoom = pl_zoom + xlim(20.5, 21)
-pl_gene = plot_geneName(gene.pos.map, xrange = c(20.5, 21), chr=3)
-g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)</code></pre>
-<pre><code>Warning: Removed 1129 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
-<pre class="r"><code>g</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="cs-2" class="section level2">
 <h2>CS 2</h2>
-<ol style="list-style-type: decimal">
-<li>Removing effect of top SNP in CS 1</li>
-</ol>
+<ul>
+<li>Option 1. We remove effect of top SNP in CS 1.</li>
+</ul>
 <pre class="r"><code>library(data.table)
 library(readr)
 library(Matrix)
@@ -1145,10 +1201,14 @@ z.max = which.max(abs(z))
 p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS2&#39;, y.lab = &#39;-log10(p value condition on CS1)&#39;)
 p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS2&#39;, y.lab = &#39;z scores condition on CS1)&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-14-1.png" width="2880" style="display: block; margin: auto;" /></p>
-<ol start="2" style="list-style-type: decimal">
-<li>Remove effect of all SNPs based on weights in other CSs</li>
-</ol>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS2_1-1.png" width="960" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Option 2. We remove effect of all other CSs.</li>
+</ul>
+<p>Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.</p>
+<p>The residuals after removing the effects from CSs other than CS2 is <span class="math display">\[
+r = y - \mathbf{X} \sum_{l\neq 2}^{L}\hat{\mathbf{b}}_{l}.
+\]</span></p>
 <pre class="r"><code>ss.dat = readRDS(&#39;data/height.CABLES1.XtX.Xty.rds&#39;)
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[2,] * mod_bhat$mu[2,]) 
 Xtr = ss.dat$Xty - XtXr
@@ -1159,35 +1219,50 @@ se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS2 = betas/se
 names(z.CS2) = colnames(R)
 z.cs2.max = which.max(abs(z.CS2))
-p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)</code></pre>
-<pre><code>Warning: Removed 1129 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
-<pre class="r"><code>p3</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;" /></p>
+p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
+p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
+p3</code></pre>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">3db8ace</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># pdf(&#39;GitHub/finemap-uk-biobank/CABLES1_CS2.pdf&#39;, height=5, width=8)
 # p3
 # dev.off()</code></pre>
-<pre class="r"><code>tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[2,]/(1-mod_bhat$alpha[2,])))
-tmp$CS = rep(4, length(z))
-tmp$CS[mod_bhat$sets$cs$L2] = 16
-tmp$CS = as.factor(tmp$CS)
-pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
-  geom_point() + ylab(&#39;log posterior odd&#39;) + 
-    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
-    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
-    ggtitle(&#39;CABLES1 Credible Set 2&#39;) + 
-    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
-tmp.sub = tmp[mod_bhat$sets$cs$L2,]
-pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
-pl_zoom = pl_zoom + xlim(20.5, 21)
-pl_gene = plot_geneName(gene.pos.map, xrange = c(20.25, 21), chr=3)
-g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)</code></pre>
-<pre><code>Warning: Removed 1129 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
-<pre class="r"><code>g</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-16-1.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
