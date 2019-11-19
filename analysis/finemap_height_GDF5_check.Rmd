@@ -1,0 +1,253 @@
+---
+title: "Fine-mapping Height GDF5 -- SuSiE check"
+author: "Yuxin Zou"
+date: "10/07/2019"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+We perform some check for the SuSiE result on region around GDF5
+
+Load pacakges:
+```{r message=FALSE}
+library(readr)
+library(dplyr)
+library(gridExtra)
+library(susieR)
+```
+Load plotting functions:
+```{r}
+knitr::read_chunk("scripts/plots.R")
+```
+
+```{r plots}
+```
+
+```{r}
+locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab='-log10(p value)', y.type = 'logp'){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  tmp = data.frame(POS = pos, log10p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  tmp$ref = names(z) == z.ref.name
+  tmp$r2 = ld^2
+  tmp$CS = rep(4, length(z))
+  tmp$CS[cs] = 16
+  tmp$CS = as.factor(tmp$CS)
+  if(y.type == 'logp'){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = log10p, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }else if(y.type == 'z'){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }
+  pl_zoom = pl_zoom + scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+                          values = seq(0,1,0.2), breaks=seq(0,1,0.2)) + 
+    # scale_colour_discrete_gradient(
+    #     colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+    #     limits = c(0, 1.01),
+    #     breaks = c(0,0.2,0.4,0.6,0.8,1),
+    #     guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)) +
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle(title) + 
+    theme_bw() + theme(axis.title.x=element_blank(), axis.text=element_text(size=15),
+                       axis.title.y=element_text(size=12),
+                       plot.title = element_text(size=title.size))
+  tmp.sub = tmp[cs,]
+  if(y.type == 'logp'){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color='black', stroke=0.1)
+  }else if(y.type == 'z'){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=z), shape=1, size=4, color='black', stroke=0.1)
+  }
+  
+  if(!is.null(xrange)){
+    pl_zoom = pl_zoom + xlim(xrange[1], xrange[2])
+  }
+  
+  pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+  g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
+  g
+}
+```
+
+Get summary statistics:
+```{r}
+ss.dat = readRDS('data/height.GDF5.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * as.vector(ss.dat$Xty)
+se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+```
+
+Get gene data:
+```{r warning=FALSE, message=FALSE}
+genes        <- read_delim("data/seq_gene.md.gz",delim = "\t",quote = "")
+class(genes) <- "data.frame"
+genes        <- subset(genes,
+                       group_label == "GRCh37.p5-Primary Assembly" &
+                       feature_type == "GENE")
+start.pos <- min(ss.dat$pos$POS)
+stop.pos  <- max(ss.dat$pos$POS)
+plot.genes <- subset(genes,
+                     chromosome == 20 &
+                     ((chr_start > start.pos & chr_start < stop.pos) |
+                      (chr_stop > start.pos & chr_start < stop.pos)) & feature_type == 'GENE')
+gene.pos.map = plot.genes %>% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c('geneName', 'start', 'end')
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
+```
+
+SuSiE bhat result: the top panel shows the r2 with respect to the top hit (diamond shape); the lower panel plots the credible sets in PIP, -log10(p value) and z scores.
+```{r GDF5_bhat_nostandardize_results, fig.align='center', fig.width=45, fig.height=15}
+mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize = FALSE)
+z.max = which.max(abs(z))
+p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
+p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie ='p')
+p3 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie ='z')
+grid.arrange(p1, p2, p3, ncol=3)
+```
+
+For 1Mb region about GDF5, SuSiE found 6 CSs. The SNP with the strongest marginal p value is rs143384 (p = 4.8689e-251).
+
+The average correlation between SNPs in CS1 (red) and CS3 (green) is
+```{r}
+round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L3])), 4)
+```
+
+## CS 3
+
+* Option 1. We remove effect of top SNP in CS 1.
+
+```{r eval=FALSE}
+library(data.table)
+library(readr)
+library(Matrix)
+geno.file = 'height.GDF5.raw.gz'
+cat("Reading genotype data.\n")
+geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
+class(geno) <- "data.frame"
+
+# Extract the genotypes.
+X <- as(as.matrix(geno[-(1:6)]),'dgCMatrix')
+
+pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
+out.pheno.file <- "pheno.height.txt"
+out.covar.file <- "covar.removeCS1.height.txt"
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat("Reading phenotype data.\n")
+pheno        <- suppressMessages(read_csv(pheno.file))
+class(pheno) <- "data.frame"
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread('height.GDF5.psam')
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,1132], data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+colnames(Z)[150] = 'X'
+Z = scale(Z, center=T, scale=F)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
+                                "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
+                                "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20"))
+Z[,cols] = scale(Z[,cols])
+Z[,'age2'] = Z[,'age']^2
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center scale X
+X = scale(X, center=T, scale=FALSE)
+xtxdiag = colSums(X^2)
+
+A   <- crossprod(Z) # Z'Z
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A)) # R'R = (Z'Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ'X
+S = R %*% crossprod(Z, y) # RZ'y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread(paste0('height.GDF5.matrix')))
+# X'X
+XtX = sqrt(xtxdiag) * t(ld.matrix*sqrt(xtxdiag)) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X'y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
+
+## SNP info
+maf <- read.delim('height.GDF5.afreq')
+pos <- fread('height.GDF5.pvar')
+pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0('height.GDF5.removeCS1.XtX.Xty.rds'))
+```
+
+After removing the effect of rs143384 (p = 4.8689e-251),
+```{r GDF5_bhat_nostandardize_CS3_1, warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
+ss.dat = readRDS('output/height.GDF5.removeCS1.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.ref = mod_bhat$sets$cs$L3[which.max(abs(z[mod_bhat$sets$cs$L3]))]
+names(z.ref) = names(z)[z.ref]
+p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.ref], ld = R[z.ref,], title='GDF5 CS3', y.lab = '-log10(p value condition on CS1)')
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.ref], ld = R[z.ref,], title='GDF5 CS3', y.lab = 'z scores condition on CS1', y.type = 'z')
+grid.arrange(p1,p2,ncol=2)
+```
+
+* Option 2. We remove effect of all other CSs.
+
+Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.
+
+The residuals after removing the effects from CSs other than CS3 is
+\[
+r = y - \mathbf{X} \sum_{l=3}^{L}\hat{\mathbf{b}}_{l}.
+\]
+
+```{r, warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
+ss.dat = readRDS('data/height.GDF5.XtX.Xty.rds')
+XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[3,] * mod_bhat$mu[3,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat$alpha[-3,]*mod_bhat$mu[-3,])/mod_bhat$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS3 = betas/se
+names(z.CS3) = colnames(R)
+z.cs3.max = which.max(abs(z.CS3))
+p1 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title='GDF5 Credible Set 3', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p2 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title='GDF5 Credible Set 3', y.lab = 'z scores condition on other CSs', title.size = 20, y.type = 'z')
+grid.arrange(p1,p2,ncol=2)
+# pdf('GitHub/finemap-uk-biobank/GDF5_CS1.pdf', height=5, width=8)
+# p2
+# dev.off()
+```
