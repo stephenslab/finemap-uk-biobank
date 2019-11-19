@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Yuxin Zou" />
+
+<meta name="date" content="2019-10-07" />
+
+<title>Fine-mapping Height GDF5 – SuSiE check</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">finemap-uk-biobank</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Fine-mapping Height GDF5 – SuSiE check</h1>
+<h4 class="author"><em>Yuxin Zou</em></h4>
+<h4 class="date"><em>10/07/2019</em></h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-11-18
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>finemap-uk-biobank/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.5.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191114code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191114)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191114code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191114)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec7cb5617d564fda5287e51a060759fadeac4e57ctargetblankc7cb561a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c7cb5617d564fda5287e51a060759fadeac4e57c" target="_blank">c7cb561</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec7cb5617d564fda5287e51a060759fadeac4e57ctargetblankc7cb561a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Untracked files:
+    Untracked:  data/height.ACAN.XtX.Xty.rds
+    Untracked:  data/height.ADAMTS10.XtX.Xty.rds
+    Untracked:  data/height.ADAMTS17.XtX.Xty.rds
+    Untracked:  data/height.ADAMTSL3.XtX.Xty.rds
+    Untracked:  data/height.CABLES1.XtX.Xty.rds
+    Untracked:  data/height.CDK6.XtX.Xty.rds
+    Untracked:  data/height.DLEU1.XtX.Xty.rds
+    Untracked:  data/height.EFEMP1.XtX.Xty.rds
+    Untracked:  data/height.GDF5.XtX.Xty.rds
+    Untracked:  data/height.GNA12.XtX.Xty.rds
+    Untracked:  data/height.HHIP.XtX.Xty.rds
+    Untracked:  data/height.HMGA2.XtX.Xty.rds
+    Untracked:  data/height.KDM2A.XtX.Xty.rds
+    Untracked:  data/height.LCORL.XtX.Xty.rds
+    Untracked:  data/height.MTMR11.XtX.Xty.rds
+    Untracked:  data/height.UQCC1.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.0.01.simulation1000.rds
+    Untracked:  data/height.ZBTB38.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.neale.rds
+    Untracked:  data/height.ZBTB38.removeCS1.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.removeCS2.XtX.Xty.rds
+    Untracked:  data/height.ZBTB38.susie.model.rds
+    Untracked:  output/height.CABLES1.removeCS1.XtX.Xty.rds
+    Untracked:  output/height.CABLES1.removeCS2.XtX.Xty.rds
+    Untracked:  output/height.GDF5.removeCS1.XtX.Xty.rds
+    Untracked:  output/height.ZBTB38.plink2.height.glm.linear
+    Untracked:  output/height.ZBTB38.susie.model.rds
+
+Unstaged changes:
+    Modified:   analysis/_site.yml
+    Modified:   analysis/finemap_height_ZBTB38_check.Rmd
+    Modified:   analysis/finemap_height_larger_region.Rmd
+    Modified:   scripts/plots.R
+    Modified:   scripts/prepare.region.sh
+    Modified:   scripts/prepare.susieinput.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/c7cb5617d564fda5287e51a060759fadeac4e57c/analysis/finemap_height_GDF5_check.Rmd" target="_blank">c7cb561</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_GDF5_check.Rmd”)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>We perform some check for the SuSiE result on region around GDF5</p>
+<p>Load pacakges:</p>
+<pre class="r"><code>library(readr)
+library(dplyr)
+library(gridExtra)
+library(susieR)</code></pre>
+<p>Load plotting functions:</p>
+<pre class="r"><code>knitr::read_chunk(&quot;scripts/plots.R&quot;)</code></pre>
+<pre class="r"><code>library(ggplot2)
+
+#&#39; plot gene name annotations
+#&#39; @param dat a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param xrange range of x axis, base-pair position
+plot_geneName = function(dat, xrange, chr){
+  ngene = 2:nrow(dat)
+  line = 1
+  dat$lines = NA
+  dat$lines[1] = 1
+  gene.end = dat[1, &#39;end&#39;]
+  while(length(ngene) != 0){
+    id = which(dat[ngene, &#39;start&#39;] &gt; gene.end + 0.02)[1]
+    if(!is.na(id)){
+      dat$lines[ngene[id]] = line
+      gene.end = dat[ngene[id],&#39;end&#39;]
+      ngene = ngene[-id]
+    }else{
+      line = line + 1
+      dat$lines[ngene[1]] = line
+      gene.end = dat[ngene[1],&#39;end&#39;]
+      ngene = ngene[-1]
+    }
+  }
+  
+  dat$start = pmax(dat$start, xrange[1])
+  dat$end = pmin(dat$end, xrange[2])
+  dat$mean = rowMeans(dat[,c(&#39;start&#39;, &#39;end&#39;)])
+  
+  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2])) + xlim(xrange[1], xrange[2]) + ylim(min(-dat$lines-0.6), -0.8) + 
+    geom_rect(aes(xmin = start, xmax = end, ymin = -lines-0.05, ymax = -lines+0.05), fill=&#39;blue&#39;) +
+    geom_text(aes(x = mean, y=-lines-0.4, label=geneName), size=4) + 
+                xlab(paste0(&#39;base-pair position (Mb) on chromosome &#39;, chr)) + ylab(&#39;Gene&#39;) + 
+    theme_bw() + theme(axis.text.x=element_blank(),
+                       axis.ticks = element_blank(),
+                       axis.text.y=element_blank(),
+                       axis.title = element_text(size=15),
+                       plot.title=element_text(size=11),
+                       panel.grid.major = element_blank(),
+                       panel.grid.minor = element_blank())
+  pl
+}
+
+discrete_gradient_pal &lt;- function(colours, bins = 5) {
+  ramp &lt;- scales::colour_ramp(colours)
+  
+  function(x) {
+    if (length(x) == 0) return(character())
+    
+    i &lt;- floor(x * bins)
+    i &lt;- ifelse(i &gt; bins-1, bins-1, i)
+    ramp(i/(bins-1))
+  }
+}
+
+scale_colour_discrete_gradient &lt;- function(..., colours, bins = 5, na.value = &quot;grey50&quot;, guide = &quot;colourbar&quot;, aesthetics = &quot;colour&quot;, colors)  {
+  colours &lt;- if (missing(colours)) 
+    colors
+  else colours
+  continuous_scale(
+    aesthetics,
+    &quot;discrete_gradient&quot;,
+    discrete_gradient_pal(colours, bins),
+    na.value = na.value,
+    guide = guide,
+    ...
+  )
+}
+
+#&#39; Locuszoom plot
+#&#39; @param z a vector of z scores with SNP names
+#&#39; @param pos base-pair positions
+#&#39; @param gene.pos.map a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param z.ref.name the reference SNP
+#&#39; @param ld correlations between teh reference SNP and the rests
+#&#39; @param title title of the plot
+#&#39; @param title.size the size of the title
+#&#39; @param true the true value
+#&#39; @param y.height height of -log10(p) plot and height of the gene name annotation plot
+#&#39; @param y.lim range of y axis
+locus.zoom = function(z, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
+                      title = NULL, title.size = 10, true = NULL, 
+                      y.height=c(5,1.5), y.lim=NULL, y.type=&#39;logp&#39;,xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  
+  if(!is.null(ld) &amp;&amp; !is.null(z.ref.name)){
+    tmp$ref = names(z) == z.ref.name
+    tmp$r2 = ld^2
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;z score&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }
+  }else{
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;z scores&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }
+  }
+  
+  if(!is.null(y.lim)){
+    pl_zoom = pl_zoom + ylim(y.lim[1], y.lim[2])
+  }
+  # pl_zoom = pl_zoom + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
+  if(!is.null(true)){
+    tmp.true = data.frame(POS = which(true!=0), p = tmp$p[which(true!=0)], 
+                          ref = (names(z) == z.ref.name)[which(true!=0)],
+                          label = paste0(&#39;SNP&#39;,1:length(which(true!=0))))
+    pl_zoom = pl_zoom + geom_point(data=tmp.true, aes(x=POS, y=p), 
+                                   color=&#39;red&#39;, show.legend = FALSE, shape=1, stroke = 1) + 
+      geom_text(data=tmp.true, aes(x = POS-30, y=p+1, label=label), size=3, color=&#39;red&#39;)
+  }
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+    g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = y.height, draw=FALSE)
+  }else{
+    g = pl_zoom
+  }
+  g
+}
+
+#&#39; SuSiE plot with Locuszoom plot
+#&#39; @param z a vector of z scores with SNP names
+#&#39; @param model the fitted SuSiE model
+#&#39; @param pos base-pair positions
+#&#39; @param gene.pos.map a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
+#&#39; @param z.ref.name the reference SNP
+#&#39; @param ld correlations between teh reference SNP and the rests
+#&#39; @param title title of the plot
+#&#39; @param title.size the size of the title
+#&#39; @param true the true value
+#&#39; @param plot.locuszoom whether to plot locuszoom plot
+#&#39; @param y.lim range of y axis
+#&#39; @param y.susie the y axis of the SuSiE plot, &#39;PIP&#39; or &#39;p&#39; or &#39;z&#39;, &#39;p&#39; refers to -log10(p)
+susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.name, ld, 
+                                title = NULL, title.size = 10, true = NULL, 
+                                plot.locuszoom = TRUE, y.lim=NULL, y.susie=&#39;PIP&#39;, xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  if(plot.locuszoom){
+    if(y.susie == &#39;z&#39;){
+      y.type = &#39;z&#39;
+    }else{
+      y.type = &#39;logp&#39;
+    }
+    pl_zoom = locus.zoom(z, pos = pos, chr = chr, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim, y.type=y.type, xrange=xrange)
+  }
+  pip = model$pip
+  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  if(y.susie == &#39;PIP&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+      xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
+  }else if(y.susie == &#39;p&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;-log10(p value)&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+      # pl_susie = pl_susie + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
+    }
+  }else if(y.susie == &#39;z&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = z)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;z scores&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
+  }
+  
+  if(!is.null(true)){
+    tmp.true = data.frame(POS = pos[which(true!=0)], PIP = pip[which(true!=0)])
+    pl_susie = pl_susie + geom_point(data=tmp.true, aes(x=POS, y=PIP), 
+                                     color=&#39;red&#39;, size=3, show.legend = FALSE)
+  }
+  
+  model.cs = model$sets$cs
+  if(!is.null(model.cs)){
+    tmp$CS = numeric(length(z))
+    for(i in 1:length(model.cs)){
+      tmp$CS[model.cs[[i]]] = gsub(&#39;L&#39;, &#39;CS&#39;, names(model.cs)[i])
+    }
+    tmp.cs = tmp[unlist(model.cs),]
+    tmp.cs$CS = factor(tmp.cs$CS)
+    levels(tmp.cs$CS) = paste0(&#39;CS&#39;, 1:length(model.cs))
+    colors = c(&#39;red&#39;, &#39;cyan&#39;, &#39;green&#39;, &#39;orange&#39;, &#39;dodgerblue&#39;, &#39;violet&#39;, &#39;gold&#39;,
+               &#39;#FF00FF&#39;, &#39;forestgreen&#39;, &#39;#7A68A6&#39;)
+    if(y.susie == &#39;PIP&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP, color=CS), 
+                                       size=3, shape=1, stroke = 2) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;p&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;z&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=z, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
+    }
+  }
+  
+  if(!is.null(gene.pos.map)){
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+    if(plot.locuszoom){
+      g = egg::ggarrange(pl_zoom, pl_susie, pl_gene, nrow=3, heights = c(4,4,1.5), draw=FALSE)
+    }else{
+      g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
+    }
+    
+  }else{
+    if(plot.locuszoom){
+      g = egg::ggarrange(pl_zoom, pl_susie, nrow=2, heights = c(4,4), draw=FALSE)
+    }else{
+      g = pl_susie
+    }
+  }
+  g
+}</code></pre>
+<pre class="r"><code>locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab=&#39;-log10(p value)&#39;, y.type = &#39;logp&#39;){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  tmp = data.frame(POS = pos, log10p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  tmp$ref = names(z) == z.ref.name
+  tmp$r2 = ld^2
+  tmp$CS = rep(4, length(z))
+  tmp$CS[cs] = 16
+  tmp$CS = as.factor(tmp$CS)
+  if(y.type == &#39;logp&#39;){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = log10p, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }else if(y.type == &#39;z&#39;){
+    pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = CS, color = r2, size=CS)) + 
+    geom_point() + ylab(y.lab)
+  }
+  pl_zoom = pl_zoom + scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                          values = seq(0,1,0.2), breaks=seq(0,1,0.2)) + 
+    # scale_colour_discrete_gradient(
+    #     colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+    #     limits = c(0, 1.01),
+    #     breaks = c(0,0.2,0.4,0.6,0.8,1),
+    #     guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)) +
+    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
+    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
+    ggtitle(title) + 
+    theme_bw() + theme(axis.title.x=element_blank(), axis.text=element_text(size=15),
+                       axis.title.y=element_text(size=12),
+                       plot.title = element_text(size=title.size))
+  tmp.sub = tmp[cs,]
+  if(y.type == &#39;logp&#39;){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
+  }else if(y.type == &#39;z&#39;){
+    pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=z), shape=1, size=4, color=&#39;black&#39;, stroke=0.1)
+  }
+  
+  if(!is.null(xrange)){
+    pl_zoom = pl_zoom + xlim(xrange[1], xrange[2])
+  }
+  
+  pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+  g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
+  g
+}</code></pre>
+<p>Get summary statistics:</p>
+<pre class="r"><code>ss.dat = readRDS(&#39;data/height.GDF5.XtX.Xty.rds&#39;)
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * as.vector(ss.dat$Xty)
+se = sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX)))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)</code></pre>
+<p>Get gene data:</p>
+<pre class="r"><code>genes        &lt;- read_delim(&quot;data/seq_gene.md.gz&quot;,delim = &quot;\t&quot;,quote = &quot;&quot;)
+class(genes) &lt;- &quot;data.frame&quot;
+genes        &lt;- subset(genes,
+                       group_label == &quot;GRCh37.p5-Primary Assembly&quot; &amp;
+                       feature_type == &quot;GENE&quot;)
+start.pos &lt;- min(ss.dat$pos$POS)
+stop.pos  &lt;- max(ss.dat$pos$POS)
+plot.genes &lt;- subset(genes,
+                     chromosome == 20 &amp;
+                     ((chr_start &gt; start.pos &amp; chr_start &lt; stop.pos) |
+                      (chr_stop &gt; start.pos &amp; chr_start &lt; stop.pos)) &amp; feature_type == &#39;GENE&#39;)
+gene.pos.map = plot.genes %&gt;% select(feature_name, chr_start, chr_stop)
+colnames(gene.pos.map) = c(&#39;geneName&#39;, &#39;start&#39;, &#39;end&#39;)
+gene.pos.map = as.data.frame(gene.pos.map)
+gene.pos.map = gene.pos.map %&gt;% mutate(start = start/1e6, end = end/1e6)</code></pre>
+<p>SuSiE bhat result: the top panel shows the r2 with respect to the top hit (diamond shape); the lower panel plots the credible sets in PIP, -log10(p value) and z scores.</p>
+<pre class="r"><code>mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize = FALSE)
+z.max = which.max(abs(z))
+p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
+p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie =&#39;p&#39;)
+p3 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie =&#39;z&#39;)
+grid.arrange(p1, p2, p3, ncol=3)</code></pre>
+<p><img src="figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_results-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>For 1Mb region about GDF5, SuSiE found 6 CSs. The SNP with the strongest marginal p value is rs143384 (p = 4.8689e-251).</p>
+<p>The average correlation between SNPs in CS1 (red) and CS3 (green) is</p>
+<pre class="r"><code>round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L3])), 4)</code></pre>
+<pre><code>[1] 0.4138</code></pre>
+<div id="cs-3" class="section level2">
+<h2>CS 3</h2>
+<ul>
+<li>Option 1. We remove effect of top SNP in CS 1.</li>
+</ul>
+<pre class="r"><code>library(data.table)
+library(readr)
+library(Matrix)
+geno.file = &#39;height.GDF5.raw.gz&#39;
+cat(&quot;Reading genotype data.\n&quot;)
+geno &lt;- fread(geno.file,sep = &quot;\t&quot;,header = TRUE,stringsAsFactors = FALSE)
+class(geno) &lt;- &quot;data.frame&quot;
+
+# Extract the genotypes.
+X &lt;- as(as.matrix(geno[-(1:6)]),&#39;dgCMatrix&#39;)
+
+pheno.file &lt;- &quot;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz&quot;
+out.pheno.file &lt;- &quot;pheno.height.txt&quot;
+out.covar.file &lt;- &quot;covar.removeCS1.height.txt&quot;
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat(&quot;Reading phenotype data.\n&quot;)
+pheno        &lt;- suppressMessages(read_csv(pheno.file))
+class(pheno) &lt;- &quot;data.frame&quot;
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread(&#39;height.GDF5.psam&#39;)
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20 + X[,1132], data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+colnames(Z)[150] = &#39;X&#39;
+Z = scale(Z, center=T, scale=F)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c(&quot;age&quot;,&quot;pc_genetic1&quot;,&quot;pc_genetic2&quot;,&quot;pc_genetic3&quot;,&quot;pc_genetic4&quot;,
+                                &quot;pc_genetic5&quot;,&quot;pc_genetic6&quot;,&quot;pc_genetic7&quot;,&quot;pc_genetic8&quot;,&quot;pc_genetic9&quot;, 
+                                &quot;pc_genetic10&quot;,&quot;pc_genetic11&quot;,&quot;pc_genetic12&quot;,&quot;pc_genetic13&quot;,&quot;pc_genetic14&quot;,
+                                &quot;pc_genetic15&quot;,&quot;pc_genetic16&quot;,&quot;pc_genetic17&quot;,&quot;pc_genetic18&quot;,&quot;pc_genetic19&quot;,&quot;pc_genetic20&quot;))
+Z[,cols] = scale(Z[,cols])
+Z[,&#39;age2&#39;] = Z[,&#39;age&#39;]^2
+
+# Compute XtX and Xty
+y = pheno$height
+names(y) = pheno$id
+
+# Center y
+y = y - mean(y)
+# Center scale X
+X = scale(X, center=T, scale=FALSE)
+xtxdiag = colSums(X^2)
+
+A   &lt;- crossprod(Z) # Z&#39;Z
+# chol decomposition for (Z&#39;Z)^(-1)
+R = chol(solve(A)) # R&#39;R = (Z&#39;Z)^(-1)
+W = R %*% crossprod(Z, X) # RZ&#39;X
+S = R %*% crossprod(Z, y) # RZ&#39;y
+
+# Load LD matrix from raw genotype
+ld.matrix = as.matrix(fread(paste0(&#39;height.GDF5.matrix&#39;)))
+# X&#39;X
+XtX = sqrt(xtxdiag) * t(ld.matrix*sqrt(xtxdiag)) - crossprod(W) # W&#39;W = X&#39;ZR&#39;RZ&#39;X = X&#39;Z(Z&#39;Z)^{-1}Z&#39;X
+rownames(XtX) = colnames(XtX) = colnames(X)
+# X&#39;y
+Xty = as.vector(y %*% X)
+Xty = Xty - crossprod(W, S) # W&#39;S = X&#39;ZR&#39;RZ&#39;y = X&#39;Z(Z&#39;Z)^{-1}Z&#39;y
+
+## SNP info
+maf &lt;- read.delim(&#39;height.GDF5.afreq&#39;)
+pos &lt;- fread(&#39;height.GDF5.pvar&#39;)
+pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
+
+saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
+        paste0(&#39;height.GDF5.removeCS1.XtX.Xty.rds&#39;))</code></pre>
+<p>After removing the effect of rs143384 (p = 4.8689e-251),</p>
+<pre class="r"><code>ss.dat = readRDS(&#39;output/height.GDF5.removeCS1.XtX.Xty.rds&#39;)
+betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z = betas/se
+pval = 2*pnorm(-abs(z))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+names(z) = rownames(R)
+z.ref = mod_bhat$sets$cs$L3[which.max(abs(z[mod_bhat$sets$cs$L3]))]
+names(z.ref) = names(z)[z.ref]
+p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.ref], ld = R[z.ref,], title=&#39;GDF5 CS3&#39;, y.lab = &#39;-log10(p value condition on CS1)&#39;)
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.ref], ld = R[z.ref,], title=&#39;GDF5 CS3&#39;, y.lab = &#39;z scores condition on CS1&#39;, y.type = &#39;z&#39;)
+grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_CS3_1-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<ul>
+<li>Option 2. We remove effect of all other CSs.</li>
+</ul>
+<p>Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.</p>
+<p>The residuals after removing the effects from CSs other than CS3 is <span class="math display">\[
+r = y - \mathbf{X} \sum_{l=3}^{L}\hat{\mathbf{b}}_{l}.
+\]</span></p>
+<pre class="r"><code>ss.dat = readRDS(&#39;data/height.GDF5.XtX.Xty.rds&#39;)
+XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[3,] * mod_bhat$mu[3,]) 
+Xtr = ss.dat$Xty - XtXr
+betas = Xtr/diag(ss.dat$XtX)
+b_2 = colSums(mod_bhat$alpha[-3,]*mod_bhat$mu[-3,])/mod_bhat$X_column_scale_factors
+rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+z.CS3 = betas/se
+names(z.CS3) = colnames(R)
+z.cs3.max = which.max(abs(z.CS3))
+p1 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title=&#39;GDF5 Credible Set 3&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
+p2 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title=&#39;GDF5 Credible Set 3&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type = &#39;z&#39;)
+grid.arrange(p1,p2,ncol=2)</code></pre>
+<p><img src="figure/finemap_height_GDF5_check.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># pdf(&#39;GitHub/finemap-uk-biobank/GDF5_CS1.pdf&#39;, height=5, width=8)
+# p2
+# dev.off()</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.1 (2018-07-02)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Scientific Linux 7.4 (Nitrogen)
+
+Matrix products: default
+BLAS/LAPACK: /software/openblas-0.2.19-el7-x86_64/lib/libopenblas_haswellp-r0.2.19.so
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] ggplot2_3.1.1     susieR_0.8.1.0545 gridExtra_2.3     dplyr_0.8.0.1    
+[5] readr_1.3.1      
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1       plyr_1.8.4       pillar_1.3.1     compiler_3.5.1  
+ [5] later_0.7.5      git2r_0.26.1     workflowr_1.5.0  tools_3.5.1     
+ [9] digest_0.6.18    evaluate_0.12    tibble_2.0.1     gtable_0.2.0    
+[13] lattice_0.20-38  egg_0.4.5        pkgconfig_2.0.2  rlang_0.3.1     
+[17] Matrix_1.2-15    yaml_2.2.0       withr_2.1.2      stringr_1.3.1   
+[21] knitr_1.20       fs_1.3.1         hms_0.4.2        rprojroot_1.3-2 
+[25] grid_3.5.1       tidyselect_0.2.5 glue_1.3.0       R6_2.3.0        
+[29] rmarkdown_1.10   purrr_0.3.2      magrittr_1.5     whisker_0.3-2   
+[33] backports_1.1.2  scales_1.0.0     promises_1.0.1   htmltools_0.3.6 
+[37] assertthat_0.2.1 colorspace_1.4-0 httpuv_1.4.5     labeling_0.3    
+[41] stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0    crayon_1.3.4    </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
