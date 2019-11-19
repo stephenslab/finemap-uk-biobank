@@ -351,7 +351,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-11-18
+<strong>Last updated:</strong> 2019-11-19
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -442,10 +442,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec017c18351fe6099b165f95b7a4aa428726c2be2targetblankc017c18a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c017c18351fe6099b165f95b7a4aa428726c2be2" target="_blank">c017c18</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree5e27d175343d227e446a7e23e20e692334c9f9betargetblank5e27d17a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/5e27d175343d227e446a7e23e20e692334c9f9be" target="_blank">5e27d17</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec017c18351fe6099b165f95b7a4aa428726c2be2targetblankc017c18a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree5e27d175343d227e446a7e23e20e692334c9f9betargetblank5e27d17a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -481,11 +481,12 @@ Untracked files:
     Untracked:  output/height.CABLES1.removeCS2.XtX.Xty.rds
     Untracked:  output/height.GDF5.removeCS1.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.plink2.height.glm.linear
+    Untracked:  output/height.ZBTB38.removeCS1.XtX.Xty.rds
+    Untracked:  output/height.ZBTB38.removeCS2.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.susie.model.rds
 
 Unstaged changes:
     Modified:   analysis/_site.yml
-    Modified:   analysis/finemap_height_ZBTB38_check.Rmd
     Modified:   scripts/plots.R
     Modified:   scripts/prepare.region.sh
     Modified:   scripts/prepare.susieinput.R
@@ -527,6 +528,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/5e27d175343d227e446a7e23e20e692334c9f9be/analysis/finemap_height_larger_region.Rmd" target="_blank">5e27d17</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_larger_region.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/finemap_height_larger_region.html" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -889,35 +924,8 @@ pval = 2*pnorm(-abs(z))
 R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 names(z) = rownames(R)</code></pre>
 <p>Get gene data</p>
-<pre class="r"><code>genes        &lt;- read_delim(&quot;data/seq_gene.md.gz&quot;,delim = &quot;\t&quot;,quote = &quot;&quot;)</code></pre>
-<pre><code>Parsed with column specification:
-cols(
-  `#tax_id` = col_double(),
-  chromosome = col_double(),
-  chr_start = col_double(),
-  chr_stop = col_double(),
-  chr_orient = col_character(),
-  contig = col_character(),
-  ctg_start = col_double(),
-  ctg_stop = col_double(),
-  ctg_orient = col_character(),
-  feature_name = col_character(),
-  feature_id = col_character(),
-  feature_type = col_character(),
-  group_label = col_character(),
-  transcript = col_character(),
-  evidence_code = col_character()
-)</code></pre>
-<pre><code>Warning: 89986 parsing failures.
-   row        col               expected          actual                  file
-147963 chromosome no trailing characters |NW_003315932.1 &#39;data/seq_gene.md.gz&#39;
-147964 chromosome no trailing characters |NW_003315932.1 &#39;data/seq_gene.md.gz&#39;
-147965 chromosome no trailing characters |NW_003315932.1 &#39;data/seq_gene.md.gz&#39;
-147966 chromosome no trailing characters |NW_003315932.1 &#39;data/seq_gene.md.gz&#39;
-147967 chromosome no trailing characters |NW_003315932.1 &#39;data/seq_gene.md.gz&#39;
-...... .......... ...................... ............... .....................
-See problems(...) for more details.</code></pre>
-<pre class="r"><code>class(genes) &lt;- &quot;data.frame&quot;
+<pre class="r"><code>genes        &lt;- read_delim(&quot;data/seq_gene.md.gz&quot;,delim = &quot;\t&quot;,quote = &quot;&quot;)
+class(genes) &lt;- &quot;data.frame&quot;
 genes        &lt;- subset(genes,
                        group_label == &quot;GRCh37.p5-Primary Assembly&quot; &amp;
                        feature_type == &quot;GENE&quot;)
@@ -944,10 +952,84 @@ rows2 &lt;- match(POS,lm.res$POS)
 plot(-log10(lm.res$P[rows2]), -log10(pval[rows1]), xlab = &#39;PLINK2&#39;, ylab = &#39;result&#39;, main=&#39;-log10(p values)&#39;, xlim=c(0,250), ylim=c(0,250))
 abline(0,1)}</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-6-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>par(pty=&#39;s&#39;)
 plot(lm.res$T_STAT[rows2], z[rows1], xlab=&#39;PLINK2&#39;, ylab = &#39;result&#39;, main = &#39;t statistics&#39;, xlim=c(-30,30), ylim=c(-30,30))
 abline(0,-1)</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-7-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Comparing summary statistics with Neale’s result, the results agree well.</p>
 <pre class="r"><code>map = fread(paste0(&#39;data/region-variants-ZBTB38.csv.gz&#39;))
 z.table = data.frame(&#39;id&#39; = gsub(&#39;_.*$&#39;, &#39;&#39;, names(z)), &#39;z&#39; = z)
@@ -970,12 +1052,51 @@ p2 &lt;- ggplot(map,aes(x = neale_tstat,y = z)) +
   labs(x = &quot;Neale lab&quot;,y = &quot;Our result&quot;,title = &quot;t-statistics&quot;)
 grid.arrange(p1,p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-8-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-8-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>We plot the p values from PLINK, and color points according to the correlations with rs2871960. The SNP rs2871960 is marked with diamond.</p>
-<pre class="r"><code>## Plot functions
+<pre class="r"><code>knitr::read_chunk(&quot;scripts/plots.R&quot;)</code></pre>
+<pre class="r"><code>library(ggplot2)
+
 #&#39; plot gene name annotations
 #&#39; @param dat a matrix of gene names with &#39;start&#39; and &#39;end&#39; base-pair position
 #&#39; @param xrange range of x axis, base-pair position
-plot_geneName = function(dat, xrange){
+plot_geneName = function(dat, xrange, chr){
   ngene = 2:nrow(dat)
   line = 1
   dat$lines = NA
@@ -995,14 +1116,18 @@ plot_geneName = function(dat, xrange){
     }
   }
   
+  dat$start = pmax(dat$start, xrange[1])
+  dat$end = pmin(dat$end, xrange[2])
   dat$mean = rowMeans(dat[,c(&#39;start&#39;, &#39;end&#39;)])
   
-  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2], ymin = -lines-0.2)) + 
+  pl = ggplot(dat, aes(xmin = xrange[1], xmax = xrange[2])) + xlim(xrange[1], xrange[2]) + ylim(min(-dat$lines-0.6), -0.8) + 
     geom_rect(aes(xmin = start, xmax = end, ymin = -lines-0.05, ymax = -lines+0.05), fill=&#39;blue&#39;) +
-    geom_text(aes(x = mean, y=-lines-0.3, label=geneName), size=2.5) + xlab(&#39;base-pair position&#39;) + ylab(&#39;Gene&#39;) + 
+    geom_text(aes(x = mean, y=-lines-0.4, label=geneName), size=4) + 
+                xlab(paste0(&#39;base-pair position (Mb) on chromosome &#39;, chr)) + ylab(&#39;Gene&#39;) + 
     theme_bw() + theme(axis.text.x=element_blank(),
                        axis.ticks = element_blank(),
                        axis.text.y=element_blank(),
+                       axis.title = element_text(size=15),
                        plot.title=element_text(size=11),
                        panel.grid.major = element_blank(),
                        panel.grid.minor = element_blank())
@@ -1046,34 +1171,66 @@ scale_colour_discrete_gradient &lt;- function(..., colours, bins = 5, na.value =
 #&#39; @param true the true value
 #&#39; @param y.height height of -log10(p) plot and height of the gene name annotation plot
 #&#39; @param y.lim range of y axis
-locus.zoom = function(z, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
-                      title = NULL, title.size = 7, true = NULL, 
-                      y.height=c(5,1.5), y.lim=NULL){
-  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
-  pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = &#39;darkblue&#39;) + 
-    ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + 
-    theme_bw() + theme(axis.title.x=element_blank(),
-                       plot.title = element_text(size=title.size))
+locus.zoom = function(z, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
+                      title = NULL, title.size = 10, true = NULL, 
+                      y.height=c(5,1.5), y.lim=NULL, y.type=&#39;logp&#39;,xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  
   if(!is.null(ld) &amp;&amp; !is.null(z.ref.name)){
     tmp$ref = names(z) == z.ref.name
     tmp$r2 = ld^2
-    pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
-      ylab(&quot;-log10(p)&quot;) + ggtitle(title) + 
-      scale_colour_discrete_gradient(
-        colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
-        limits = c(0, 1.01),
-        breaks = c(0,0.2,0.4,0.6,0.8,1),
-        guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
-      ) + 
-      scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
-      theme_bw() + theme(axis.title.x=element_blank(),
-                         plot.title = element_text(size=title.size))
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab(&quot;z score&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c(&quot;darkblue&quot;, &quot;deepskyblue&quot;, &quot;lightgreen&quot;, &quot;orange&quot;, &quot;red&quot;),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = &quot;black&quot;, ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }
+  }else{
+    if(y.type == &#39;logp&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;-log10(p value)&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == &#39;z&#39;){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z)) + geom_point(color = &#39;darkblue&#39;) + 
+        ylab(&quot;z scores&quot;) + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }
   }
   
   if(!is.null(y.lim)){
     pl_zoom = pl_zoom + ylim(y.lim[1], y.lim[2])
   }
-  pl_zoom = pl_zoom + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
+  # pl_zoom = pl_zoom + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
   if(!is.null(true)){
     tmp.true = data.frame(POS = which(true!=0), p = tmp$p[which(true!=0)], 
                           ref = (names(z) == z.ref.name)[which(true!=0)],
@@ -1083,7 +1240,7 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL,
       geom_text(data=tmp.true, aes(x = POS-30, y=p+1, label=label), size=3, color=&#39;red&#39;)
   }
   if(!is.null(gene.pos.map)){
-    pl_gene = plot_geneName(gene.pos.map, xrange = c(min(pos), max(pos)))
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
     g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = y.height, draw=FALSE)
   }else{
     g = pl_zoom
@@ -1101,36 +1258,50 @@ locus.zoom = function(z, pos, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL,
 #&#39; @param title title of the plot
 #&#39; @param title.size the size of the title
 #&#39; @param true the true value
-#&#39; @param plotz whether to plot locuszoom plot
+#&#39; @param plot.locuszoom whether to plot locuszoom plot
 #&#39; @param y.lim range of y axis
-#&#39; @param y.susie the y axis of the SuSiE plot, &#39;PIP&#39; or &#39;p&#39;, &#39;p&#39; refers to -log10(p)
-susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, z.ref.name, ld, 
-                                title = NULL, title.size = 7, true = NULL, 
-                                plotz = TRUE, y.lim=NULL, y.susie=&#39;PIP&#39;){
-  if(plotz){
-    pl_zoom = locus.zoom(z, pos = pos, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim)
+#&#39; @param y.susie the y axis of the SuSiE plot, &#39;PIP&#39; or &#39;p&#39; or &#39;z&#39;, &#39;p&#39; refers to -log10(p)
+susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.name, ld, 
+                                title = NULL, title.size = 10, true = NULL, 
+                                plot.locuszoom = TRUE, y.lim=NULL, y.susie=&#39;PIP&#39;, xrange=NULL){
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
+  if(plot.locuszoom){
+    if(y.susie == &#39;z&#39;){
+      y.type = &#39;z&#39;
+    }else{
+      y.type = &#39;logp&#39;
+    }
+    pl_zoom = locus.zoom(z, pos = pos, chr = chr, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim, y.type=y.type, xrange=xrange)
   }
   pip = model$pip
-  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
+  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
   if(y.susie == &#39;PIP&#39;){
-    if(plotz){
-      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
-        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
-    }else{
-      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
-        theme_bw() + theme(axis.title.x=element_blank())
+    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+      xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
     }
   }else if(y.susie == &#39;p&#39;){
-    if(plotz){
-      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
-        ylab(&quot;-log10(p)&quot;) + 
-        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
-    }else{
-      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
-        ylab(&quot;-log10(p)&quot;) + 
-        theme_bw() + theme(axis.title.x=element_blank())
+    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;-log10(p value)&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+      # pl_susie = pl_susie + geom_hline(yintercept=-log10(5e-08), linetype=&#39;dashed&#39;, color = &#39;red&#39;)
     }
-    
+  }else if(y.susie == &#39;z&#39;){
+    pl_susie = ggplot(tmp, aes(x = POS, y = z)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab(&quot;z scores&quot;) + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
   }
   
   if(!is.null(true)){
@@ -1141,28 +1312,40 @@ susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, z.ref.name, 
   
   model.cs = model$sets$cs
   if(!is.null(model.cs)){
+    tmp$CS = numeric(length(z))
     for(i in 1:length(model.cs)){
-      tmp.cs = tmp[model.cs[[i]],]
-      if(y.susie == &#39;PIP&#39;){
-        pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP), 
-                                       color = i+4, size=3, show.legend = FALSE, shape=1, stroke = 1)
-      }else if(y.susie == &#39;p&#39;){
-        pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p), 
-                                       color = i+4, size=3, show.legend = FALSE, shape=1, stroke = 1)
-      }
+      tmp$CS[model.cs[[i]]] = gsub(&#39;L&#39;, &#39;CS&#39;, names(model.cs)[i])
+    }
+    tmp.cs = tmp[unlist(model.cs),]
+    tmp.cs$CS = factor(tmp.cs$CS)
+    levels(tmp.cs$CS) = paste0(&#39;CS&#39;, 1:length(model.cs))
+    colors = c(&#39;red&#39;, &#39;cyan&#39;, &#39;green&#39;, &#39;orange&#39;, &#39;dodgerblue&#39;, &#39;violet&#39;, &#39;gold&#39;,
+               &#39;#FF00FF&#39;, &#39;forestgreen&#39;, &#39;#7A68A6&#39;)
+    if(y.susie == &#39;PIP&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=PIP, color=CS), 
+                                       size=3, shape=1, stroke = 2) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;p&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
+    }else if(y.susie == &#39;z&#39;){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=z, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
     }
   }
   
   if(!is.null(gene.pos.map)){
-    pl_gene = plot_geneName(gene.pos.map, xrange = c(min(pos), max(pos)))
-    if(plotz){
+    pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
+    if(plot.locuszoom){
       g = egg::ggarrange(pl_zoom, pl_susie, pl_gene, nrow=3, heights = c(4,4,1.5), draw=FALSE)
     }else{
-      g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(4,2), draw=FALSE)
+      g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
     }
     
   }else{
-    if(plotz){
+    if(plot.locuszoom){
       g = egg::ggarrange(pl_zoom, pl_susie, nrow=2, heights = c(4,4), draw=FALSE)
     }else{
       g = pl_susie
@@ -1170,8 +1353,45 @@ susie_plot_locuszoom = function(z, model, pos, gene.pos.map = NULL, z.ref.name, 
   }
   g
 }</code></pre>
-<pre class="r"><code>locus.zoom(z, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;)</code></pre>
+<pre class="r"><code>locus.zoom(z, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, chr=3,ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;)</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-10-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-10-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="susie" class="section level2">
 <h2>SuSiE</h2>
@@ -1192,10 +1412,47 @@ Resources Used:    cput=00:32:43,vmem=35429564kb,walltime=00:39:23,mem=31456804k
 
 Fitting SuSiE model tooks 2304 seconds.</code></pre>
 <pre class="r"><code>mod = readRDS(&#39;output/height.ZBTB38.susie.model.rds&#39;)
-p1 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;)
-p2 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, y.susie =&#39;p&#39;)
+p1 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;)
+p2 = susie_plot_locuszoom(z, mod, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, y.susie =&#39;p&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-12-1.png" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-12-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-12-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Fit susie bhat and rss model using LD matrix from LDstore and summary statistics from PLINK:</p>
 <pre class="r"><code>mod_bhat.ld = susie_bhat(bhat = as.vector(betas), shat = as.vector(se), R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty)/(ss.dat$n-1), standardize = FALSE)
 mod_bhat.ld.stand = susie_bhat(bhat = as.vector(betas), shat = as.vector(se), R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty)/(ss.dat$n-1), standardize = TRUE)
@@ -1204,11 +1461,48 @@ mod_rss.ld = susie_rss(z = as.vector(z), R = R)</code></pre>
 development, so it should not be considered stable.</code></pre>
 <pre><code>Warning in susie_rss(z = as.vector(z), R = R): The maximum number of non-
 zero effects is greater than 1, this feature is experimental.</code></pre>
-<pre class="r"><code>p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE bhat without standardize&#39;)
-p_bhat_stand = susie_plot_locuszoom(z, mod_bhat.ld.stand, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE bhat with standardize&#39;)
-p_rss = susie_plot_locuszoom(z, mod_rss.ld, pos = ss.dat$pos$POS/1e6, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE RSS&#39;)
+<pre class="r"><code>p_bhat = susie_plot_locuszoom(z, mod_bhat.ld, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE bhat without standardize&#39;)
+p_bhat_stand = susie_plot_locuszoom(z, mod_bhat.ld.stand, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE bhat with standardize&#39;)
+p_rss = susie_plot_locuszoom(z, mod_rss.ld, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[which(ss.dat$pos$POS == 141121814),], z.ref.name = &#39;rs2871960_C&#39;, title = &#39;SuSiE RSS&#39;)
 grid.arrange(p_bhat, p_bhat_stand, p_rss, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_larger_region.Rmd/unnamed-chunk-13-1.png" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-13-1">
+Past versions of unnamed-chunk-13-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-13-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b30f8d67239d4a0a8c6026e0baa1d6b11c18545a/docs/figure/finemap_height_larger_region.Rmd/unnamed-chunk-13-1.png" target="_blank">b30f8d6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The first credible set contains</p>
 <pre class="r"><code>cs1 = ss.dat$pos[unlist(mod_bhat.ld$sets$cs$L1),]
 cs1$gene = sapply(cs1$POS/1e6, function(i){
