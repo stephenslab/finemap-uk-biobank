@@ -352,7 +352,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-11-18
+<strong>Last updated:</strong> 2019-11-19
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -443,10 +443,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreed9848c88e62b35af828c8f3949ca3447869f54c2targetblankd9848c8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/d9848c88e62b35af828c8f3949ca3447869f54c2" target="_blank">d9848c8</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreeb7e63090e96db62f96eee219416041e4bbd49417targetblankb7e6309a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/b7e63090e96db62f96eee219416041e4bbd49417" target="_blank">b7e6309</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreed9848c88e62b35af828c8f3949ca3447869f54c2targetblankd9848c8a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreeb7e63090e96db62f96eee219416041e4bbd49417targetblankb7e6309a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -485,9 +485,8 @@ Untracked files:
 
 Unstaged changes:
     Modified:   analysis/_site.yml
-    Modified:   analysis/finemap_height_GDF5_check.Rmd
     Modified:   analysis/finemap_height_ZBTB38_check.Rmd
-    Modified:   analysis/finemap_height_larger_region.Rmd
+    Modified:   analysis/index.Rmd
     Modified:   scripts/plots.R
     Modified:   scripts/prepare.region.sh
     Modified:   scripts/prepare.susieinput.R
@@ -529,6 +528,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b7e63090e96db62f96eee219416041e4bbd49417/analysis/finemap_height_CABLES1_check.Rmd" target="_blank">b7e6309</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_CABLES1_check.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/8aef62bff8ed7c4f295d65f0d22644c4aa84dcda/docs/finemap_height_CABLES1_check.html" target="_blank">8aef62b</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1087,6 +1120,29 @@ zouyuxin
 </table>
 </div>
 </div>
+<p>The first credible set contains</p>
+<pre class="r"><code>cs1 = ss.dat$pos[unlist(mod_bhat$sets$cs$L1),]
+cs1$gene = sapply(cs1$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start &lt;= i), which(gene.pos.map$end &gt;= i))
+  gene.pos.map$geneName[id]
+})
+cs1</code></pre>
+<pre><code>     #CHROM      POS        ID REF ALT      maf    gene
+1293     18 20724810 rs7235010   A   G 0.216373 CABLES1
+1294     18 20724931 rs4392169   T   A 0.216218 CABLES1
+1296     18 20727611 rs4800452   T   C 0.216717 CABLES1
+1299     18 20728223 rs7236494   A   G 0.216449 CABLES1
+1301     18 20729714 rs7244464   C   A 0.216409 CABLES1</code></pre>
+<p>The second credible set contains</p>
+<pre class="r"><code>cs2 = ss.dat$pos[unlist(mod_bhat$sets$cs$L2),]
+cs2$gene = sapply(cs2$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start &lt;= i), which(gene.pos.map$end &gt;= i))
+  gene.pos.map$geneName[id]
+})
+cs2</code></pre>
+<pre><code>     #CHROM      POS         ID REF ALT      maf    gene
+1281     18 20719164 rs12327253   G   A 0.286795 CABLES1
+1282     18 20719585 rs57772091   C   T 0.187854 CABLES1</code></pre>
 <div id="cs-1" class="section level2">
 <h2>CS 1</h2>
 <ul>
@@ -1245,13 +1301,13 @@ z.cs1.max = which.max(abs(z.CS1))
 p1 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title=&#39;CABLES1 Credible Set 1&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title=&#39;CABLES1 Credible Set 1&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="1920" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
-Past versions of unnamed-chunk-8-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div id="fig-unnamed-chunk-10-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1270,7 +1326,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">ac423f0</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/8aef62bff8ed7c4f295d65f0d22644c4aa84dcda/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">8aef62b</a>
 </td>
 <td>
 zouyuxin
@@ -1281,7 +1337,7 @@ zouyuxin
 </tr>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">9e4fee7</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">ac423f0</a>
 </td>
 <td>
 zouyuxin
@@ -1292,7 +1348,18 @@ zouyuxin
 </tr>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">3db8ace</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">9e4fee7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">3db8ace</a>
 </td>
 <td>
 zouyuxin
@@ -1429,6 +1496,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/8aef62bff8ed7c4f295d65f0d22644c4aa84dcda/docs/figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS2_1-1.png" target="_blank">8aef62b</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS2_1-1.png" target="_blank">9e4fee7</a>
 </td>
 <td>
@@ -1463,13 +1541,13 @@ z.cs2.max = which.max(abs(z.CS2))
 p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
 grid.arrange(p3, p4, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-12-1.png" width="1920" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
-Past versions of unnamed-chunk-10-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-12-1">
+Past versions of unnamed-chunk-12-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div id="fig-unnamed-chunk-12-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1488,7 +1566,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">ac423f0</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-12-1.png" target="_blank">9e4fee7</a>
 </td>
 <td>
 zouyuxin
@@ -1499,18 +1577,7 @@ zouyuxin
 </tr>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">9e4fee7</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2019-11-19
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">3db8ace</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3db8acee4d25c5eb52995d35da642ad18b9a5335/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-12-1.png" target="_blank">3db8ace</a>
 </td>
 <td>
 zouyuxin
