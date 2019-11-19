@@ -1,7 +1,7 @@
 ---
 title: "Fine-mapping Height GDF5 -- SuSiE check"
 author: "Yuxin Zou"
-date: "10/07/2019"
+date: "11/18/2019"
 output: 
   html_document:
     code_folding: hide
@@ -242,12 +242,10 @@ b_2 = colSums(mod_bhat$alpha[-3,]*mod_bhat$mu[-3,])/mod_bhat$X_column_scale_fact
 rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
 se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS3 = betas/se
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 names(z.CS3) = colnames(R)
 z.cs3.max = which.max(abs(z.CS3))
 p1 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title='GDF5 Credible Set 3', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
 p2 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title='GDF5 Credible Set 3', y.lab = 'z scores condition on other CSs', title.size = 20, y.type = 'z')
 grid.arrange(p1,p2,ncol=2)
-# pdf('GitHub/finemap-uk-biobank/GDF5_CS1.pdf', height=5, width=8)
-# p2
-# dev.off()
 ```
