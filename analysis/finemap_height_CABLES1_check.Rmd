@@ -51,7 +51,7 @@ locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld
                        axis.title.y=element_text(size=12),
                        plot.title = element_text(size=title.size))
   tmp.sub = tmp[cs,]
-  if(y.type == 'log10p'){
+  if(y.type == 'logp'){
     pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=log10p), shape=1, size=4, color='black', stroke=0.1)
   }else if(y.type == 'z'){
     pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=z), shape=1, size=4, color='black', stroke=0.1)
@@ -99,8 +99,8 @@ gene.pos.map = gene.pos.map %>% mutate(start = start/1e6, end = end/1e6)
 gene.pos.map = gene.pos.map[-c(1),]
 ```
 
-SuSiE bhat result:
-```{r fig.align='center', fig.width=45, fig.height=15}
+SuSiE bhat result: the top panel shows the r2 with respect to the top hit (diamond shape); the lower panel plots the credible sets in PIP, -log10(p value) and z scores.
+```{r CABLES1_bhat_nostandardize_results, fig.align='center', fig.width=45, fig.height=15}
 mod_bhat = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), track_fit=TRUE, standardize=FALSE)
 z.max = which.max(abs(z))
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max))
@@ -117,7 +117,7 @@ round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)
 ```
 
 Zoom in plot:
-```{r}
+```{r CABLES1_bhat_nostandardize_results_CSszoomin, fig.align='center', fig.height=8, fig.width=10}
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title='CABLES1 Credible Sets', plot.locuszoom = FALSE, y.susie = 'p', xrange=c(20.5, 21), title.size = 20)
 p1
 # pdf('GitHub/finemap-uk-biobank/CABLES1_CSs.pdf', height = 5, width=8)
@@ -127,7 +127,7 @@ p1
 
 ## CS 1
 
-1. Removing effect of top SNP in CS 2
+* Option 1. We remove effect of top SNP in CS 2.
 
 ```{r eval=FALSE}
 library(data.table)
@@ -212,8 +212,8 @@ saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y),
         paste0('height.CABLES1.removeCS2.XtX.Xty.rds'))
 ```
 
-After removing the effect of rs12327253 (p = 0.1015),
-```{r warning=FALSE, fig.align='center', fig.height=15, fig.width=30}
+After removing the effect of rs12327253 (p = 0.1015), the p values and z scores are plotted below. The color is correspongding to LD, the shape is corresponding to CS. The SNP in CS is labeled with filled circle.
+```{r CABLES1_bhat_nostandardize_CS1_2, warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
 ss.dat = readRDS('output/height.CABLES1.removeCS2.XtX.Xty.rds')
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -224,13 +224,22 @@ R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$
 names(z) = rownames(R)
 z.max = which.max(abs(z))
 p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS1', y.lab = '-log10(p value condition on CS2)')
-p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS1', y.lab = 'z scores condition on CS2)', y.type = 'z')
+p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title='CABLES1 CS1', y.lab = 'z scores condition on CS2', y.type = 'z')
 grid.arrange(p1, p2, ncol=2)
 ```
 
-2. Remove effect of all SNPs based on weights in other CSs
-```{r}
+* Option 2. We remove effect of all other CSs.
+
+Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.
+
+The residuals after removing the effects from CSs other than CS1 is
+\[
+r = y - \mathbf{X} \sum_{l=2}^{L}\hat{\mathbf{b}}_{l}.
+\]
+
+```{r, warning=FALSE, fig.align='center', fig.height=8, fig.width=20}
 ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
+# remove 1-st effect from fitted values
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[1,] * mod_bhat$mu[1,]) 
 Xtr = ss.dat$Xty - XtXr
 betas = Xtr/diag(ss.dat$XtX)
@@ -240,35 +249,17 @@ se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS1 = betas/se
 names(z.CS1) = colnames(R)
 z.cs1.max = which.max(abs(z.CS1))
-p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
-p2
+p1 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = 'z scores condition on other CSs', title.size = 20, y.type='z')
+grid.arrange(p1, p2, ncol=2)
 # pdf('GitHub/finemap-uk-biobank/CABLES1_CS1.pdf', height=5, width=8)
 # p2
 # dev.off()
 ```
 
-```{r}
-tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[1,]/(1-mod_bhat$alpha[1,])))
-tmp$CS = rep(4, length(z))
-tmp$CS[mod_bhat$sets$cs$L1] = 16
-tmp$CS = as.factor(tmp$CS)
-pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
-  geom_point() + ylab('log posterior odd') + 
-    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
-    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
-    ggtitle('CABLES1 Credible Set 1') + 
-    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
-tmp.sub = tmp[mod_bhat$sets$cs$L1,]
-pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
-pl_zoom = pl_zoom + xlim(20.5, 21)
-pl_gene = plot_geneName(gene.pos.map, xrange = c(20.5, 21), chr=3)
-g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
-g
-```
-
 ## CS 2
 
-1. Removing effect of top SNP in CS 1
+* Option 1. We remove effect of top SNP in CS 1.
 
 ```{r eval=FALSE}
 library(data.table)
@@ -349,7 +340,7 @@ saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y),
 ```
 
 After removing the effect of rs7235010 (p = 1.3394e-113), the conditional p value for rs57772091 becomes 1.9404e-08!
-```{r warning=FALSE, fig.align='center', fig.height=15, fig.width=30}
+```{r CABLES1_bhat_nostandardize_CS2_1, warning=FALSE, fig.align='center', fig.height=8, fig.width=10}
 ss.dat = readRDS('output/height.CABLES1.removeCS1.XtX.Xty.rds')
 betas = as.vector(ss.dat$Xty/diag(ss.dat$XtX))
 rss = c(ss.dat$yty) - betas * ss.dat$Xty
@@ -364,8 +355,16 @@ p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, 
 grid.arrange(p1, p2, ncol=2)
 ```
 
-2. Remove effect of all SNPs based on weights in other CSs
-```{r}
+* Option 2. We remove effect of all other CSs.
+
+Instead of removing the effect of top SNP from other CSs, we do exactly what SuSiE does here. In SuSiE, we estimate effects using residuals that are obtained by removing the effects of all other CSs.
+
+The residuals after removing the effects from CSs other than CS2 is
+\[
+r = y - \mathbf{X} \sum_{l\neq 2}^{L}\hat{\mathbf{b}}_{l}.
+\]
+
+```{r warning=FALSE, fig.align='center', fig.height=8, fig.width=10}
 ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[2,] * mod_bhat$mu[2,]) 
 Xtr = ss.dat$Xty - XtXr
@@ -377,27 +376,10 @@ z.CS2 = betas/se
 names(z.CS2) = colnames(R)
 z.cs2.max = which.max(abs(z.CS2))
 p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
+p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = 'z scores condition on other CSs', title.size = 20, y.type='z')
 p3
 # pdf('GitHub/finemap-uk-biobank/CABLES1_CS2.pdf', height=5, width=8)
 # p3
 # dev.off()
 ```
 
-```{r}
-tmp = data.frame(POS = ss.dat$pos$POS/1e6, logPO = log(mod_bhat$alpha[2,]/(1-mod_bhat$alpha[2,])))
-tmp$CS = rep(4, length(z))
-tmp$CS[mod_bhat$sets$cs$L2] = 16
-tmp$CS = as.factor(tmp$CS)
-pl_zoom = ggplot(tmp, aes(x = POS, y = logPO, shape = CS, size=CS)) + 
-  geom_point() + ylab('log posterior odd') + 
-    scale_shape_manual(values = c(4, 19), guide=FALSE) + 
-    scale_size_manual(values=c(1.5,4), guide=FALSE) + 
-    ggtitle('CABLES1 Credible Set 2') + 
-    theme_bw() + theme(axis.title.x=element_blank(), plot.title = element_text(size=12))
-tmp.sub = tmp[mod_bhat$sets$cs$L2,]
-pl_zoom = pl_zoom + geom_point(data = tmp.sub, aes(x=POS, y=logPO), shape=1, size=4, color='black', stroke=0.1)
-pl_zoom = pl_zoom + xlim(20.5, 21)
-pl_gene = plot_geneName(gene.pos.map, xrange = c(20.25, 21), chr=3)
-g = egg::ggarrange(pl_zoom, pl_gene, nrow=2, heights = c(5,1), draw=FALSE)
-g
-```
