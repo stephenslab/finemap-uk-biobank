@@ -24,6 +24,9 @@ knitr::read_chunk("scripts/plots.R")
 ```{r}
 locus.zoom.cs = function(z, cs, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, title = NULL, title.size = 10, xrange = NULL, y.lab='-log10(p value)', y.type = 'logp'){
 
+  if(is.null(xrange)){
+    xrange = c(min(pos), max(pos))
+  }
   tmp = data.frame(POS = pos, log10p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
   tmp$ref = names(z) == z.ref.name
   tmp$r2 = ld^2
@@ -120,9 +123,6 @@ Zoom in plot:
 ```{r CABLES1_bhat_nostandardize_results_CSszoomin, fig.align='center', fig.height=8, fig.width=10}
 p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title='CABLES1 Credible Sets', plot.locuszoom = FALSE, y.susie = 'p', xrange=c(20.5, 21), title.size = 20)
 p1
-# pdf('GitHub/finemap-uk-biobank/CABLES1_CSs.pdf', height = 5, width=8)
-# p1
-# dev.off()
 ```
 
 ## CS 1
@@ -243,18 +243,16 @@ ss.dat = readRDS('data/height.CABLES1.XtX.Xty.rds')
 XtXr = mod_bhat$XtXr - ss.dat$XtX %*% (mod_bhat$alpha[1,] * mod_bhat$mu[1,]) 
 Xtr = ss.dat$Xty - XtXr
 betas = Xtr/diag(ss.dat$XtX)
-b_2 = colSums(mod_bhat$alpha[-1,]*mod_bhat$mu[-1,])/mod_bhat$X_column_scale_factors
+b_2 = colSums(mod_bhat$alpha[-1,]*mod_bhat$mu[-1,])
 rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
 se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS1 = betas/se
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 names(z.CS1) = colnames(R)
 z.cs1.max = which.max(abs(z.CS1))
 p1 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
 p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(20.5,21), title='CABLES1 Credible Set 1', y.lab = 'z scores condition on other CSs', title.size = 20, y.type='z')
 grid.arrange(p1, p2, ncol=2)
-# pdf('GitHub/finemap-uk-biobank/CABLES1_CS1.pdf', height=5, width=8)
-# p2
-# dev.off()
 ```
 
 ## CS 2
@@ -335,6 +333,11 @@ rownames(XtX) = colnames(XtX) = colnames(X)
 Xty = as.vector(y %*% X)
 Xty = Xty - crossprod(W, S) # W'S = X'ZR'RZ'y = X'Z(Z'Z)^{-1}Z'y
 
+## SNP info
+maf <- read.delim('height.CABLES1.afreq')
+pos <- fread('height.CABLES1.pvar')
+pos$maf = pmin(maf$ALT_FREQS, 1-maf$ALT_FREQS)
+
 saveRDS(list(XtX = XtX, Xty = Xty, yty = sum(y^2) - crossprod(S), n = length(y), pos=pos),
         paste0('height.CABLES1.removeCS1.XtX.Xty.rds'))
 ```
@@ -373,13 +376,11 @@ b_2 = colSums(mod_bhat$alpha[-2,]*mod_bhat$mu[-2,])/mod_bhat$X_column_scale_fact
 rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
 se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS2 = betas/se
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 names(z.CS2) = colnames(R)
 z.cs2.max = which.max(abs(z.CS2))
 p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = '-log10(p value condition on other CSs)', title.size = 20)
 p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title='CABLES1 Credible Set 2', y.lab = 'z scores condition on other CSs', title.size = 20, y.type='z')
 p3
-# pdf('GitHub/finemap-uk-biobank/CABLES1_CS2.pdf', height=5, width=8)
-# p3
-# dev.off()
 ```
 
