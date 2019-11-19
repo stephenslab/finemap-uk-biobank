@@ -11,7 +11,7 @@
 
 <meta name="author" content="Yuxin Zou" />
 
-<meta name="date" content="2019-10-07" />
+<meta name="date" content="2019-11-18" />
 
 <title>Fine-mapping Height GDF5 – SuSiE check</title>
 
@@ -327,7 +327,7 @@ div.section {
 
 <h1 class="title toc-ignore">Fine-mapping Height GDF5 – SuSiE check</h1>
 <h4 class="author"><em>Yuxin Zou</em></h4>
-<h4 class="date"><em>10/07/2019</em></h4>
+<h4 class="date"><em>11/18/2019</em></h4>
 
 </div>
 
@@ -443,10 +443,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec7cb5617d564fda5287e51a060759fadeac4e57ctargetblankc7cb561a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c7cb5617d564fda5287e51a060759fadeac4e57c" target="_blank">c7cb561</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree4809e97312b26d2c5bcb07bfe1bc7078344f4a71targetblank4809e97a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/4809e97312b26d2c5bcb07bfe1bc7078344f4a71" target="_blank">4809e97</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec7cb5617d564fda5287e51a060759fadeac4e57ctargetblankc7cb561a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree4809e97312b26d2c5bcb07bfe1bc7078344f4a71targetblank4809e97a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -479,6 +479,8 @@ Untracked files:
     Untracked:  output/height.CABLES1.removeCS2.XtX.Xty.rds
     Untracked:  output/height.GDF5.removeCS1.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.plink2.height.glm.linear
+    Untracked:  output/height.ZBTB38.removeCS1.XtX.Xty.rds
+    Untracked:  output/height.ZBTB38.removeCS2.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.susie.model.rds
 
 Unstaged changes:
@@ -526,6 +528,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/4809e97312b26d2c5bcb07bfe1bc7078344f4a71/analysis/finemap_height_GDF5_check.Rmd" target="_blank">4809e97</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_GDF5_check.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/fbbaa4a02b76198f4d45f36bf65ccffdb379f729/docs/finemap_height_GDF5_check.html" target="_blank">fbbaa4a</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -898,6 +934,43 @@ p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.po
 p3 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = names(z.max), y.susie =&#39;z&#39;)
 grid.arrange(p1, p2, p3, ncol=3)</code></pre>
 <p><img src="figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_results-1.png" width="4320" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GDF5_bhat_nostandardize_results-1">
+Past versions of GDF5_bhat_nostandardize_results-1.png
+</button>
+</p>
+<div id="fig-GDF5_bhat_nostandardize_results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/fbbaa4a02b76198f4d45f36bf65ccffdb379f729/docs/figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_results-1.png" target="_blank">fbbaa4a</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>For 1Mb region about GDF5, SuSiE found 6 CSs. The SNP with the strongest marginal p value is rs143384 (p = 4.8689e-251).</p>
 <p>The average correlation between SNPs in CS1 (red) and CS3 (green) is</p>
 <pre class="r"><code>round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L3])), 4)</code></pre>
@@ -1002,6 +1075,43 @@ p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, 
 p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr=20, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.ref], ld = R[z.ref,], title=&#39;GDF5 CS3&#39;, y.lab = &#39;z scores condition on CS1&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_CS3_1-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-GDF5_bhat_nostandardize_CS3_1-1">
+Past versions of GDF5_bhat_nostandardize_CS3_1-1.png
+</button>
+</p>
+<div id="fig-GDF5_bhat_nostandardize_CS3_1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/fbbaa4a02b76198f4d45f36bf65ccffdb379f729/docs/figure/finemap_height_GDF5_check.Rmd/GDF5_bhat_nostandardize_CS3_1-1.png" target="_blank">fbbaa4a</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <ul>
 <li>Option 2. We remove effect of all other CSs.</li>
 </ul>
@@ -1017,15 +1127,50 @@ b_2 = colSums(mod_bhat$alpha[-3,]*mod_bhat$mu[-3,])/mod_bhat$X_column_scale_fact
 rss = c(ss.dat$yty - 2*sum(ss.dat$Xty * b_2) + sum(XtXr * b_2)) - betas * Xtr
 se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
 z.CS3 = betas/se
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
 names(z.CS3) = colnames(R)
 z.cs3.max = which.max(abs(z.CS3))
 p1 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title=&#39;GDF5 Credible Set 3&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p2 = locus.zoom.cs(z.CS3, mod_bhat$sets$cs$L3, pos=ss.dat$pos$POS/1e6, chr = 20, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs3.max), ld = R[z.cs3.max,], title=&#39;GDF5 Credible Set 3&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type = &#39;z&#39;)
 grid.arrange(p1,p2,ncol=2)</code></pre>
 <p><img src="figure/finemap_height_GDF5_check.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># pdf(&#39;GitHub/finemap-uk-biobank/GDF5_CS1.pdf&#39;, height=5, width=8)
-# p2
-# dev.off()</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/fbbaa4a02b76198f4d45f36bf65ccffdb379f729/docs/figure/finemap_height_GDF5_check.Rmd/unnamed-chunk-8-1.png" target="_blank">fbbaa4a</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
