@@ -443,10 +443,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree559060a74b02e192f42994e50da1bbb396052ae8targetblank559060aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/559060a74b02e192f42994e50da1bbb396052ae8" target="_blank">559060a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreed9848c88e62b35af828c8f3949ca3447869f54c2targetblankd9848c8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/d9848c88e62b35af828c8f3949ca3447869f54c2" target="_blank">d9848c8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree559060a74b02e192f42994e50da1bbb396052ae8targetblank559060aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreed9848c88e62b35af828c8f3949ca3447869f54c2targetblankd9848c8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -487,6 +487,7 @@ Unstaged changes:
     Modified:   analysis/_site.yml
     Modified:   analysis/finemap_height_GDF5_check.Rmd
     Modified:   analysis/finemap_height_ZBTB38_check.Rmd
+    Modified:   analysis/finemap_height_larger_region.Rmd
     Modified:   scripts/plots.R
     Modified:   scripts/prepare.region.sh
     Modified:   scripts/prepare.susieinput.R
@@ -528,6 +529,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/d9848c88e62b35af828c8f3949ca3447869f54c2/analysis/finemap_height_CABLES1_check.Rmd" target="_blank">d9848c8</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_CABLES1_check.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/finemap_height_CABLES1_check.html" target="_blank">ac423f0</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1012,11 +1047,8 @@ zouyuxin
 <pre class="r"><code>round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)</code></pre>
 <pre><code>[1] 0.2764</code></pre>
 <p>Zoom in plot:</p>
-<pre class="r"><code>p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title=&#39;CABLES1 Credible Sets&#39;, plot.locuszoom = FALSE, y.susie = &#39;p&#39;, xrange=c(20.5, 21), title.size = 20)</code></pre>
-<pre><code>Warning: Removed 1129 rows containing missing values (geom_point).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_rect).</code></pre>
-<pre><code>Warning: Removed 4 rows containing missing values (geom_text).</code></pre>
-<pre class="r"><code>p1</code></pre>
+<pre class="r"><code>p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title=&#39;CABLES1 Credible Sets&#39;, plot.locuszoom = FALSE, y.susie = &#39;p&#39;, xrange=c(20.5, 21), title.size = 20)
+p1</code></pre>
 <p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_results_CSszoomin-1.png" width="960" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-CABLES1_bhat_nostandardize_results_CSszoomin-1">
@@ -1238,6 +1270,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">ac423f0</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-8-1.png" target="_blank">9e4fee7</a>
 </td>
 <td>
@@ -1361,7 +1404,7 @@ z.max = which.max(abs(z))
 p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS2&#39;, y.lab = &#39;-log10(p value condition on CS1)&#39;)
 p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(20.5,21), title=&#39;CABLES1 CS2&#39;, y.lab = &#39;z scores condition on CS1)&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS2_1-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/CABLES1_bhat_nostandardize_CS2_1-1.png" width="1920" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-CABLES1_bhat_nostandardize_CS2_1-1">
 Past versions of CABLES1_bhat_nostandardize_CS2_1-1.png
@@ -1419,8 +1462,8 @@ names(z.CS2) = colnames(R)
 z.cs2.max = which.max(abs(z.CS2))
 p3 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p4 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=18, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(20.5, 21), title=&#39;CABLES1 Credible Set 2&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
-p3</code></pre>
-<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="960" style="display: block; margin: auto;" /></p>
+grid.arrange(p3, p4, ncol=2)</code></pre>
+<p><img src="figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" width="1920" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
 Past versions of unnamed-chunk-10-1.png
@@ -1443,6 +1486,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/ac423f0c5f87f0b3a5a959000488aee3bef36e3b/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">ac423f0</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e4fee74a03d0fa998340836d5409dc9d0bdddcc/docs/figure/finemap_height_CABLES1_check.Rmd/unnamed-chunk-10-1.png" target="_blank">9e4fee7</a>
