@@ -8,4 +8,24 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+This repository contains code and results for fine-mapping on UK Biobank phenotypes.
+
+* We apply SuSiE related methods on top 20 hits for height.
+    
+    - [SuSiE-bhat without standardize](finemap_height_20top_susiebhat_nostandardize.html)
+    
+    - [SuSiE-bhat with standardize](finemap_height_20top_susiebhat_standardize.html)
+    
+    - [SuSiE-RSS](finemap_height_20top_susierss.html)
+    
+    - [SuSiE-RSS with lambda = 1e-4](finemap_height_20top_susierss_lambda.html)
+    
+    Based on these results, we further investigate some regions more carefully. 
+    
+    - [GDF5](finemap_height_GDF5_check.html): check whether the CS on the right is valid.
+    
+    - [CABLES1](finemap_height_CABLES1_check.html): check whether the 2nd CS with large marginal p values is valid.
+    
+    - [ZBTB38](finemap_height_ZBTB38_check.html): SuSiE-bhat without standardize gives ONE CS, but SuSiE-bhat with standardize gives TWO CS.
+    
+    
