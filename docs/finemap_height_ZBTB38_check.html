@@ -352,7 +352,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-11-18
+<strong>Last updated:</strong> 2019-11-19
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -443,10 +443,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec14d255e6195d41367350eb93921f7198e64899btargetblankc14d255a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c14d255e6195d41367350eb93921f7198e64899b" target="_blank">c14d255</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreef71bb43c1cd3e6ac3762bcb267ff398c0c77d32dtargetblankf71bb43a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/f71bb43c1cd3e6ac3762bcb267ff398c0c77d32d" target="_blank">f71bb43</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec14d255e6195d41367350eb93921f7198e64899btargetblankc14d255a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreef71bb43c1cd3e6ac3762bcb267ff398c0c77d32dtargetblankf71bb43a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -481,11 +481,13 @@ Untracked files:
     Untracked:  output/height.ZBTB38.plink2.height.glm.linear
     Untracked:  output/height.ZBTB38.removeCS1.XtX.Xty.rds
     Untracked:  output/height.ZBTB38.removeCS2.XtX.Xty.rds
+    Untracked:  output/height.ZBTB38.simulation1000.rds
     Untracked:  output/height.ZBTB38.susie.model.rds
 
 Unstaged changes:
     Modified:   analysis/_site.yml
-    Modified:   analysis/finemap_height_larger_region.Rmd
+    Modified:   analysis/finemap_height_CABLES1_check.Rmd
+    Modified:   analysis/index.Rmd
     Modified:   scripts/plots.R
     Modified:   scripts/prepare.region.sh
     Modified:   scripts/prepare.susieinput.R
@@ -527,6 +529,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/f71bb43c1cd3e6ac3762bcb267ff398c0c77d32d/analysis/finemap_height_ZBTB38_check.Rmd" target="_blank">f71bb43</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-20
+</td>
+<td>
+wflow_publish(“analysis/finemap_height_ZBTB38_check.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/finemap_height_ZBTB38_check.html" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -984,6 +1020,43 @@ p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos
 p2 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, ld = R[z.max,], z.ref.name = &#39;rs2871960_C&#39;, y.susie =&#39;p&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_standardize_results-1.png" width="2880" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ZBTB38_bhat_standardize_results-1">
+Past versions of ZBTB38_bhat_standardize_results-1.png
+</button>
+</p>
+<div id="fig-ZBTB38_bhat_standardize_results-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_standardize_results-1.png" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>For 1Mb region about ZBTB38, SuSiE found 2 CSs. The SNP with the strongest marginal p value in CS1 is rs2871960 (p = 1.8670e-207). For CS2, the SNP with the strongest marginal p value is rs11919556 (p = 0.0211).</p>
 <p>The correlation between rs2871960 and rs11919556 is 0.221051. The average correlation between SNPs in CS1 and CS2 is</p>
 <pre class="r"><code>round(mean(abs(R[mod_bhat$sets$cs$L1, mod_bhat$sets$cs$L2])), 4)</code></pre>
@@ -992,6 +1065,98 @@ grid.arrange(p1, p2, ncol=2)</code></pre>
 <pre class="r"><code>p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = names(z), ld = R[z.max,], title=&#39;ZBTB38 Credible Sets&#39;, plot.locuszoom = FALSE, y.susie = &#39;p&#39;, xrange=c(140.9,141.5), title.size = 20)
 p1</code></pre>
 <p><img src="figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_standardize_CSs-1.png" width="960" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ZBTB38_bhat_standardize_CSs-1">
+Past versions of ZBTB38_bhat_standardize_CSs-1.png
+</button>
+</p>
+<div id="fig-ZBTB38_bhat_standardize_CSs-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_standardize_CSs-1.png" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The first credible set contains</p>
+<pre class="r"><code>cs1 = ss.dat$pos[unlist(mod_bhat$sets$cs$L1),]
+cs1$gene = sapply(cs1$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start &lt;= i), which(gene.pos.map$end &gt;= i))
+  gene.pos.map$geneName[id]
+})
+cs1</code></pre>
+<pre><code>     #CHROM       POS         ID REF ALT      maf   gene
+1255      3 141101961  rs9853018   T   C 0.446589 ZBTB38
+1258      3 141102833  rs6763931   A   G 0.446887 ZBTB38
+1261      3 141105570   rs724016   G   A 0.447055 ZBTB38
+1262      3 141106063  rs7632381   C   T 0.447588 ZBTB38
+1267      3 141109321  rs6808936   G   A 0.447482 ZBTB38
+1268      3 141109348  rs6785012   T   C 0.447476 ZBTB38
+1270      3 141110074  rs4683606   G   A 0.447216 ZBTB38
+1278      3 141118028 rs13068733   G   A 0.447268 ZBTB38
+1281      3 141121814  rs2871960   C   A 0.447921 ZBTB38
+1288      3 141125186  rs1344674   G   A 0.449007 ZBTB38
+1291      3 141125705  rs1344672   G   C 0.448705 ZBTB38</code></pre>
+<p>The second credible set contains</p>
+<pre class="r"><code>cs2 = ss.dat$pos[unlist(mod_bhat$sets$cs$L2),]
+cs2$gene = sapply(cs2$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start &lt;= i), which(gene.pos.map$end &gt;= i))
+  gene.pos.map$geneName[id]
+})
+cs2</code></pre>
+<pre><code>     #CHROM       POS          ID REF ALT      maf   gene
+1225      3 141089418 rs115198977   A   C 0.028305 ZBTB38
+1226      3 141091356 rs116086535   T   G 0.039387 ZBTB38
+1230      3 141092497  rs55675250   C   T 0.028124 ZBTB38
+1231      3 141092645  rs56259972   T   A 0.028307 ZBTB38
+1234      3 141094334  rs77022697   T   C 0.027163 ZBTB38
+1253      3 141101781  rs80060248   C   G 0.027312 ZBTB38
+1256      3 141102130 rs118108151   A   G 0.027106 ZBTB38
+1269      3 141110025  rs79361824   G   A 0.027174 ZBTB38
+1275      3 141114894  rs75828411   A   G 0.027178 ZBTB38
+1280      3 141121557 rs117589471   C   G 0.027313 ZBTB38
+1284      3 141123883 rs117323650   T   C 0.027176 ZBTB38
+1301      3 141131707  rs75092195   A   G 0.027288 ZBTB38
+1303      3 141133260  rs74441190   A   G 0.027288 ZBTB38
+1312      3 141135004  rs11919556   C   T 0.041658 ZBTB38
+1315      3 141135690 rs114626934   G   A 0.027292 ZBTB38
+1317      3 141136022   rs6440005   C   T 0.027713 ZBTB38
+1324      3 141138545 rs115126368   C   T 0.027296 ZBTB38
+1325      3 141138692 rs144648746   A   G 0.027296 ZBTB38
+1344      3 141143205  rs79057647   C   T 0.027288 ZBTB38
+1347      3 141143489  rs77828701   C   T 0.025980 ZBTB38
+1348      3 141143491  rs76300426   T   C 0.026070 ZBTB38
+1350      3 141143620  rs79197573   G   A 0.027285 ZBTB38
+1360      3 141145479  rs79311431   G   A 0.027700 ZBTB38
+1361      3 141145601  rs79153193   A   C 0.027680 ZBTB38
+1366      3 141147784 rs115605995   A   C 0.027669 ZBTB38
+1390      3 141155631 rs140143440   T   C 0.027114 ZBTB38
+1391      3 141156007 rs114802788   T   C 0.027317 ZBTB38
+1474      3 141197995 rs116215663   C   A 0.025722       </code></pre>
 <div id="cs-1" class="section level2">
 <h2>CS 1</h2>
 <ul>
@@ -1091,6 +1256,43 @@ p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=3, g
 p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 CS1&#39;, y.lab = &#39;z scores condition on CS2&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_nostandardize_CS1_2-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ZBTB38_bhat_nostandardize_CS1_2-1">
+Past versions of ZBTB38_bhat_nostandardize_CS1_2-1.png
+</button>
+</p>
+<div id="fig-ZBTB38_bhat_nostandardize_CS1_2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_nostandardize_CS1_2-1.png" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <ul>
 <li>Option 2. We remove effect of all other CSs.</li>
 </ul>
@@ -1113,7 +1315,44 @@ z.cs1.max = which.max(abs(z.CS1))
 p1 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 3, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 Credible Set 1&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p2 = locus.zoom.cs(z.CS1, mod_bhat$sets$cs$L1, pos=ss.dat$pos$POS/1e6, chr = 3, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs1.max), ld = R[z.cs1.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 Credible Set 1&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_ZBTB38_check.Rmd/unnamed-chunk-8-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_ZBTB38_check.Rmd/unnamed-chunk-10-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/figure/finemap_height_ZBTB38_check.Rmd/unnamed-chunk-10-1.png" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="cs-2" class="section level2">
 <h2>CS 2</h2>
@@ -1214,6 +1453,43 @@ p1 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=3, g
 p2 = locus.zoom.cs(z, cs = mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr=3, gene.pos.map = gene.pos.map, z.ref.name = names(z)[z.max], ld = R[z.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 CS2&#39;, y.lab = &#39;z scores condition on CS1&#39;, y.type = &#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
 <p><img src="figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_nostandardize_CS2_1-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-ZBTB38_bhat_nostandardize_CS2_1-1">
+Past versions of ZBTB38_bhat_nostandardize_CS2_1-1.png
+</button>
+</p>
+<div id="fig-ZBTB38_bhat_nostandardize_CS2_1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/149b7c77f68d982f87ba5d2e10fee342da10f9f6/docs/figure/finemap_height_ZBTB38_check.Rmd/ZBTB38_bhat_nostandardize_CS2_1-1.png" target="_blank">149b7c7</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2019-11-19
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <ul>
 <li>Option 2. We remove effect of all other CSs.</li>
 </ul>
@@ -1236,7 +1512,122 @@ z.cs2.max = which.max(abs(z.CS2))
 p1 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr = 3, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 Credible Set 2&#39;, y.lab = &#39;-log10(p value condition on other CSs)&#39;, title.size = 20)
 p2 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr = 3, gene.pos.map = gene.pos.map, z.ref.name = names(z.cs2.max), ld = R[z.cs2.max,], xrange=c(140.9,141.5), title=&#39;ZBTB38 Credible Set 2&#39;, y.lab = &#39;z scores condition on other CSs&#39;, title.size = 20, y.type=&#39;z&#39;)
 grid.arrange(p1, p2, ncol=2)</code></pre>
-<p><img src="figure/finemap_height_ZBTB38_check.Rmd/unnamed-chunk-10-1.png" width="1920" style="display: block; margin: auto;" /></p>
+<p><img src="figure/finemap_height_ZBTB38_check.Rmd/unnamed-chunk-12-1.png" width="1920" style="display: block; margin: auto;" /></p>
+</div>
+<div id="simulation-under-the-estimated-model" class="section level2">
+<h2>Simulation under the estimated model</h2>
+<p>In the following simulation, we treat rs2871960 and rs11919556 as true signals. The effect sizes are from estimated model. We use the fitted residual variance in the simulation. The response y is simulated from <span class="math display">\[
+y \sim N_n(Xb, \sigma^2 I)
+\]</span> , where X the genotype matrix that column centered, scaled, and removed the effect of covariates.</p>
+<pre class="r"><code># ON CRI
+library(data.table)
+library(readr)
+library(Matrix)
+library(susieR)
+geno.file = &#39;height.ZBTB38.raw.gz&#39;
+cat(&quot;Reading genotype data.\n&quot;)
+geno &lt;- fread(geno.file,sep = &quot;\t&quot;,header = TRUE,stringsAsFactors = FALSE)
+class(geno) &lt;- &quot;data.frame&quot;
+
+# Extract the genotypes.
+X &lt;- as(as.matrix(geno[-(1:6)]),&#39;dgCMatrix&#39;)
+
+pheno.file &lt;- &quot;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz&quot;
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat(&quot;Reading phenotype data.\n&quot;)
+pheno        &lt;- suppressMessages(read_csv(pheno.file))
+class(pheno) &lt;- &quot;data.frame&quot;
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread(&#39;height.ZBTB38.psam&#39;)
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20, data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+Z = scale(Z, center=TRUE, scale=FALSE)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c(&quot;age&quot;,&quot;pc_genetic1&quot;,&quot;pc_genetic2&quot;,&quot;pc_genetic3&quot;,&quot;pc_genetic4&quot;,
+                                &quot;pc_genetic5&quot;,&quot;pc_genetic6&quot;,&quot;pc_genetic7&quot;,&quot;pc_genetic8&quot;,&quot;pc_genetic9&quot;, 
+                                &quot;pc_genetic10&quot;,&quot;pc_genetic11&quot;,&quot;pc_genetic12&quot;,&quot;pc_genetic13&quot;,&quot;pc_genetic14&quot;,
+                                &quot;pc_genetic15&quot;,&quot;pc_genetic16&quot;,&quot;pc_genetic17&quot;,&quot;pc_genetic18&quot;,&quot;pc_genetic19&quot;,&quot;pc_genetic20&quot;))
+Z[,cols] = scale(Z[,cols])
+Z[,&#39;age2&#39;] = Z[,&#39;age&#39;]^2
+
+# Center X
+X = scale(X, center=TRUE, scale = FALSE)
+xtxdiag = colSums(X^2)
+
+A   &lt;- crossprod(Z)
+# chol decomposition for (Z&#39;Z)^(-1)
+R = chol(solve(A))
+W = R %*% t(Z) %*% X
+
+# Remove Covariates from X
+X   &lt;- as.matrix(X - Z %*% crossprod(R,W))
+
+# Get estimated parameters
+ss.dat = readRDS(&#39;height.ZBTB38.XtX.Xty.rds&#39;)
+betas = as.vector(ss.dat$Xty)/diag(ss.dat$XtX)
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = T)
+sigma2 = mod_bhat.ld$sigma2
+b2 = c(mod_bhat.ld$mu[1, 1281], mod_bhat.ld$mu[2, 1312])/mod_bhat.ld$X_column_scale_factors[1281, 1312]
+Xb = as.vector(X[, c(1281, 1312)] %*% b2)
+
+n = nrow(X)
+result = vector(&quot;list&quot;, 1000)
+set.seed(201910)
+for(i in 1:1000){
+  ## generate y
+  y = Xb + rnorm(n, 0, sqrt(sigma2))
+  
+  ## compute Xty, yty
+  Xty = as.vector(y %*% X)
+  yty = sum(y^2)
+  
+  ## compute summary stats
+  betas = as.vector(Xty/diag(ss.dat$XtX))
+  rss = yty - betas * Xty
+  se = as.vector(sqrt(rss/((n-1)*diag(ss.dat$XtX))))
+  z = betas/se
+  
+  result[[i]] = susie_bhat(betas, se, R=R, n=n, var_y = as.numeric(yty/(n-1)), standardize = T)
+}
+saveRDS(result, &#39;height.ZBTB38.simulation1000.rds&#39;)</code></pre>
+<p>Load simulation results:</p>
+<pre class="r"><code>result = readRDS(&#39;output/height.ZBTB38.simulation1000.rds&#39;)</code></pre>
+<p>In 1000 simulations, 320 runs have 2 CSs. The rests have 1 CS.</p>
+<pre class="r"><code>table(sapply(result, function(mod) length(mod$sets$cs)))</code></pre>
+<pre><code>
+  1   2 
+680 320 </code></pre>
+<p>291 runs contain both true signals.</p>
+<pre class="r"><code>contain.true = sapply(result, function(mod) all(c(1281, 1312) %in% unlist(mod$sets$cs)))
+sum(contain.true)</code></pre>
+<pre><code>[1] 291</code></pre>
+<p>963 runs contain rs2871960.</p>
+<pre class="r"><code>contain.true.1 = sapply(result, function(mod) all( 1281 %in% unlist(mod$sets$cs)))
+sum(contain.true.1)</code></pre>
+<pre><code>[1] 963</code></pre>
+<p>302 runs contain rs11919556.</p>
+<pre class="r"><code>contain.true.2 = sapply(result, function(mod) all( 1312 %in% unlist(mod$sets$cs)))
+sum(contain.true.2)</code></pre>
+<pre><code>[1] 302</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
