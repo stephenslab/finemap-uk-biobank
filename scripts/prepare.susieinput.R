@@ -48,19 +48,15 @@ cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3",
 Z[,cols] = scale(Z[,cols])
 Z[,'age2'] = Z[,'age']^2
 
-print(dim(Z))
-
 # Compute XtX and Xty
 y = pheno$height
 names(y) = pheno$id
 
 # Center y
 y = y - mean(y)
-# Center scale X
-cm = Matrix::colMeans(X, na.rm = TRUE)
-csd = susieR:::compute_colSds(X)
-csd[csd == 0] = 1
-X = as.matrix(t((t(X) - cm) / csd))
+# Center X
+X = scale(X, center=TRUE, scale = FALSE)
+xtxdiag = colSums(X^2)
 
 A   <- crossprod(Z) # Z'Z
 # chol decomposition for (Z'Z)^(-1)
@@ -71,7 +67,7 @@ S = R %*% crossprod(Z, y) # RZ'y
 # Load LD matrix from raw genotype
 ld.matrix = as.matrix(fread(paste0('height.', region.name, '.matrix')))
 # X'X
-XtX = ld.matrix*(nrow(X)-1) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
+XtX = sqrt(xtxdiag) * t(ld.matrix*sqrt(xtxdiag)) - crossprod(W) # W'W = X'ZR'RZ'X = X'Z(Z'Z)^{-1}Z'X
 rownames(XtX) = colnames(XtX) = colnames(X)
 # X'y
 Xty = as.vector(y %*% X)

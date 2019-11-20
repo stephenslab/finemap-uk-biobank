@@ -81,32 +81,58 @@ scale_colour_discrete_gradient <- function(..., colours, bins = 5, na.value = "g
 #' @param y.lim range of y axis
 locus.zoom = function(z, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL, 
                       title = NULL, title.size = 10, true = NULL, 
-                      y.height=c(5,1.5), y.lim=NULL, xrange=NULL){
+                      y.height=c(5,1.5), y.lim=NULL, y.type='logp',xrange=NULL){
   if(is.null(xrange)){
     xrange = c(min(pos), max(pos))
   }
-  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
-  pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = 'darkblue') + 
-    ylab("-log10(p value)") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
-    theme_bw() + theme(axis.title.x=element_blank(),
-                       plot.title = element_text(size=title.size))
+  tmp = data.frame(POS = pos, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
+  
   if(!is.null(ld) && !is.null(z.ref.name)){
     tmp$ref = names(z) == z.ref.name
     tmp$r2 = ld^2
-    pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
-      ylab("-log10(p value)") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
-      scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
-                            values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
-      # scale_colour_discrete_gradient(
-      #   colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
-      #   limits = c(0, 1.01),
-      #   breaks = c(0,0.2,0.4,0.6,0.8,1),
-      #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)
-      # ) + 
-      scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
-      theme_bw() + theme(axis.title.x=element_blank(),
-                         axis.title.y = element_text(size=15),axis.text = element_text(size=15),
-                         plot.title = element_text(size=title.size))
+    if(y.type == 'logp'){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab("-log10(p value)") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == 'z'){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z, shape = ref, size=ref, color=r2)) + geom_point() + 
+        ylab("z score") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        scale_color_gradientn(colors = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+                              values = seq(0,1,0.2), breaks=seq(0,1,0.2)) +
+        # scale_colour_discrete_gradient(
+        #   colours = c("darkblue", "deepskyblue", "lightgreen", "orange", "red"),
+        #   limits = c(0, 1.01),
+        #   breaks = c(0,0.2,0.4,0.6,0.8,1),
+        #   guide = guide_colourbar(nbin = 100, raster = FALSE, frame.colour = "black", ticks.colour = NA)
+        # ) + 
+        scale_shape_manual(values=c(20, 18), guide=FALSE) + scale_size_manual(values=c(2,5), guide=FALSE) + 
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           axis.title.y = element_text(size=15),axis.text = element_text(size=15),
+                           plot.title = element_text(size=title.size))
+    }
+  }else{
+    if(y.type == 'logp'){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = p)) + geom_point(color = 'darkblue') + 
+        ylab("-log10(p value)") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }else if(y.type == 'z'){
+      pl_zoom = ggplot(tmp, aes(x = POS, y = z)) + geom_point(color = 'darkblue') + 
+        ylab("z scores") + ggtitle(title) + xlim(xrange[1], xrange[2]) +
+        theme_bw() + theme(axis.title.x=element_blank(),
+                           plot.title = element_text(size=title.size))
+    }
   }
   
   if(!is.null(y.lim)){
@@ -140,48 +166,50 @@ locus.zoom = function(z, pos, chr, gene.pos.map=NULL, z.ref.name=NULL, ld=NULL,
 #' @param title title of the plot
 #' @param title.size the size of the title
 #' @param true the true value
-#' @param plotz whether to plot locuszoom plot
+#' @param plot.locuszoom whether to plot locuszoom plot
 #' @param y.lim range of y axis
-#' @param y.susie the y axis of the SuSiE plot, 'PIP' or 'p', 'p' refers to -log10(p)
+#' @param y.susie the y axis of the SuSiE plot, 'PIP' or 'p' or 'z', 'p' refers to -log10(p)
 susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.name, ld, 
                                 title = NULL, title.size = 10, true = NULL, 
-                                plotz = TRUE, y.lim=NULL, y.susie='PIP', xrange=NULL){
+                                plot.locuszoom = TRUE, y.lim=NULL, y.susie='PIP', xrange=NULL){
   if(is.null(xrange)){
     xrange = c(min(pos), max(pos))
   }
-  if(plotz){
-    pl_zoom = locus.zoom(z, pos = pos, chr = chr, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim, xrange=xrange)
+  if(plot.locuszoom){
+    if(y.susie == 'z'){
+      y.type = 'z'
+    }else{
+      y.type = 'logp'
+    }
+    pl_zoom = locus.zoom(z, pos = pos, chr = chr, ld=ld, z.ref.name = z.ref.name, title = title, title.size = title.size, y.lim=y.lim, y.type=y.type, xrange=xrange)
   }
   pip = model$pip
-  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10))
+  tmp = data.frame(POS = pos, PIP = pip, p = -(pnorm(-abs(z), log.p = T) + log(2))/log(10), z = z)
   if(y.susie == 'PIP'){
-    if(plotz){
-      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
-        xlim(xrange[1], xrange[2]) + 
-        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
-    }else{
-      pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
-        xlim(xrange[1], xrange[2]) + ggtitle(title) + 
-        theme_bw() + theme(axis.title.x=element_blank(),
-                           axis.text = element_text(size=15),
-                           axis.title.y = element_text(size=15),
-                           plot.title = element_text(size=title.size))
+    pl_susie = ggplot(tmp, aes(x = POS, y = PIP)) + geom_point(show.legend = FALSE, size=3) + 
+      xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
     }
   }else if(y.susie == 'p'){
-    if(plotz){
-      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
-        ylab("-log10(p value)") + xlim(xrange[1], xrange[2]) + 
-        theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank())
+    pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab("-log10(p value)") + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
       # pl_susie = pl_susie + geom_hline(yintercept=-log10(5e-08), linetype='dashed', color = 'red')
-    }else{
-      pl_susie = ggplot(tmp, aes(x = POS, y = p)) + geom_point(show.legend = FALSE, size=3) +
-        ylab("-log10(p value)") + xlim(xrange[1], xrange[2]) + ggtitle(title) + 
-        theme_bw() + theme(axis.title.x=element_blank(),
-                           axis.text = element_text(size=15),
-                           axis.title.y = element_text(size=15),
-                           plot.title = element_text(size=title.size))
     }
-    
+  }else if(y.susie == 'z'){
+    pl_susie = ggplot(tmp, aes(x = POS, y = z)) + geom_point(show.legend = FALSE, size=3) + 
+      ylab("z scores") + xlim(xrange[1], xrange[2]) + 
+      theme_bw() + theme(axis.title.x=element_blank(), axis.text.x=element_blank(),axis.text = element_text(size=15),
+                         axis.title.y = element_text(size=15))
+    if(!plot.locuszoom){
+      pl_susie = pl_susie + ggtitle(title) + theme(plot.title = element_text(size=title.size))
+    }
   }
   
   if(!is.null(true)){
@@ -209,19 +237,23 @@ susie_plot_locuszoom = function(z, model, pos, chr, gene.pos.map = NULL, z.ref.n
       pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=p, color=CS), 
                                        shape=1, size=3, stroke=1.5) + 
         scale_color_manual(values=colors)
+    }else if(y.susie == 'z'){
+      pl_susie = pl_susie + geom_point(data=tmp.cs, aes(x=POS, y=z, color=CS), 
+                                       shape=1, size=3, stroke=1.5) + 
+        scale_color_manual(values=colors)
     }
   }
   
   if(!is.null(gene.pos.map)){
     pl_gene = plot_geneName(gene.pos.map, xrange = xrange, chr=chr)
-    if(plotz){
+    if(plot.locuszoom){
       g = egg::ggarrange(pl_zoom, pl_susie, pl_gene, nrow=3, heights = c(4,4,1.5), draw=FALSE)
     }else{
       g = egg::ggarrange(pl_susie, pl_gene, nrow=2, heights = c(5.5,1.5), draw=FALSE)
     }
     
   }else{
-    if(plotz){
+    if(plot.locuszoom){
       g = egg::ggarrange(pl_zoom, pl_susie, nrow=2, heights = c(4,4), draw=FALSE)
     }else{
       g = pl_susie
