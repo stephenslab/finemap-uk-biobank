@@ -126,6 +126,26 @@ p1 = susie_plot_locuszoom(z, mod_bhat, pos = ss.dat$pos$POS/1e6, chr=3, gene.pos
 p1
 ```
 
+The first credible set contains 
+```{r}
+cs1 = ss.dat$pos[unlist(mod_bhat$sets$cs$L1),]
+cs1$gene = sapply(cs1$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  gene.pos.map$geneName[id]
+})
+cs1
+```
+
+The second credible set contains 
+```{r}
+cs2 = ss.dat$pos[unlist(mod_bhat$sets$cs$L2),]
+cs2$gene = sapply(cs2$POS/1e6, function(i){
+  id = intersect(which(gene.pos.map$start <= i), which(gene.pos.map$end >= i))
+  gene.pos.map$geneName[id]
+})
+cs2
+```
+
 ## CS 1
 
 * Option 1. We remove effect of top SNP in CS 2.
@@ -386,3 +406,131 @@ p2 = locus.zoom.cs(z.CS2, mod_bhat$sets$cs$L2, pos=ss.dat$pos$POS/1e6, chr = 3, 
 grid.arrange(p1, p2, ncol=2)
 ```
 
+## Simulation under the estimated model
+
+In the following simulation, we treat rs2871960 and rs11919556 as true signals. The effect sizes are from estimated model. We use the fitted residual variance in the simulation. The response y is simulated from
+$$
+y \sim N_n(Xb, \sigma^2 I)
+$$
+, where X the genotype matrix that column centered, scaled, and removed the effect of covariates.
+
+```{r eval=FALSE}
+# ON CRI
+library(data.table)
+library(readr)
+library(Matrix)
+library(susieR)
+geno.file = 'height.ZBTB38.raw.gz'
+cat("Reading genotype data.\n")
+geno <- fread(geno.file,sep = "\t",header = TRUE,stringsAsFactors = FALSE)
+class(geno) <- "data.frame"
+
+# Extract the genotypes.
+X <- as(as.matrix(geno[-(1:6)]),'dgCMatrix')
+
+pheno.file <- "/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/height.csv.gz"
+
+# LOAD PHENOTYPE and COVARIATES DATA
+# -------------------
+# Read the phenotype data from the CSV file.
+cat("Reading phenotype data.\n")
+pheno        <- suppressMessages(read_csv(pheno.file))
+class(pheno) <- "data.frame"
+pheno$sex = factor(pheno$sex)
+pheno$assessment_centre = factor(pheno$assessment_centre)
+pheno$genotype_measurement_batch = factor(pheno$genotype_measurement_batch)
+pheno$age2 = pheno$age^2
+# match individual order with genotype file
+ind = fread('height.ZBTB38.psam')
+match.idx = match(ind$IID, pheno$id)
+pheno = pheno[match.idx,]
+
+Z = model.matrix(~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+                   pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+                   pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10 +
+                   pc_genetic11 + pc_genetic12 + pc_genetic13 + pc_genetic14 + pc_genetic15 +
+                   pc_genetic16 + pc_genetic17 + pc_genetic18 + pc_genetic19 + pc_genetic20, data = pheno)
+
+# Remove intercept
+Z = Z[,-1]
+Z = scale(Z, center=TRUE, scale=FALSE)
+# standardize quantitative columns
+cols = which(colnames(Z) %in% c("age","pc_genetic1","pc_genetic2","pc_genetic3","pc_genetic4",
+                                "pc_genetic5","pc_genetic6","pc_genetic7","pc_genetic8","pc_genetic9", 
+                                "pc_genetic10","pc_genetic11","pc_genetic12","pc_genetic13","pc_genetic14",
+                                "pc_genetic15","pc_genetic16","pc_genetic17","pc_genetic18","pc_genetic19","pc_genetic20"))
+Z[,cols] = scale(Z[,cols])
+Z[,'age2'] = Z[,'age']^2
+
+# Center X
+X = scale(X, center=TRUE, scale = FALSE)
+xtxdiag = colSums(X^2)
+
+A   <- crossprod(Z)
+# chol decomposition for (Z'Z)^(-1)
+R = chol(solve(A))
+W = R %*% t(Z) %*% X
+
+# Remove Covariates from X
+X   <- as.matrix(X - Z %*% crossprod(R,W))
+
+# Get estimated parameters
+ss.dat = readRDS('height.ZBTB38.XtX.Xty.rds')
+betas = as.vector(ss.dat$Xty)/diag(ss.dat$XtX)
+rss = c(ss.dat$yty) - betas * ss.dat$Xty
+se = as.vector(sqrt(rss/((ss.dat$n-1)*diag(ss.dat$XtX))))
+R = as.matrix(t(ss.dat$XtX * (1/sqrt(diag(ss.dat$XtX)))) * (1/ sqrt(diag(ss.dat$XtX))))
+mod_bhat.ld = susie_bhat(bhat = betas, shat = se, R = R, n = ss.dat$n, var_y = as.numeric(ss.dat$yty/(ss.dat$n-1)), standardize = T)
+sigma2 = mod_bhat.ld$sigma2
+b2 = c(mod_bhat.ld$mu[1, 1281], mod_bhat.ld$mu[2, 1312])/mod_bhat.ld$X_column_scale_factors[1281, 1312]
+Xb = as.vector(X[, c(1281, 1312)] %*% b2)
+
+n = nrow(X)
+result = vector("list", 1000)
+set.seed(201910)
+for(i in 1:1000){
+  ## generate y
+  y = Xb + rnorm(n, 0, sqrt(sigma2))
+  
+  ## compute Xty, yty
+  Xty = as.vector(y %*% X)
+  yty = sum(y^2)
+  
+  ## compute summary stats
+  betas = as.vector(Xty/diag(ss.dat$XtX))
+  rss = yty - betas * Xty
+  se = as.vector(sqrt(rss/((n-1)*diag(ss.dat$XtX))))
+  z = betas/se
+  
+  result[[i]] = susie_bhat(betas, se, R=R, n=n, var_y = as.numeric(yty/(n-1)), standardize = T)
+}
+saveRDS(result, 'height.ZBTB38.simulation1000.rds')
+```
+
+Load simulation results:
+```{r}
+result = readRDS('output/height.ZBTB38.simulation1000.rds')
+```
+
+In 1000 simulations, 320 runs have 2 CSs. The rests have 1 CS.
+```{r}
+table(sapply(result, function(mod) length(mod$sets$cs)))
+```
+
+291 runs contain both true signals.
+```{r}
+contain.true = sapply(result, function(mod) all(c(1281, 1312) %in% unlist(mod$sets$cs)))
+sum(contain.true)
+```
+
+963 runs contain rs2871960.
+```{r}
+contain.true.1 = sapply(result, function(mod) all( 1281 %in% unlist(mod$sets$cs)))
+sum(contain.true.1)
+```
+
+302 runs contain rs11919556.
+```{r}
+contain.true.2 = sapply(result, function(mod) all( 1312 %in% unlist(mod$sets$cs)))
+sum(contain.true.2)
+```
