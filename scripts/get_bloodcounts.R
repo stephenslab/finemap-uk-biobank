@@ -17,7 +17,8 @@ cols      <- c("eid","31-0.0","54-0.0","21022-0.0","22006-0.0",
                "30100-0.0", "30110-0.0", "30120-0.0", "30130-0.0", "30140-0.0",
                "30150-0.0", "30160-0.0", "30180-0.0", "30190-0.0", "30200-0.0",
                "30210-0.0", "30220-0.0", "30240-0.0", "30250-0.0", "30260-0.0",
-               "30270-0.0", "30280-0.0", "30290-0.0", "30300-0.0")
+               "30270-0.0", "30280-0.0", "30290-0.0", "30300-0.0",
+               paste0("41202-0.", 0:379), "3140-0.0")
 col_names <- c("id","sex","assessment_centre","age","ethnic_genetic",
                "sex_genetic","genotype_measurement_batch","missingness",
                paste0("pc_genetic",1:10),
@@ -27,7 +28,8 @@ col_names <- c("id","sex","assessment_centre","age","ethnic_genetic",
                "MPV", "PDW", "Lymphocyte#", "Monocyte#", "Neutrophill#",
                "Eosinophill#", "Basophill#", "Lymphocyte%", "Monocyte%", "Neutrophill%",
                "Eosinophill%", "Basophill%", "Reticulocyte%", "Reticulocyte#", "MRV",
-               "MSCV", "IRF", "HLR%", "HLR#")
+               "MSCV", "IRF", "HLR%", "HLR#",
+               paste0('ICD10.',0:379), "pregnancy")
 
 cat("Reading data from the CSV files.\n")
 out <- system.time({
@@ -54,42 +56,64 @@ cat("Preparing data.\n")
 dat        <- dat[,cols]
 names(dat) <- col_names
 
-# Convert all columns except the first one (the first column contains
+# Convert numerical columns except the first one (the first column contains
 # the sample ids) to numeric values, and set all empty strings to NA.
 n <- length(dat)
 for (i in 2:n) {
   x          <- dat[,i]
   x[x == ""] <- as.character(NA)
-  dat[,i]    <- as.numeric(x)
+  if(grepl('ICD10', colnames(dat)[i])){
+    dat[,i]    <- x
+  }else{
+    dat[,i]    <- as.numeric(x)
+  }
 }
 
 # Remove all rows in which one or more of the values are missing,
-# aside from the in the "outlier" and "relatedness_genetic" columns.
+# aside from the in the "outlier", "ICD10", "pregnancy" columns.
 #
 # When the "genetic ethnic grouping" column is included, this removes
 # any samples that are not marked as being "White British". The
 # "outliers" have value 1 when it is an outlier, NA otherwise.
-cols <- !(names(dat) == "outliers")
+cols <- !(grepl(paste(c('ICD10', "outliers", "pregnancy"),collapse = '|'), names(dat)))
 rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
 cat(sprintf("After removing rows with NAs, %d rows remain.\n",nrow(dat)))
 
 # Remove rows with mismatches between self-reported and genetic sex
-# This step should filter out 310 rows.
+# This step should filter out 287 rows.
 dat <- dat %>% filter(sex == sex_genetic)
 cat(sprintf("After removing sex mismatches, %d rows remain.\n",nrow(dat)))
 
 # Remove "missingness" and "heterozygosity" outliers as defined by UK
-# Biobank. This step should filter out 723 rows. Note that this step
+# Biobank. This step should filter out 665 rows. Note that this step
 # will remove any samples in which the "missingness" column is greater
 # than 5%.
 dat <- dat %>% filter(is.na(outliers))
 cat(sprintf("After removing outliers, %d rows remain.\n",nrow(dat)))
 
 # Remove any individuals have at leat one relative based on the
-# kinship calculations. This step should filter out 131,805 rows.
+# kinship calculations. This step should filter out 126,235 rows.
 dat <- dat %>% filter(kinship_genetic == 0)
 cat(sprintf(paste("After removing relatedness individuals based on kinship,",
+                  "%d rows remain.\n"),nrow(dat)))
+
+# Remove any pregnant individuals
+# This step should filter out 164 rows.
+dat <- dat %>% filter(!(pregnancy %in% c(1,2)))
+cat(sprintf(paste("After removing pregnant individuals,",
+                  "%d rows remain.\n"),nrow(dat)))
+
+# Remove any individuals with blood related diseases
+# This step sohuld filter out 6070 rows
+icd10 = c('C94', 'C95', 'Z856', "C901", "C914", "C82", "C83", 'C84', "C85", "Z948",
+  "Z511", "Z512", "Z542", "D46", paste0("D", 55:64), paste0("B", 20:24),
+  "N180", "Z992", "Z491", "Z492", "K74", "C88", "C900", "C902", "C91", "C92",
+  "D45", "D47", "E831")
+daticd10 = dat %>% select(which(grepl('ICD10', colnames(dat)))) %>% as.matrix
+icd_status = matrix(grepl(paste(icd10, collapse='|'), daticd10), nrow(daticd10), ncol(daticd10))
+dat = dat %>% filter(rowSums(icd_status) == 0)
+cat(sprintf(paste("After removing individuals with blood diseases,",
                   "%d rows remain.\n"),nrow(dat)))
 
 # Remove individuals with "abnormal" measurements.
@@ -99,11 +123,11 @@ cat(sprintf(paste("After removing relatedness individuals based on kinship,",
 # analyses.
 cols.to.remove <- c("sex_genetic","ethnic_genetic",
                     "missingness",
-                    "kinship_genetic","outliers")
+                    "kinship_genetic","outliers","pregnancy",paste0("ICD10.", 0:379))
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
 
 cat("Writing prepared data to CSV file.\n")
-write.csv(dat,output.file,row.names = FALSE,quote = FALSE)
+write.csv(dat,output.file,row.names = FALSE,quote = FALSE, na='NA')
 
 
