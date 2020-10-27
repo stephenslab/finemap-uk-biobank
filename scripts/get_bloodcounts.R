@@ -23,12 +23,12 @@ col_names <- c("id","sex","assessment_centre","age","ethnic_genetic",
                "sex_genetic","genotype_measurement_batch","missingness",
                paste0("pc_genetic",1:10),
                "kinship_genetic", "outliers",
-               "WBC#", "RBC#", "Haemoglobin", "Haematocrit", "MCV",
-               "MCH", "MCHC", "RDW", "Platelet#", "Plateletcrit",
-               "MPV", "PDW", "Lymphocyte#", "Monocyte#", "Neutrophill#",
-               "Eosinophill#", "Basophill#", "Lymphocyte%", "Monocyte%", "Neutrophill%",
-               "Eosinophill%", "Basophill%", "Reticulocyte%", "Reticulocyte#", "MRV",
-               "MSCV", "IRF", "HLR%", "HLR#",
+               "WBC_count", "RBC_count", "Haemoglobin", "Haematocrit", "MCV",
+               "MCH", "MCHC", "RDW", "Platelet_count", "Plateletcrit",
+               "MPV", "PDW", "Lymphocyte_count", "Monocyte_count", "Neutrophill_count",
+               "Eosinophill_count", "Basophill_count", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc",
+               "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "Reticulocyte_count", "MRV",
+               "MSCV", "IRF", "HLR_perc", "HLR_count",
                paste0('ICD10.',0:379), "pregnancy")
 
 cat("Reading data from the CSV files.\n")
