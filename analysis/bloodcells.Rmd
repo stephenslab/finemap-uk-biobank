@@ -1,0 +1,168 @@
+---
+title: "UKBiobank Blood Cell"
+author: "Yuxin Zou"
+date: "10/26/2020"
+---
+
+The UkB blood cell traits are
+
+PheID | Abbrev    | Phenotype                                  | Cell type
+------|-----------|--------------------------------------------|------------------
+30000 | WBCcount  | White blood cell count                     | Compound white cell
+30010 | RBCcount  | Red blood cell count                       | Mature red cell
+30020 | HGB       | Haemoglobin concentration                  | Mature red cell
+30030 | HCT       | Haematocrit percentage                     | Mature red cell
+30040 | MCV       | Mean corpuscular volume                    | Mature red cell
+30050 | MCH       | Mean corpuscular haemoglobin               | Mature red cell
+30060 | MCHC      | Mean corpuscular haemoglobin concentration | Mature red cell
+30070 | RDW       | Red blood cell distribution width          | Mature red cell
+30080 | PLTcount  | Platelet count                             | Platelet
+30090 | PCT       | Platelet crit                              | Platelet
+30100 | MPV       | Mean platelet (thrombocyte) volume         | Platelet
+30110 | PDW       | Platelet distribution width                | Platelet
+30120 | LYMPHcount| Lymphocyte count                           | Lymphoid white cell
+30130 | MONOcount | Monocyte count                             | Myeloid white cell
+30140 | NEUTcount | Neutrophill count                          | Myeloid white cell
+30150 | EOcount   | Eosinophill count                          | Myeloid white cell
+30160 | BASOcount | Basophill count                            | Myeloid white cell
+30180 | LYMPHperc | Lymphocyte percentage                      | Compound white cell
+30190 | MONOperc  | Monocyte percentage                        | Compound white cell
+30200 | NEUTperc  | Neutrophill percentage                     | Compound white cell
+30210 | EOperc    | Eosinophill percentage                     | Compound white cell
+30220 | BASOperc  | Basophill percentage                       | Compound white cell
+30240 | RETperc   | Reticulocyte percentage                    | Immature red cell
+30250 | RETcount  | Reticulocyte count                         | Immature red cell
+30260 | MRV       | Mean reticulocyte volume                   | Immature red cell
+30270 | MSCV      | Mean sphered cell volume                   | Mature red cell
+30280 | IRF       | Immature reticulocyte fraction             | Immature red cell
+30290 | HLRperc   | High light scatter reticulocyte percentage | Immature red cell
+30300 | HLRcount  | High light scatter reticulocyte count      | Immature red cell
+
+
+We filtered individuals with following criteria:
+
+1. Remove samples with missing values.
+
+2. Remove samples that are not marked as being "White British".
+
+3. Remove samples with mismatches between self-reported and genetic sex.
+
+4. Remove outliers defined by UK Biobank.
+
+5. Remove any individuals have at leat one relative based on the kinship calculations.
+
+6. Remove any pregnant individuals.
+
+7. Remove any individuals with following in hospital in-patient data:
+    
+    leukemia, lymphoma, bone marrow transplant, chemotherapy, myelodysplastic syndrome, anemia, HIV, end-stage kidney disease, dialysis, cirrhosis, multiple myeloma, lymphocytic leukemia, myeloid leukemia, polycythaemia vera, haemochromatosis
+
+Load UKBiobank Blood Cell traits (individuals are filtered using [script](scripts/get_bloodcounts.R))
+```{r, message=FALSE}
+library(data.table)
+library(dplyr)
+dat = fread('data/bloodcounts.csv')
+class(dat) <- "data.frame"
+```
+There are `r nrow(dat)` individuals.
+
+Check distribution for each trait:
+```{r}
+par(mfrow=c(2,3))
+for(i in 16:44){
+  hist(dat[,i], breaks = 100, main=colnames(dat)[i], xlab='x')
+}
+```
+
+Distributions for trait with small observartions:
+```{r}
+par(mfrow=c(2,3))
+hist(dat$WBC_count[dat$WBC_count < 20], breaks = 100, main=paste0('WBC_count ', sum(dat$WBC_count > 20), ' inds > 20'), xlab='x')
+hist(dat$Lymphocyte_count[dat$Lymphocyte_count < 8], breaks = 100, main=paste0('Lymphocyte_count ', sum(dat$Lymphocyte_count > 8), ' inds > 8'), xlab='x')
+hist(dat$Monocyte_count[dat$Monocyte_count < 2], breaks = 100, main=paste0('Monocyte_count ', sum(dat$Monocyte_count > 2), ' inds > 2'), xlab='x')
+hist(dat$Eosinophill_count[dat$Eosinophill_count < 1], breaks = 100, main=paste0('Eosinophill_count ', sum(dat$Eosinophill_count > 1), ' inds > 1'), xlab='x')
+hist(dat$Eosinophill_perc[dat$Eosinophill_perc < 10], breaks = 100, main=paste0('Eosinophill_perc ', sum(dat$Eosinophill_perc > 10), ' inds > 10'), xlab='x')
+hist(dat$Basophill_count[dat$Basophill_count < 0.5], breaks = 100, main=paste0('Basophill_count ', sum(dat$Basophill_count > 0.5), ' inds > 0.5'), xlab='x')
+hist(dat$Basophill_perc[dat$Basophill_perc < 2], breaks = 100, main=paste0('Basophill_perc ', sum(dat$Basophill_perc > 2), ' inds > 2'), xlab='x')
+hist(dat$Reticulocyte_count[dat$Reticulocyte_count < 0.2], breaks = 100, main=paste0('Reticulocyte_count ', sum(dat$Reticulocyte_count > 0.2), ' inds > 0.2'), xlab='x')
+hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc < 4], breaks = 100, main=paste0('Reticulocyte_perc ', sum(dat$Reticulocyte_perc > 4), ' inds > 4'), xlab='x')
+hist(dat$HLR_count[dat$HLR_count < 0.1], breaks = 100, main=paste0('HLR_count ', sum(dat$HLR_count > 0.1), ' inds > 0.1'), xlab='x')
+hist(dat$HLR_perc[dat$HLR_perc < 2], breaks = 100, main=paste0('HLR_perc ', sum(dat$HLR_perc > 2), ' inds > 2'), xlab='x')
+```
+
+## Basophill
+
+Basophils count is the proportion of ( basophils / 100 ) x white blood cell count.
+
+```{r, fig.width=5, fig.height=5}
+Basophils_count = dat$Basophill_perc * dat$WBC_count / 100
+{plot(Basophils_count, dat$Basophill_count, ylab='UKB Basophill count')
+abline(0,1)}
+```
+
+There are `r sum(Basophils_count==0)` 0's in computed Basophils_count, but there are `r sum(dat$Basophill_count ==0)` 0's in UKB Basophils count.
+
+```{r}
+hist(Basophils_count[Basophils_count < 0.5], breaks = 100, main=paste0('Derived Basophils_count ', sum(Basophils_count > 0.5), ' inds > 0.5'), xlab='x')
+```
+There are rounding errors in derived count traits.
+
+We recompute all derived traits.
+```{r}
+dat$Haematocrit = (dat$MCV * dat$RBC_count)/10
+dat$MCH = (dat$Haemoglobin/dat$RBC_count) * 10
+dat$MCHC = (dat$Haemoglobin/dat$Haematocrit)*100
+dat$Lymphocyte_count = (dat$Lymphocyte_perc * dat$WBC_count)/100
+dat$Monocyte_count = (dat$Monocyte_perc * dat$WBC_count)/100
+dat$Eosinophill_count = (dat$Eosinophill_perc * dat$WBC_count)/100
+dat$Basophill_count = (dat$Basophill_perc * dat$WBC_count)/100
+dat$Reticulocyte_count = (dat$Reticulocyte_perc * dat$RBC_count)/100
+dat$HLR_count = (dat$HLR_perc * dat$RBC_count)/100
+```
+
+```{r}
+par(mfrow=c(2,3))
+hist(dat$WBC_count[dat$WBC_count < 20], breaks = 100, main=paste0('WBC_count ', sum(dat$WBC_count > 20), ' inds > 20'), xlab='x')
+hist(dat$Lymphocyte_count[dat$Lymphocyte_count < 8], breaks = 100, main=paste0('Lymphocyte_count ', sum(dat$Lymphocyte_count > 8), ' inds > 8'), xlab='x')
+hist(dat$Monocyte_count[dat$Monocyte_count < 2], breaks = 100, main=paste0('Monocyte_count ', sum(dat$Monocyte_count > 2), ' inds > 2'), xlab='x')
+hist(dat$Eosinophill_count[dat$Eosinophill_count < 1], breaks = 100, main=paste0('Eosinophill_count ', sum(dat$Eosinophill_count > 1), ' inds > 1'), xlab='x')
+hist(dat$Eosinophill_perc[dat$Eosinophill_perc < 10], breaks = 100, main=paste0('Eosinophill_perc ', sum(dat$Eosinophill_perc > 10), ' inds > 10'), xlab='x')
+hist(dat$Basophill_count[dat$Basophill_count < 0.5], breaks = 100, main=paste0('Basophill_count ', sum(dat$Basophill_count > 0.5), ' inds > 0.5'), xlab='x')
+hist(dat$Basophill_perc[dat$Basophill_perc < 2], breaks = 100, main=paste0('Basophill_perc ', sum(dat$Basophill_perc > 2), ' inds > 2'), xlab='x')
+hist(dat$Reticulocyte_count[dat$Reticulocyte_count < 0.2], breaks = 100, main=paste0('Reticulocyte_count ', sum(dat$Reticulocyte_count > 0.2), ' inds > 0.2'), xlab='x')
+hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc < 4], breaks = 100, main=paste0('Reticulocyte_perc ', sum(dat$Reticulocyte_perc > 4), ' inds > 4'), xlab='x')
+hist(dat$HLR_count[dat$HLR_count < 0.1], breaks = 100, main=paste0('HLR_count ', sum(dat$HLR_count > 0.1), ' inds > 0.1'), xlab='x')
+hist(dat$HLR_perc[dat$HLR_perc < 2], breaks = 100, main=paste0('HLR_perc ', sum(dat$HLR_perc > 2), ' inds > 2'), xlab='x')
+```
+
+Remove extreme observatios
+```{r}
+rem = c()
+for(i in 16:44){
+  rem = c(rem, which(dat[,i] < (median(dat[,i]) - 4*sqrt(mean((dat[,i] - median(dat[,i]))^2))) | dat[,i] > (median(dat[,i]) + 4*sqrt(mean((dat[,i] - median(dat[,i]))^2)))))
+}
+## remove 12758 individuals
+dat_1 = dat[-unique(rem),]
+```
+
+```{r}
+par(mfrow=c(2,3))
+for(i in 16:44){
+  hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab='x')
+}
+```
+
+Inverse normalization:
+```{r}
+dat_2 = dat_1
+for(i in 16:44){
+  dat_2[,i] = qnorm((rank(dat_2[,i],na.last="keep")-0.5)/sum(!is.na(dat_2[,i])))
+}
+```
+
+```{r}
+par(mfrow=c(2,3))
+for(i in 16:44){
+  hist(dat_2[,i], breaks = 50, main=colnames(dat_2)[i], xlab='x')
+}
+```
