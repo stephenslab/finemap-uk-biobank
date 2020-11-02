@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree075c9523ff5a4178870977290ed212f86cf509d6targetblank075c952a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/075c9523ff5a4178870977290ed212f86cf509d6" target="_blank">075c952</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9459e04cb84844c12ca6a4d1819bcc5ec7adc0cetargetblank9459e04a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9459e04cb84844c12ca6a4d1819bcc5ec7adc0ce" target="_blank">9459e04</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree075c9523ff5a4178870977290ed212f86cf509d6targetblank075c952a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9459e04cb84844c12ca6a4d1819bcc5ec7adc0cetargetblank9459e04a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/075c9523ff5a4178870977290ed212f86cf509d6" target="_blank">075c952</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9459e04cb84844c12ca6a4d1819bcc5ec7adc0ce" target="_blank">9459e04</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -466,13 +466,12 @@ Ignored files:
     Ignored:    scripts/.DS_Store
 
 Untracked files:
-    Untracked:  data/bloodcounts.csv
+    Untracked:  data/bloodcounts_V1.csv
     Untracked:  data/height.chr3.matrix
     Untracked:  data/susie_ss_input_sex.rds
 
 Unstaged changes:
     Modified:   analysis/compare_result_more.Rmd
-    Modified:   scripts/get_bloodcounts.R
 
 </code></pre>
 <p>
@@ -511,6 +510,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9459e04cb84844c12ca6a4d1819bcc5ec7adc0ce/analysis/bloodcells.Rmd" target="_blank">9459e04</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/bloodcells.html" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -795,8 +828,8 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 </table>
 <p>We filtered individuals with following criteria:</p>
 <ol style="list-style-type: decimal">
-<li><p>Remove samples with missing values.</p></li>
 <li><p>Remove samples that are not marked as being &quot;White British&quot;.</p></li>
+<li><p>Remove samples with missing values.</p></li>
 <li><p>Remove samples with mismatches between self-reported and genetic sex.</p></li>
 <li><p>Remove outliers defined by UK Biobank.</p></li>
 <li><p>Remove any individuals have at leat one relative based on the kinship calculations.</p></li>
@@ -807,7 +840,7 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 <p>Load UKBiobank Blood Cell traits (individuals are filtered using <a href="scripts/get_bloodcounts.R">script</a>)</p>
 <pre class="r"><code>library(data.table)
 library(dplyr)
-dat = fread(&#39;data/bloodcounts.csv&#39;)
+dat = fread(&#39;data/bloodcounts_V1.csv&#39;)
 class(dat) &lt;- &quot;data.frame&quot;</code></pre>
 <p>There are 257604 individuals.</p>
 <p>Check distribution for each trait:</p>
@@ -1201,7 +1234,196 @@ for(i in 16:44){
 for(i in 16:44){
   hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab=&#39;x&#39;)
 }</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-8-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-8-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
+Past versions of unnamed-chunk-8-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-1.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
+Past versions of unnamed-chunk-8-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-2.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-3">
+Past versions of unnamed-chunk-8-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-3.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-4">
+Past versions of unnamed-chunk-8-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-4.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-5">
+Past versions of unnamed-chunk-8-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-8-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-5.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="identify-outliers" class="section level2">
 <h2>Identify Outliers</h2>
@@ -1218,9 +1440,46 @@ This message is displayed once per session.</code></pre>
 <pre class="r"><code>covy_sub = cov(dat_1_sub)
 corrplot(covy_sub, method=&#39;color&#39;, type=&#39;upper&#39;, tl.col=&quot;black&quot;, tl.srt=45, is.corr = FALSE)</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-10-1.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>D2_sub = stats::mahalanobis(dat_1_sub, center=0, cov=covy_sub)
-dat_sub_select = dat_1[D2_sub &lt; qchisq(0.005, df=16, lower.tail = F),]</code></pre>
-<p>There are 250547 individuals.</p>
+dat_sub_select = dat_1[D2_sub &lt; qchisq(0.01, df=16, lower.tail = F),]</code></pre>
+<p>There are 248979 individuals.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
