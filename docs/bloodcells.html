@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9459e04cb84844c12ca6a4d1819bcc5ec7adc0cetargetblank9459e04a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9459e04cb84844c12ca6a4d1819bcc5ec7adc0ce" target="_blank">9459e04</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree719d7f3859488cf139dd65868cd36851fb28b08dtargetblank719d7f3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/719d7f3859488cf139dd65868cd36851fb28b08d" target="_blank">719d7f3</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9459e04cb84844c12ca6a4d1819bcc5ec7adc0cetargetblank9459e04a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree719d7f3859488cf139dd65868cd36851fb28b08dtargetblank719d7f3a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9459e04cb84844c12ca6a4d1819bcc5ec7adc0ce" target="_blank">9459e04</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/719d7f3859488cf139dd65868cd36851fb28b08d" target="_blank">719d7f3</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,6 +510,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/719d7f3859488cf139dd65868cd36851fb28b08d/analysis/bloodcells.Rmd" target="_blank">719d7f3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/0aeed271e3c3c9639b84cf727a01ec2db627efb8/docs/bloodcells.html" target="_blank">0aeed27</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -837,7 +871,7 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 <li><p>Remove any individuals with following in hospital in-patient data:</p>
 <p>leukemia, lymphoma, bone marrow transplant, chemotherapy, myelodysplastic syndrome, anemia, HIV, end-stage kidney disease, dialysis, cirrhosis, multiple myeloma, lymphocytic leukemia, myeloid leukemia, polycythaemia vera, haemochromatosis</p></li>
 </ol>
-<p>Load UKBiobank Blood Cell traits (individuals are filtered using <a href="scripts/get_bloodcounts.R">script</a>)</p>
+<p>Load UKBiobank Blood Cell traits (individuals are filtered using <a href="../scripts/get_bloodcounts.R">script</a>)</p>
 <pre class="r"><code>library(data.table)
 library(dplyr)
 dat = fread(&#39;data/bloodcounts_V1.csv&#39;)
