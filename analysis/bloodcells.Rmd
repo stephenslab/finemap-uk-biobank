@@ -57,7 +57,7 @@ We filtered individuals with following criteria:
     
     leukemia, lymphoma, bone marrow transplant, chemotherapy, myelodysplastic syndrome, anemia, HIV, end-stage kidney disease, dialysis, cirrhosis, multiple myeloma, lymphocytic leukemia, myeloid leukemia, polycythaemia vera, haemochromatosis
 
-Load UKBiobank Blood Cell traits (individuals are filtered using [script](scripts/get_bloodcounts.R))
+Load UKBiobank Blood Cell traits (individuals are filtered using [script](../scripts/get_bloodcounts.R))
 ```{r, message=FALSE}
 library(data.table)
 library(dplyr)
