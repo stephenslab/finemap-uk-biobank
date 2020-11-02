@@ -7,7 +7,7 @@ input.file2 <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
 input.file3 <- file.path("/gpfs/data/xhe-lab/uk-biobank/data/phenotypes",
                          "16-oct-2020","ukb44231.csv.gz")
 output.file <- file.path("/gpfs/data/stephens-lab/finemap-uk-biobank",
-                         "data/raw/bloodcounts.csv")
+                         "data/raw/BloodCells/bloodcells.csv")
 
 cols      <- c("eid","31-0.0","54-0.0","21022-0.0","22006-0.0",
                "22001-0.0","22000-0.0","22005-0.0",paste0("22009-0.",1:10),
