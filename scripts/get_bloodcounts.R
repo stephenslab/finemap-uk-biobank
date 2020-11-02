@@ -12,23 +12,21 @@ output.file <- file.path("/gpfs/data/stephens-lab/finemap-uk-biobank",
 cols      <- c("eid","31-0.0","54-0.0","21022-0.0","22006-0.0",
                "22001-0.0","22000-0.0","22005-0.0",paste0("22009-0.",1:10),
                "22021-0.0", "22027-0.0",
-               "30000-0.0", "30010-0.0", "30020-0.0", "30030-0.0", "30040-0.0",
-               "30050-0.0", "30060-0.0", "30070-0.0", "30080-0.0", "30090-0.0",
-               "30100-0.0", "30110-0.0", "30120-0.0", "30130-0.0", "30140-0.0",
-               "30150-0.0", "30160-0.0", "30180-0.0", "30190-0.0", "30200-0.0",
-               "30210-0.0", "30220-0.0", "30240-0.0", "30250-0.0", "30260-0.0",
-               "30270-0.0", "30280-0.0", "30290-0.0", "30300-0.0",
+               "30000-0.0", "30010-0.0", "30020-0.0", "30040-0.0",
+               "30070-0.0", "30080-0.0", "30090-0.0",
+               "30110-0.0", "30180-0.0", "30190-0.0", "30200-0.0",
+               "30210-0.0", "30220-0.0", "30240-0.0",
+               "30270-0.0", "30290-0.0",
                paste0("41202-0.", 0:379), "3140-0.0")
 col_names <- c("id","sex","assessment_centre","age","ethnic_genetic",
                "sex_genetic","genotype_measurement_batch","missingness",
                paste0("pc_genetic",1:10),
                "kinship_genetic", "outliers",
-               "WBC_count", "RBC_count", "Haemoglobin", "Haematocrit", "MCV",
-               "MCH", "MCHC", "RDW", "Platelet_count", "Plateletcrit",
-               "MPV", "PDW", "Lymphocyte_count", "Monocyte_count", "Neutrophill_count",
-               "Eosinophill_count", "Basophill_count", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc",
-               "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "Reticulocyte_count", "MRV",
-               "MSCV", "IRF", "HLR_perc", "HLR_count",
+               "WBC_count", "RBC_count", "Haemoglobin", "MCV",
+               "RDW", "Platelet_count", "Plateletcrit",
+               "PDW", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc",
+               "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc",
+               "MSCV", "HLR_perc",
                paste0('ICD10.',0:379), "pregnancy")
 
 cat("Reading data from the CSV files.\n")
@@ -48,6 +46,7 @@ dat12 <- inner_join(dat1,dat2,by = "eid")
 dat <- inner_join(dat12, dat3, by='eid')
 rm(dat1,dat2,dat3,dat12)
 cat(sprintf("Merged table contains %d rows.\n",nrow(dat)))
+## There are 502492 samples
 
 # PREPARE DATA
 # ------------
@@ -69,12 +68,16 @@ for (i in 2:n) {
   }
 }
 
+# Remove any samples that are not marked as being "White British".
+# This step should filter out 92887 rows.
+dat = dat %>% filter(ethnic_genetic == 1)
+cat(sprintf("After removing non White British, %d rows remain.\n",nrow(dat)))
+
 # Remove all rows in which one or more of the values are missing,
 # aside from the in the "outlier", "ICD10", "pregnancy" columns.
-#
-# When the "genetic ethnic grouping" column is included, this removes
-# any samples that are not marked as being "White British". The
-# "outliers" have value 1 when it is an outlier, NA otherwise.
+# The "outliers" have value 1 when it is an outlier, NA otherwise.
+# The "pregnancy" have value NA for males.
+# This step should filter out 18578 rows.
 cols <- !(grepl(paste(c('ICD10', "outliers", "pregnancy"),collapse = '|'), names(dat)))
 rows <- which(rowSums(is.na(dat[,cols])) == 0)
 dat  <- dat[rows,]
@@ -93,7 +96,7 @@ dat <- dat %>% filter(is.na(outliers))
 cat(sprintf("After removing outliers, %d rows remain.\n",nrow(dat)))
 
 # Remove any individuals have at leat one relative based on the
-# kinship calculations. This step should filter out 126,235 rows.
+# kinship calculations. This step should filter out 126,236 rows.
 dat <- dat %>% filter(kinship_genetic == 0)
 cat(sprintf(paste("After removing relatedness individuals based on kinship,",
                   "%d rows remain.\n"),nrow(dat)))
@@ -105,7 +108,7 @@ cat(sprintf(paste("After removing pregnant individuals,",
                   "%d rows remain.\n"),nrow(dat)))
 
 # Remove any individuals with blood related diseases
-# This step sohuld filter out 6070 rows
+# This step should filter out 6070 rows
 icd10 = c('C94', 'C95', 'Z856', "C901", "C914", "C82", "C83", 'C84', "C85", "Z948",
   "Z511", "Z512", "Z542", "D46", paste0("D", 55:64), paste0("B", 20:24),
   "N180", "Z992", "Z491", "Z492", "K74", "C88", "C900", "C902", "C91", "C92",
@@ -117,7 +120,22 @@ cat(sprintf(paste("After removing individuals with blood diseases,",
                   "%d rows remain.\n"),nrow(dat)))
 
 # Remove individuals with "abnormal" measurements.
-# ....
+# This step should filter out 8625 rows
+pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count",
+                "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc",
+                "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc",
+                "Reticulocyte_perc", "MSCV", "HLR_perc")
+## RINT
+for(name in pheno_names){
+  id = which(colnames(dat) == name)
+  dat[,id] = qnorm((rank(dat[,id],na.last="keep")-0.5)/sum(!is.na(dat[,id])))
+}
+## compute empirical covariance matrix
+covy = dat %>% select(pheno_names) %>% cov
+D2 = stats::mahalanobis(dat %>% select(pheno_names), center=0, cov=covy) ## mahalanobis distance
+dat = dat[D2 < qchisq(0.01, df=16, lower.tail = F),]
+cat(sprintf(paste("After removing individuals with abnormal measurements,",
+                  "%d rows remain.\n"),nrow(dat)))
 
 # Finally, remove the columns that are no longer needed for subsequent
 # analyses.
@@ -126,6 +144,11 @@ cols.to.remove <- c("sex_genetic","ethnic_genetic",
                     "kinship_genetic","outliers","pregnancy",paste0("ICD10.", 0:379))
 cols <- which(!is.element(names(dat),cols.to.remove))
 dat  <- dat[,cols]
+
+# SUMMARIZE DATA
+# --------------
+# Double-check that everything looks okay.
+summary(dat)
 
 cat("Writing prepared data to CSV file.\n")
 write.csv(dat,output.file,row.names = FALSE,quote = FALSE, na='NA')
