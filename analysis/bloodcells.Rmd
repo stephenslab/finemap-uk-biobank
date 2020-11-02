@@ -6,37 +6,37 @@ date: "10/26/2020"
 
 The UkB blood cell traits are
 
-PheID | Abbrev    | Phenotype                                  | Cell type
-------|-----------|--------------------------------------------|------------------
-30000 | WBCcount  | White blood cell count                     | Compound white cell
-30010 | RBCcount  | Red blood cell count                       | Mature red cell
-30020 | HGB       | Haemoglobin concentration                  | Mature red cell
-30030 | HCT       | Haematocrit percentage                     | Mature red cell
-30040 | MCV       | Mean corpuscular volume                    | Mature red cell
-30050 | MCH       | Mean corpuscular haemoglobin               | Mature red cell
-30060 | MCHC      | Mean corpuscular haemoglobin concentration | Mature red cell
-30070 | RDW       | Red blood cell distribution width          | Mature red cell
-30080 | PLTcount  | Platelet count                             | Platelet
-30090 | PCT       | Platelet crit                              | Platelet
-30100 | MPV       | Mean platelet (thrombocyte) volume         | Platelet
-30110 | PDW       | Platelet distribution width                | Platelet
-30120 | LYMPHcount| Lymphocyte count                           | Lymphoid white cell
-30130 | MONOcount | Monocyte count                             | Myeloid white cell
-30140 | NEUTcount | Neutrophill count                          | Myeloid white cell
-30150 | EOcount   | Eosinophill count                          | Myeloid white cell
-30160 | BASOcount | Basophill count                            | Myeloid white cell
-30180 | LYMPHperc | Lymphocyte percentage                      | Compound white cell
-30190 | MONOperc  | Monocyte percentage                        | Compound white cell
-30200 | NEUTperc  | Neutrophill percentage                     | Compound white cell
-30210 | EOperc    | Eosinophill percentage                     | Compound white cell
-30220 | BASOperc  | Basophill percentage                       | Compound white cell
-30240 | RETperc   | Reticulocyte percentage                    | Immature red cell
-30250 | RETcount  | Reticulocyte count                         | Immature red cell
-30260 | MRV       | Mean reticulocyte volume                   | Immature red cell
-30270 | MSCV      | Mean sphered cell volume                   | Mature red cell
-30280 | IRF       | Immature reticulocyte fraction             | Immature red cell
-30290 | HLRperc   | High light scatter reticulocyte percentage | Immature red cell
-30300 | HLRcount  | High light scatter reticulocyte count      | Immature red cell
+PheID | Abbrev    | Phenotype                                  | Cell type          | Determination
+------|-----------|--------------------------------------------|--------------------|--------------
+30000 | WBCcount  | White blood cell count                     | Compound white cell| Measured
+30010 | RBCcount  | Red blood cell count                       | Mature red cell    | Measured
+30020 | HGB       | Haemoglobin concentration                  | Mature red cell    | Measured
+30030 | HCT       | Haematocrit percentage                     | Mature red cell    | (RBCcount x MCV) / 10
+30040 | MCV       | Mean corpuscular volume                    | Mature red cell    | Measured
+30050 | MCH       | Mean corpuscular haemoglobin               | Mature red cell    | (hemoglobin/RBCcount) x 10
+30060 | MCHC      | Mean corpuscular haemoglobin concentration | Mature red cell    | (haemoglobin/haematocrit) x 100
+30070 | RDW       | Red blood cell distribution width          | Mature red cell    | Measured
+30080 | PLTcount  | Platelet count                             | Platelet           | Measured
+30090 | PCT       | Platelet crit                              | Platelet           | Measured
+30100 | MPV       | Mean platelet (thrombocyte) volume         | Platelet           | (PCT/PLTcount) x 10000
+30110 | PDW       | Platelet distribution width                | Platelet           | Measured
+30120 | LYMPHcount| Lymphocyte count                           | Lymphoid white cell| (LYMPHperc/100) x WBCcount
+30130 | MONOcount | Monocyte count                             | Myeloid white cell | (MONOperc/100) x WBCcount
+30140 | NEUTcount | Neutrophill count                          | Myeloid white cell | (NEUTperc/100) x WBCcount
+30150 | EOcount   | Eosinophill count                          | Myeloid white cell | (EOperc/100) x WBCcount
+30160 | BASOcount | Basophill count                            | Myeloid white cell | (BASOperc/100) x WBCcount
+30180 | LYMPHperc | Lymphocyte percentage                      | Compound white cell| Measured
+30190 | MONOperc  | Monocyte percentage                        | Compound white cell| Measured
+30200 | NEUTperc  | Neutrophill percentage                     | Compound white cell| Measured
+30210 | EOperc    | Eosinophill percentage                     | Compound white cell| Measured
+30220 | BASOperc  | Basophill percentage                       | Compound white cell| Measured
+30240 | RETperc   | Reticulocyte percentage                    | Immature red cell  | Measured
+30250 | RETcount  | Reticulocyte count                         | Immature red cell  | (RETperc/100) × RBCcount
+30260 | MRV       | Mean reticulocyte volume                   | Immature red cell  | MCV x (RETperc/100)
+30270 | MSCV      | Mean sphered cell volume                   | Mature red cell    | Measured
+30280 | IRF       | Immature reticulocyte fraction             | Immature red cell  | HLRcount/RETcount
+30290 | HLRperc   | High light scatter reticulocyte percentage | Immature red cell  | Measured
+30300 | HLRcount  | High light scatter reticulocyte count      | Immature red cell  | (HLRperc/100) × RBCcount
 
 
 We filtered individuals with following criteria:
@@ -112,37 +112,23 @@ We recompute all derived traits.
 dat$Haematocrit = (dat$MCV * dat$RBC_count)/10
 dat$MCH = (dat$Haemoglobin/dat$RBC_count) * 10
 dat$MCHC = (dat$Haemoglobin/dat$Haematocrit)*100
+dat$MPV = (dat$Plateletcrit/dat$Platelet_count) * 10000
 dat$Lymphocyte_count = (dat$Lymphocyte_perc * dat$WBC_count)/100
 dat$Monocyte_count = (dat$Monocyte_perc * dat$WBC_count)/100
 dat$Eosinophill_count = (dat$Eosinophill_perc * dat$WBC_count)/100
 dat$Basophill_count = (dat$Basophill_perc * dat$WBC_count)/100
+dat$Neutrophill_count = (dat$Neutrophill_perc * dat$WBC_count)/100
 dat$Reticulocyte_count = (dat$Reticulocyte_perc * dat$RBC_count)/100
 dat$HLR_count = (dat$HLR_perc * dat$RBC_count)/100
+dat$IRF = dat$HLR_perc/dat$Reticulocyte_perc
 ```
 
+Inverse normalization for each trait:
 ```{r}
-par(mfrow=c(2,3))
-hist(dat$WBC_count[dat$WBC_count < 20], breaks = 100, main=paste0('WBC_count ', sum(dat$WBC_count > 20), ' inds > 20'), xlab='x')
-hist(dat$Lymphocyte_count[dat$Lymphocyte_count < 8], breaks = 100, main=paste0('Lymphocyte_count ', sum(dat$Lymphocyte_count > 8), ' inds > 8'), xlab='x')
-hist(dat$Monocyte_count[dat$Monocyte_count < 2], breaks = 100, main=paste0('Monocyte_count ', sum(dat$Monocyte_count > 2), ' inds > 2'), xlab='x')
-hist(dat$Eosinophill_count[dat$Eosinophill_count < 1], breaks = 100, main=paste0('Eosinophill_count ', sum(dat$Eosinophill_count > 1), ' inds > 1'), xlab='x')
-hist(dat$Eosinophill_perc[dat$Eosinophill_perc < 10], breaks = 100, main=paste0('Eosinophill_perc ', sum(dat$Eosinophill_perc > 10), ' inds > 10'), xlab='x')
-hist(dat$Basophill_count[dat$Basophill_count < 0.5], breaks = 100, main=paste0('Basophill_count ', sum(dat$Basophill_count > 0.5), ' inds > 0.5'), xlab='x')
-hist(dat$Basophill_perc[dat$Basophill_perc < 2], breaks = 100, main=paste0('Basophill_perc ', sum(dat$Basophill_perc > 2), ' inds > 2'), xlab='x')
-hist(dat$Reticulocyte_count[dat$Reticulocyte_count < 0.2], breaks = 100, main=paste0('Reticulocyte_count ', sum(dat$Reticulocyte_count > 0.2), ' inds > 0.2'), xlab='x')
-hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc < 4], breaks = 100, main=paste0('Reticulocyte_perc ', sum(dat$Reticulocyte_perc > 4), ' inds > 4'), xlab='x')
-hist(dat$HLR_count[dat$HLR_count < 0.1], breaks = 100, main=paste0('HLR_count ', sum(dat$HLR_count > 0.1), ' inds > 0.1'), xlab='x')
-hist(dat$HLR_perc[dat$HLR_perc < 2], breaks = 100, main=paste0('HLR_perc ', sum(dat$HLR_perc > 2), ' inds > 2'), xlab='x')
-```
-
-Remove extreme observatios
-```{r}
-rem = c()
+dat_1 = dat
 for(i in 16:44){
-  rem = c(rem, which(dat[,i] < (median(dat[,i]) - 4*sqrt(mean((dat[,i] - median(dat[,i]))^2))) | dat[,i] > (median(dat[,i]) + 4*sqrt(mean((dat[,i] - median(dat[,i]))^2)))))
+  dat_1[,i] = qnorm((rank(dat_1[,i],na.last="keep")-0.5)/sum(!is.na(dat_1[,i])))
 }
-## remove 12758 individuals
-dat_1 = dat[-unique(rem),]
 ```
 
 ```{r}
@@ -152,17 +138,27 @@ for(i in 16:44){
 }
 ```
 
-Inverse normalization:
+## Identify Outliers
+
+Since we will jointly model these traits using multivariate normal distribution, we want to find outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly calculated phenotypes. We use 16 phenotypes.
+
 ```{r}
-dat_2 = dat_1
-for(i in 16:44){
-  dat_2[,i] = qnorm((rank(dat_2[,i],na.last="keep")-0.5)/sum(!is.na(dat_2[,i])))
-}
+sub_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count", "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "MSCV", "HLR_perc")
+dat_1_sub = dat_1 %>% select(sub_names)
+```
+
+Covariace matrix of traits
+```{r}
+library(corrplot)
+covy_sub = cov(dat_1_sub)
+corrplot(covy_sub, method='color', type='upper', tl.col="black", tl.srt=45, is.corr = FALSE)
 ```
 
 ```{r}
-par(mfrow=c(2,3))
-for(i in 16:44){
-  hist(dat_2[,i], breaks = 50, main=colnames(dat_2)[i], xlab='x')
-}
+D2_sub = stats::mahalanobis(dat_1_sub, center=0, cov=covy_sub)
+dat_sub_select = dat_1[D2_sub < qchisq(0.005, df=16, lower.tail = F),]
 ```
+
+There are `r nrow(dat_sub_select)` individuals.
+
+
