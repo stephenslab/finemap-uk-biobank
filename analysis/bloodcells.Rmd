@@ -41,9 +41,9 @@ PheID | Abbrev    | Phenotype                                  | Cell type      
 
 We filtered individuals with following criteria:
 
-1. Remove samples with missing values.
+1. Remove samples that are not marked as being "White British".
 
-2. Remove samples that are not marked as being "White British".
+2. Remove samples with missing values.
 
 3. Remove samples with mismatches between self-reported and genetic sex.
 
@@ -61,7 +61,7 @@ Load UKBiobank Blood Cell traits (individuals are filtered using [script](script
 ```{r, message=FALSE}
 library(data.table)
 library(dplyr)
-dat = fread('data/bloodcounts.csv')
+dat = fread('data/bloodcounts_V1.csv')
 class(dat) <- "data.frame"
 ```
 There are `r nrow(dat)` individuals.
@@ -156,7 +156,7 @@ corrplot(covy_sub, method='color', type='upper', tl.col="black", tl.srt=45, is.c
 
 ```{r}
 D2_sub = stats::mahalanobis(dat_1_sub, center=0, cov=covy_sub)
-dat_sub_select = dat_1[D2_sub < qchisq(0.005, df=16, lower.tail = F),]
+dat_sub_select = dat_1[D2_sub < qchisq(0.01, df=16, lower.tail = F),]
 ```
 
 There are `r nrow(dat_sub_select)` individuals.
