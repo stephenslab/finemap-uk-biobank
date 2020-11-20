@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Yuxin Zou" />
+
+<meta name="date" content="2020-11-19" />
+
+<title>Blood cells regions</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">finemap-uk-biobank</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Blood cells regions</h1>
+<h4 class="author">Yuxin Zou</h4>
+<h4 class="date">11/19/2020</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-11-20
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>finemap-uk-biobank/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it's best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191114code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191114)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191114code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191114)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec2021d01339310218de273fc04fb131feb989609targetblankc2021d0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c2021d01339310218de273fc04fb131feb989609" target="_blank">c2021d0</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec2021d01339310218de273fc04fb131feb989609targetblankc2021d0a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c2021d01339310218de273fc04fb131feb989609" target="_blank">c2021d0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.Rhistory
+    Ignored:    scripts/.DS_Store
+
+Untracked files:
+    Untracked:  data/bloodcells1.csv
+    Untracked:  data/height.chr3.matrix
+    Untracked:  data/susie_ss_input_sex.rds
+
+Unstaged changes:
+    Modified:   analysis/bloodcells.Rmd
+    Modified:   analysis/compare_result_more.Rmd
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/bloodcells_regions.Rmd</code>) and HTML (<code>docs/bloodcells_regions.html</code>) files. If you've configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/c2021d01339310218de273fc04fb131feb989609/analysis/bloodcells_regions.Rmd" target="_blank">c2021d0</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is <a href="../scripts/get_bloodcells.R">get_bloodcells</a>. The filtering steps are also described <a href="bloodcells.html">here</a>.</p>
+<p>For genotype data, variants with imputation score (INFO) &gt; 0.9, MAF &gt; 1% are included in association studies.</p>
+<p>The script to run GWAS is <a href="../scripts/plink_gwas.sh">GWAS</a></p>
+<p>For each phenotype, regions for fine-mapping are defined by greedily starting with the most significantly associated SNP, including SNPs within a window of 500kb centered at the SNP, until we include all significant SNPs (p &lt; 5e-8). We merge ovelapping regions. We exclude HLA region (chr6: 25Mb - 36Mb). The steps are</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the most significantly associated SNP.</p></li>
+<li><p>Choose region +- 250kb around the SNP.</p></li>
+<li><p>Find the next most significantly associated SNP ouside the selected regions.</p></li>
+<li><p>Choose region +- 250kb around the SNP.</p></li>
+<li><p>Merge regions if they overlap. ...</p></li>
+</ol>
+<p>When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.</p>
+<pre class="r"><code>library(data.table)
+library(dplyr)</code></pre>
+<pre><code>
+Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:data.table&#39;:
+
+    between, first, last</code></pre>
+<pre><code>The following objects are masked from &#39;package:stats&#39;:
+
+    filter, lag</code></pre>
+<pre><code>The following objects are masked from &#39;package:base&#39;:
+
+    intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>pheno_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;,
+                &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;,
+                &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;,
+                &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
+<pre class="r"><code>trait_regions = list()
+for(trait in pheno_names){
+  # reg = fread(paste0(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions/&#39;, trait, &#39;_regions&#39;))
+  region = fread(paste0(&#39;~/Desktop/ukb-bloodcells/regions_raw/&#39;, trait, &#39;_regions&#39;))
+  region = region %&gt;% arrange(desc(logp))
+  region_r = c()
+  for(i in 1:22){
+    region.chr = region %&gt;% filter(CHR == i) %&gt;% arrange(start)
+    if(nrow(region.chr) == 0){
+      next
+    }
+    tmp = region.chr %&gt;% group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;%
+      summarise(start = first(start), end = max(end), .groups = &#39;drop&#39;) %&gt;% 
+      mutate(length = end - start) %&gt;%
+      mutate(CHR = i) %&gt;% select(CHR, start, end, length)
+    region_r = rbind(region_r, tmp)
+  }
+  trait_regions[[trait]] = region_r
+}</code></pre>
+<p>Summary of region length for each phenotype:</p>
+<pre class="r"><code>lapply(trait_regions, function(x) summary(x$length))</code></pre>
+<pre><code>$WBC_count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 378854  500000  500000  610315  500000 2301820 
+
+$RBC_count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 500000  500000  500000  653221  755004 2940124 
+
+$Haemoglobin
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 301703  500000  500000  611650  500000 3251867 
+
+$MCV
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 500000  500000  500000  670089  772563 2920824 
+
+$RDW
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 275738  500000  500000  650422  500000 4089364 
+
+$Platelet_count
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 270883  500000  500000  678600  766174 3646000 
+
+$Plateletcrit
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 270883  500000  500000  640939  754988 3593140 
+
+$PDW
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 268602  500000  500000  650832  751519 4239970 
+
+$Lymphocyte_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 378854  500000  500000  621719  753623 2239954 
+
+$Monocyte_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 310142  500000  500000  659465  751945 3864804 
+
+$Neutrophill_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 368127  500000  500000  612052  500000 2208916 
+
+$Eosinophill_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 397874  500000  500000  656940  750663 3994646 
+
+$Basophill_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 500000  500000  500000  561068  500000 1748896 
+
+$Reticulocyte_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 303607  500000  500000  653925  753414 5547602 
+
+$MSCV
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 272793  500000  500000  656841  754786 3254290 
+
+$HLR_perc
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 381586  500000  500000  674729  768513 5973226 </code></pre>
+<p>For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 9572 SNPs.</p>
+<pre class="r"><code>gwas_HLR_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_HLR_perc&#39;)
+colnames(gwas_HLR_perc)[1] = &#39;CHR&#39;
+gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
+gwas_HLR_perc = gwas_HLR_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_HLR_perc.sub = gwas_HLR_perc %&gt;% filter(CHR == 3, POS &gt;= 46234573, POS &lt;=52207799)
+plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 8888 SNPs.</p>
+<pre class="r"><code>gwas_Reticulocyte_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_Reticulocyte_perc&#39;)
+colnames(gwas_Reticulocyte_perc)[1] = &#39;CHR&#39;
+gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
+gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_Reticulocyte_perc.sub = gwas_Reticulocyte_perc %&gt;% filter(CHR == 3, POS &gt;= 48155661, POS &lt;=53703263)
+plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>For PDW, the maximum region is at CHR 8 from 7838230 to 12078200, which includes 16605 SNPs.</p>
+<pre class="r"><code>gwas_PDW = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_PDW&#39;)
+colnames(gwas_PDW)[1] = &#39;CHR&#39;
+gwas_PDW$P = as.numeric(gwas_PDW$P)
+gwas_PDW = gwas_PDW %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_PDW.sub = gwas_PDW %&gt;% filter(CHR == 8, POS &gt;= 7838230, POS &lt;=12078200)
+plot(gwas_PDW.sub$POS, gwas_PDW.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Select regions across phenotype:</p>
+<pre class="r"><code>tb = bind_rows(trait_regions, .id = &quot;column_label&quot;)
+res.final = c()
+for(i in 1:22){
+  tb.chr = tb %&gt;% filter(CHR == i) %&gt;% arrange(start)
+  if(nrow(tb.chr) == 0){
+    next
+  }
+  tmp = tb.chr %&gt;% group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;%
+    summarise(start = first(start), end = max(end), .groups = &#39;drop&#39;) %&gt;% 
+    mutate(length = end - start) %&gt;%
+    mutate(CHR = i) %&gt;% select(CHR, start, end, length)
+  res.final = rbind(res.final, tmp)
+}
+snpsnum = c()
+for(i in 1:nrow(res.final)){
+  snpsnum = c(snpsnum, gwas_PDW %&gt;% filter(CHR == res.final$CHR[i],
+                                           POS &gt;= res.final$start[i], 
+                                           POS &lt;= res.final$end[i]) %&gt;% nrow )
+}
+res.final$snpsnum = snpsnum</code></pre>
+<p>Summary of region length:</p>
+<pre class="r"><code>summary(res.final$length)</code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 307855  500000  658060  932086 1057863 8729501 </code></pre>
+<p>Summary of SNP number for each region:</p>
+<pre class="r"><code>summary(res.final$snpsnum)</code></pre>
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+     21    1512    2015    2641    3146   21219 </code></pre>
+<p>There are 972 regoins in total, 68 regions with length greater than 2Mb, 84 regions contain greater than 5000 SNPs.</p>
+<p>The region with maximum length and maximum number of SNPs:</p>
+<pre class="r"><code>par(mfrow=c(3,1))
+gwas_HLR_perc.max = gwas_HLR_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)
+gwas_Reticulocyte_perc.max = gwas_Reticulocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_Reticulocyte_perc.max$POS, gwas_Reticulocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Reticulocyte_perc&#39;)
+gwas_PDW.max = gwas_PDW %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_PDW.max$POS, gwas_PDW.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;PDW&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gwas_Lymphocyte_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_Lymphocyte_perc&#39;)
+colnames(gwas_Lymphocyte_perc)[1] = &#39;CHR&#39;
+gwas_Lymphocyte_perc$P = as.numeric(gwas_Lymphocyte_perc$P)
+gwas_Lymphocyte_perc = gwas_Lymphocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_Lymphocyte_perc.max = gwas_Lymphocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_Lymphocyte_perc.max$POS, gwas_Lymphocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Lymphocyte_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.6.3 (2020-02-29)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS  10.16
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] dplyr_1.0.2       data.table_1.13.2 workflowr_1.6.2  
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.5       rstudioapi_0.11  whisker_0.4      knitr_1.30      
+ [5] magrittr_1.5     tidyselect_1.1.0 R6_2.5.0         rlang_0.4.8     
+ [9] stringr_1.4.0    tools_3.6.3      xfun_0.19        git2r_0.27.1    
+[13] htmltools_0.5.0  ellipsis_0.3.1   rprojroot_1.3-2  yaml_2.2.1      
+[17] digest_0.6.27    tibble_3.0.4     lifecycle_0.2.0  crayon_1.3.4    
+[21] purrr_0.3.4      later_1.1.0.1    vctrs_0.3.4      promises_1.1.1  
+[25] fs_1.5.0         glue_1.4.2       evaluate_0.14    rmarkdown_2.5   
+[29] stringi_1.5.3    compiler_3.6.3   pillar_1.4.6     generics_0.1.0  
+[33] backports_1.2.0  httpuv_1.5.4     pkgconfig_2.0.3 </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
