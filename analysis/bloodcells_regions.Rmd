@@ -59,7 +59,7 @@ for(trait in pheno_names){
 }
 ```
 
-Summary of region length for each phenotype:
+Summary of region length for each phenotype before selecting regions across traits:
 ```{r}
 lapply(trait_regions, function(x) summary(x$length))
 ```
