@@ -352,7 +352,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-18
+<strong>Last updated:</strong> 2020-11-20
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee0f8d53e4cad721e30cba9e0ba92cab2018b4617targetblanke0f8d53a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e0f8d53e4cad721e30cba9e0ba92cab2018b4617" target="_blank">e0f8d53</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreeaae06f57257a7d73e143555bc436c8a2de8bb5a7targetblankaae06f5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/aae06f57257a7d73e143555bc436c8a2de8bb5a7" target="_blank">aae06f5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee0f8d53e4cad721e30cba9e0ba92cab2018b4617targetblanke0f8d53a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreeaae06f57257a7d73e143555bc436c8a2de8bb5a7targetblankaae06f5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e0f8d53e4cad721e30cba9e0ba92cab2018b4617" target="_blank">e0f8d53</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/aae06f57257a7d73e143555bc436c8a2de8bb5a7" target="_blank">aae06f5</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -467,12 +467,12 @@ Ignored files:
 
 Untracked files:
     Untracked:  data/bloodcells1.csv
-    Untracked:  data/bloodcounts_V1.csv
     Untracked:  data/height.chr3.matrix
     Untracked:  data/susie_ss_input_sex.rds
 
 Unstaged changes:
     Modified:   analysis/compare_result_more.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -511,6 +511,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/aae06f57257a7d73e143555bc436c8a2de8bb5a7/analysis/bloodcells.Rmd" target="_blank">aae06f5</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/bloodcells.html" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -929,7 +963,7 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 </tr>
 </tbody>
 </table>
-<p>To prepare the phenotype data, we need to remove samples with abnormal observations. Since we will jointly model blood cell traits using multivariate normal distribution, we want to discard outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly derived phenotypes. We use 16 phenotypes.</p>
+<p>To prepare the phenotype data, we need to remove samples with abnormal observations. Since we will jointly model blood cell traits using multivariate normal distribution, we want to discard outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly derived phenotypes. <strong>We use 16 phenotypes.</strong></p>
 <pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
 <p>We filtered individuals with following criteria:</p>
 <ol style="list-style-type: decimal">
@@ -982,6 +1016,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-1.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-3-1.png" target="_blank">b6f3f56</a>
 </td>
 <td>
@@ -1026,6 +1071,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-2.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-3-2.png" target="_blank">b6f3f56</a>
 </td>
 <td>
@@ -1044,6 +1100,43 @@ hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc &lt; 4], main=paste0(&#39;Retic
 hist(dat$MSCV, main=&#39;MSCV&#39;, xlab=&#39;x&#39;, breaks = 100)
 hist(dat$HLR_perc[dat$HLR_perc &lt; 2], main=paste0(&#39;HLR_perc &#39;, sum(dat$HLR_perc &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;, breaks = 50)</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-3">
+Past versions of unnamed-chunk-3-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-3.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Inverse normalization for each trait:</p>
 <pre class="r"><code>dat_1 = dat
 for(i in 16:31){
@@ -1078,6 +1171,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-1.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-5-1.png" target="_blank">b6f3f56</a>
 </td>
 <td>
@@ -1091,7 +1195,82 @@ zouyuxin
 </table>
 </div>
 </div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-2.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-3">
+Past versions of unnamed-chunk-5-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-3.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <div id="identify-outliers" class="section level2">
 <h2>Identify Outliers</h2>
 <pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)
@@ -1124,6 +1303,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">9e0d1c3</a>
@@ -1177,6 +1367,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-8-1.png" target="_blank">1dbfe6c</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-1.png" target="_blank">9e0d1c3</a>
