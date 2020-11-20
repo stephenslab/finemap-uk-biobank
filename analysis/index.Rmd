@@ -28,6 +28,9 @@ This repository contains code and results for fine-mapping on UK Biobank phenoty
     
     - [ZBTB38](finemap_height_ZBTB38_check.html): SuSiE-bhat without standardize gives ONE CS, but SuSiE-bhat with standardize gives TWO CS.
     
+    
+The following files are for multi-trait fine-mapping using mvSuSiE.
+
 * [UKB blood cell traits](bloodcells.html)
 
     [Blood cell regions](bloodcells_regions.html)
