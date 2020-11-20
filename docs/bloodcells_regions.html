@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec2021d01339310218de273fc04fb131feb989609targetblankc2021d0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c2021d01339310218de273fc04fb131feb989609" target="_blank">c2021d0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3bfe6838516f8dee959a28cf80d36e3d818cabb0targetblank3bfe683a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3bfe6838516f8dee959a28cf80d36e3d818cabb0" target="_blank">3bfe683</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreec2021d01339310218de273fc04fb131feb989609targetblankc2021d0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3bfe6838516f8dee959a28cf80d36e3d818cabb0targetblank3bfe683a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/c2021d01339310218de273fc04fb131feb989609" target="_blank">c2021d0</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3bfe6838516f8dee959a28cf80d36e3d818cabb0" target="_blank">3bfe683</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -516,6 +516,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3bfe6838516f8dee959a28cf80d36e3d818cabb0/analysis/bloodcells_regions.Rmd" target="_blank">3bfe683</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/bloodcells_regions.html" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/c2021d01339310218de273fc04fb131feb989609/analysis/bloodcells_regions.Rmd" target="_blank">c2021d0</a>
 </td>
 <td>
@@ -548,19 +582,8 @@ wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
 </ol>
 <p>When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.</p>
 <pre class="r"><code>library(data.table)
-library(dplyr)</code></pre>
-<pre><code>
-Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>The following objects are masked from &#39;package:data.table&#39;:
-
-    between, first, last</code></pre>
-<pre><code>The following objects are masked from &#39;package:stats&#39;:
-
-    filter, lag</code></pre>
-<pre><code>The following objects are masked from &#39;package:base&#39;:
-
-    intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>pheno_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;,
+library(dplyr)
+pheno_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;,
                 &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;,
                 &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;,
                 &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
@@ -654,24 +677,135 @@ colnames(gwas_HLR_perc)[1] = &#39;CHR&#39;
 gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
 gwas_HLR_perc = gwas_HLR_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
 gwas_HLR_perc.sub = gwas_HLR_perc %&gt;% filter(CHR == 3, POS &gt;= 46234573, POS &lt;=52207799)
-plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)</code></pre>
 <p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-4-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/figure/bloodcells_regions.Rmd/unnamed-chunk-4-1.png" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 8888 SNPs.</p>
 <pre class="r"><code>gwas_Reticulocyte_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_Reticulocyte_perc&#39;)
 colnames(gwas_Reticulocyte_perc)[1] = &#39;CHR&#39;
 gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
 gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
 gwas_Reticulocyte_perc.sub = gwas_Reticulocyte_perc %&gt;% filter(CHR == 3, POS &gt;= 48155661, POS &lt;=53703263)
-plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Reticulocyte_perc&#39;)</code></pre>
 <p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/figure/bloodcells_regions.Rmd/unnamed-chunk-5-1.png" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>For PDW, the maximum region is at CHR 8 from 7838230 to 12078200, which includes 16605 SNPs.</p>
 <pre class="r"><code>gwas_PDW = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_PDW&#39;)
 colnames(gwas_PDW)[1] = &#39;CHR&#39;
 gwas_PDW$P = as.numeric(gwas_PDW$P)
 gwas_PDW = gwas_PDW %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
 gwas_PDW.sub = gwas_PDW %&gt;% filter(CHR == 8, POS &gt;= 7838230, POS &lt;=12078200)
-plot(gwas_PDW.sub$POS, gwas_PDW.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;)</code></pre>
+plot(gwas_PDW.sub$POS, gwas_PDW.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;PDW&#39;)</code></pre>
 <p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/figure/bloodcells_regions.Rmd/unnamed-chunk-6-1.png" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Select regions across phenotype:</p>
 <pre class="r"><code>tb = bind_rows(trait_regions, .id = &quot;column_label&quot;)
 res.final = c()
@@ -703,21 +837,96 @@ res.final$snpsnum = snpsnum</code></pre>
      21    1512    2015    2641    3146   21219 </code></pre>
 <p>There are 972 regoins in total, 68 regions with length greater than 2Mb, 84 regions contain greater than 5000 SNPs.</p>
 <p>The region with maximum length and maximum number of SNPs:</p>
-<pre class="r"><code>par(mfrow=c(3,1))
-gwas_HLR_perc.max = gwas_HLR_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
-plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)
-gwas_Reticulocyte_perc.max = gwas_Reticulocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
-plot(gwas_Reticulocyte_perc.max$POS, gwas_Reticulocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Reticulocyte_perc&#39;)
-gwas_PDW.max = gwas_PDW %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
-plot(gwas_PDW.max$POS, gwas_PDW.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;PDW&#39;)</code></pre>
+<pre class="r"><code>gwas_HLR_perc.max = gwas_HLR_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)</code></pre>
 <p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
+Past versions of unnamed-chunk-10-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/figure/bloodcells_regions.Rmd/unnamed-chunk-10-1.png" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>gwas_Reticulocyte_perc.max = gwas_Reticulocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_Reticulocyte_perc.max$POS, gwas_Reticulocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Reticulocyte_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-2">
+Past versions of unnamed-chunk-10-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-10-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/717d6b1913338557ebccdfbfcdfc4e69ccc52380/docs/figure/bloodcells_regions.Rmd/unnamed-chunk-10-2.png" target="_blank">717d6b1</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>gwas_PDW.max = gwas_PDW %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_PDW.max$POS, gwas_PDW.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;PDW&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>gwas_Lymphocyte_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_Lymphocyte_perc&#39;)
 colnames(gwas_Lymphocyte_perc)[1] = &#39;CHR&#39;
 gwas_Lymphocyte_perc$P = as.numeric(gwas_Lymphocyte_perc$P)
 gwas_Lymphocyte_perc = gwas_Lymphocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
 gwas_Lymphocyte_perc.max = gwas_Lymphocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
 plot(gwas_Lymphocyte_perc.max$POS, gwas_Lymphocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Lymphocyte_perc&#39;)</code></pre>
-<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/bloodcells_regions.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
