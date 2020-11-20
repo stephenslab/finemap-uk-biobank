@@ -352,7 +352,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-02
+<strong>Last updated:</strong> 2020-11-18
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree5e746f1e38b3c446c386f7dbb7172e8836d07c45targetblank5e746f1a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/5e746f1e38b3c446c386f7dbb7172e8836d07c45" target="_blank">5e746f1</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee0f8d53e4cad721e30cba9e0ba92cab2018b4617targetblanke0f8d53a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e0f8d53e4cad721e30cba9e0ba92cab2018b4617" target="_blank">e0f8d53</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree5e746f1e38b3c446c386f7dbb7172e8836d07c45targetblank5e746f1a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee0f8d53e4cad721e30cba9e0ba92cab2018b4617targetblanke0f8d53a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/5e746f1e38b3c446c386f7dbb7172e8836d07c45" target="_blank">5e746f1</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e0f8d53e4cad721e30cba9e0ba92cab2018b4617" target="_blank">e0f8d53</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -466,11 +466,10 @@ Ignored files:
     Ignored:    scripts/.DS_Store
 
 Untracked files:
+    Untracked:  data/bloodcells1.csv
     Untracked:  data/bloodcounts_V1.csv
     Untracked:  data/height.chr3.matrix
     Untracked:  data/susie_ss_input_sex.rds
-    Untracked:  scripts/.plink_gwas.sh.swp
-    Untracked:  scripts/plink_gwas.sh
 
 Unstaged changes:
     Modified:   analysis/compare_result_more.Rmd
@@ -512,6 +511,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/e0f8d53e4cad721e30cba9e0ba92cab2018b4617/analysis/bloodcells.Rmd" target="_blank">e0f8d53</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-18
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/e1728853e20cb14fb2f30bcb7e7286258dfb6764/docs/bloodcells.html" target="_blank">e172885</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -896,6 +929,8 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 </tr>
 </tbody>
 </table>
+<p>To prepare the phenotype data, we need to remove samples with abnormal observations. Since we will jointly model blood cell traits using multivariate normal distribution, we want to discard outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly derived phenotypes. We use 16 phenotypes.</p>
+<pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
 <p>We filtered individuals with following criteria:</p>
 <ol style="list-style-type: decimal">
 <li><p>Remove samples that are not marked as being &quot;White British&quot;.</p></li>
@@ -906,216 +941,22 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 <li><p>Remove any pregnant individuals.</p></li>
 <li><p>Remove any individuals with following in hospital in-patient data:</p>
 <p>leukemia, lymphoma, bone marrow transplant, chemotherapy, myelodysplastic syndrome, anemia, HIV, end-stage kidney disease, dialysis, cirrhosis, multiple myeloma, lymphocytic leukemia, myeloid leukemia, polycythaemia vera, haemochromatosis</p></li>
+<li><p>Identify outliers in multivariate normal.</p></li>
 </ol>
-<p>Load UKBiobank Blood Cell traits (individuals are filtered using <a href="../scripts/get_bloodcells.R">script</a>)</p>
+<p>Load UKBiobank Blood Cell traits (individuals are filtered using <a href="../scripts/get_bloodcells.R">script</a> before line 121).</p>
 <pre class="r"><code>library(data.table)
 library(dplyr)
-dat = fread(&#39;data/bloodcounts_V1.csv&#39;)
+dat = fread(&#39;data/bloodcells1.csv&#39;)
 class(dat) &lt;- &quot;data.frame&quot;</code></pre>
-<p>There are 257604 individuals.</p>
+<p>There are 257605 individuals.</p>
 <p>Check distribution for each trait:</p>
 <pre class="r"><code>par(mfrow=c(2,3))
-for(i in 16:44){
-  hist(dat[,i], breaks = 100, main=colnames(dat)[i], xlab=&#39;x&#39;)
-}</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
-Past versions of unnamed-chunk-2-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-2-1.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-2">
-Past versions of unnamed-chunk-2-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-2-2.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-3">
-Past versions of unnamed-chunk-2-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-2-3.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-2-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-4">
-Past versions of unnamed-chunk-2-4.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-2-4.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-2-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-5">
-Past versions of unnamed-chunk-2-5.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-2-5.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Distributions for trait with small observartions:</p>
-<pre class="r"><code>par(mfrow=c(2,3))
 hist(dat$WBC_count[dat$WBC_count &lt; 20], breaks = 100, main=paste0(&#39;WBC_count &#39;, sum(dat$WBC_count &gt; 20), &#39; inds &gt; 20&#39;), xlab=&#39;x&#39;)
-hist(dat$Lymphocyte_count[dat$Lymphocyte_count &lt; 8], breaks = 100, main=paste0(&#39;Lymphocyte_count &#39;, sum(dat$Lymphocyte_count &gt; 8), &#39; inds &gt; 8&#39;), xlab=&#39;x&#39;)
-hist(dat$Monocyte_count[dat$Monocyte_count &lt; 2], breaks = 100, main=paste0(&#39;Monocyte_count &#39;, sum(dat$Monocyte_count &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;)
-hist(dat$Eosinophill_count[dat$Eosinophill_count &lt; 1], breaks = 100, main=paste0(&#39;Eosinophill_count &#39;, sum(dat$Eosinophill_count &gt; 1), &#39; inds &gt; 1&#39;), xlab=&#39;x&#39;)
-hist(dat$Eosinophill_perc[dat$Eosinophill_perc &lt; 10], breaks = 100, main=paste0(&#39;Eosinophill_perc &#39;, sum(dat$Eosinophill_perc &gt; 10), &#39; inds &gt; 10&#39;), xlab=&#39;x&#39;)
-hist(dat$Basophill_count[dat$Basophill_count &lt; 0.5], breaks = 100, main=paste0(&#39;Basophill_count &#39;, sum(dat$Basophill_count &gt; 0.5), &#39; inds &gt; 0.5&#39;), xlab=&#39;x&#39;)</code></pre>
+hist(dat$RBC_count, main=&#39;RBC_count&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$Haemoglobin, main=&#39;Haemoglobin&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$MCV, main=&#39;MCV&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$RDW[dat$RDW &lt; 20], main=paste0(&#39;RDW &#39;, sum(dat$RDW &gt; 20), &#39; inds &gt; 20&#39;), xlab=&#39;x&#39;, breaks = 100)
+hist(dat$Platelet_count, main=&#39;Platelet_count&#39;, xlab=&#39;x&#39;, breaks = 100)</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
@@ -1154,11 +995,12 @@ zouyuxin
 </table>
 </div>
 </div>
-<pre class="r"><code>hist(dat$Basophill_perc[dat$Basophill_perc &lt; 2], breaks = 100, main=paste0(&#39;Basophill_perc &#39;, sum(dat$Basophill_perc &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;)
-hist(dat$Reticulocyte_count[dat$Reticulocyte_count &lt; 0.2], breaks = 100, main=paste0(&#39;Reticulocyte_count &#39;, sum(dat$Reticulocyte_count &gt; 0.2), &#39; inds &gt; 0.2&#39;), xlab=&#39;x&#39;)
-hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc &lt; 4], breaks = 100, main=paste0(&#39;Reticulocyte_perc &#39;, sum(dat$Reticulocyte_perc &gt; 4), &#39; inds &gt; 4&#39;), xlab=&#39;x&#39;)
-hist(dat$HLR_count[dat$HLR_count &lt; 0.1], breaks = 100, main=paste0(&#39;HLR_count &#39;, sum(dat$HLR_count &gt; 0.1), &#39; inds &gt; 0.1&#39;), xlab=&#39;x&#39;)
-hist(dat$HLR_perc[dat$HLR_perc &lt; 2], breaks = 100, main=paste0(&#39;HLR_perc &#39;, sum(dat$HLR_perc &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;)</code></pre>
+<pre class="r"><code>hist(dat$Plateletcrit, main=&#39;Plateletcrit&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$PDW, main=&#39;PDW&#39;, xlab=&#39;x&#39;, breaks = 50)
+hist(dat$Lymphocyte_perc, main=&#39;Lymphocyte_perc&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$Monocyte_perc[dat$Monocyte_perc &lt; 20], main=paste0(&#39;Monocyte_perc &#39;, sum(dat$Monocyte_perc &gt; 20), &#39; inds &gt; 20&#39;), xlab=&#39;x&#39;, breaks = 100)
+hist(dat$Neutrophill_perc, main=&#39;Neutrophill_perc&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$Eosinophill_perc[dat$Eosinophill_perc &lt; 10], main=paste0(&#39;Eosinophill_perc &#39;, sum(dat$Eosinophill_perc &gt; 10), &#39; inds &gt; 10&#39;), xlab=&#39;x&#39;, breaks = 100)</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-2">
@@ -1197,52 +1039,20 @@ zouyuxin
 </table>
 </div>
 </div>
-<div id="basophill" class="section level2">
-<h2>Basophill</h2>
-<p>Basophils count is the proportion of ( basophils / 100 ) x white blood cell count.</p>
-<pre class="r"><code>Basophils_count = dat$Basophill_perc * dat$WBC_count / 100
-{plot(Basophils_count, dat$Basophill_count, ylab=&#39;UKB Basophill count&#39;)
-abline(0,1)}</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-4-1.png" width="480" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
-Past versions of unnamed-chunk-4-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-4-1.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>There are 835 0's in computed Basophils_count, but there are 75056 0's in UKB Basophils count.</p>
-<pre class="r"><code>hist(Basophils_count[Basophils_count &lt; 0.5], breaks = 100, main=paste0(&#39;Derived Basophils_count &#39;, sum(Basophils_count &gt; 0.5), &#39; inds &gt; 0.5&#39;), xlab=&#39;x&#39;)</code></pre>
+<pre class="r"><code>hist(dat$Basophill_perc[dat$Basophill_perc &lt; 4], main=paste0(&#39;Basophill_perc &#39;, sum(dat$Basophill_perc &gt; 4), &#39; inds &gt; 4&#39;), xlab=&#39;x&#39;, breaks = 50)
+hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc &lt; 4], main=paste0(&#39;Reticulocyte_perc &#39;, sum(dat$Reticulocyte_perc &gt; 4), &#39; inds &gt; 4&#39;), xlab=&#39;x&#39;, breaks = 50)
+hist(dat$MSCV, main=&#39;MSCV&#39;, xlab=&#39;x&#39;, breaks = 100)
+hist(dat$HLR_perc[dat$HLR_perc &lt; 2], main=paste0(&#39;HLR_perc &#39;, sum(dat$HLR_perc &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;, breaks = 50)</code></pre>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Inverse normalization for each trait:</p>
+<pre class="r"><code>dat_1 = dat
+for(i in 16:31){
+  dat_1[,i] = qnorm((rank(dat_1[,i],na.last=&quot;keep&quot;)-0.5)/sum(!is.na(dat_1[,i])))
+}</code></pre>
+<pre class="r"><code>par(mfrow=c(2,3))
+for(i in 16:31){
+  hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab=&#39;x&#39;)
+}</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
@@ -1281,29 +1091,69 @@ zouyuxin
 </table>
 </div>
 </div>
-<p>There are rounding errors in derived count traits.</p>
-<p>We recompute all derived traits.</p>
-<pre class="r"><code>dat$Haematocrit = (dat$MCV * dat$RBC_count)/10
-dat$MCH = (dat$Haemoglobin/dat$RBC_count) * 10
-dat$MCHC = (dat$Haemoglobin/dat$Haematocrit)*100
-dat$MPV = (dat$Plateletcrit/dat$Platelet_count) * 10000
-dat$Lymphocyte_count = (dat$Lymphocyte_perc * dat$WBC_count)/100
-dat$Monocyte_count = (dat$Monocyte_perc * dat$WBC_count)/100
-dat$Eosinophill_count = (dat$Eosinophill_perc * dat$WBC_count)/100
-dat$Basophill_count = (dat$Basophill_perc * dat$WBC_count)/100
-dat$Neutrophill_count = (dat$Neutrophill_perc * dat$WBC_count)/100
-dat$Reticulocyte_count = (dat$Reticulocyte_perc * dat$RBC_count)/100
-dat$HLR_count = (dat$HLR_perc * dat$RBC_count)/100
-dat$IRF = dat$HLR_perc/dat$Reticulocyte_perc</code></pre>
-<p>Inverse normalization for each trait:</p>
-<pre class="r"><code>dat_1 = dat
-for(i in 16:44){
-  dat_1[,i] = qnorm((rank(dat_1[,i],na.last=&quot;keep&quot;)-0.5)/sum(!is.na(dat_1[,i])))
-}</code></pre>
-<pre class="r"><code>par(mfrow=c(2,3))
-for(i in 16:44){
-  hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab=&#39;x&#39;)
-}</code></pre>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<div id="identify-outliers" class="section level2">
+<h2>Identify Outliers</h2>
+<pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)
+dat_1_traits = dat_1 %&gt;% select(all_of(trait_names))</code></pre>
+<p>Covariace matrix of traits</p>
+<pre class="r"><code>library(corrplot)</code></pre>
+<pre><code>corrplot 0.84 loaded</code></pre>
+<pre class="r"><code>covy = cov(dat_1_traits)
+corrplot(covy, method=&#39;color&#39;, type=&#39;upper&#39;, tl.col=&quot;black&quot;, tl.srt=45, is.corr = FALSE)</code></pre>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">b6f3f56</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Measure Mahalanobis distance</p>
+<pre class="r"><code>D2 = stats::mahalanobis(dat_1_traits, center=0, cov=covy) # squared Mahalanobis distance
+{hist(D2[D2 &lt; 60], breaks = 100, main=paste0(&#39;Mahalanobis distance: &#39;, sum(D2 &gt; 60), &#39; inds D2 &gt; 60&#39;),  xlab=&#39;D2&#39;)
+abline(v=qchisq(0.01, df=16, lower.tail = F))}</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
@@ -1342,214 +1192,9 @@ zouyuxin
 </table>
 </div>
 </div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-2">
-Past versions of unnamed-chunk-8-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-8-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-2.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-3">
-Past versions of unnamed-chunk-8-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-8-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-3.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-4">
-Past versions of unnamed-chunk-8-4.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-8-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-4.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-5">
-Past versions of unnamed-chunk-8-5.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-8-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-8-5.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="identify-outliers" class="section level2">
-<h2>Identify Outliers</h2>
-<p>Since we will jointly model these traits using multivariate normal distribution, we want to find outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly calculated phenotypes. We use 16 phenotypes.</p>
-<pre class="r"><code>sub_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)
-dat_1_sub = dat_1 %&gt;% select(sub_names)</code></pre>
-<pre><code>Note: Using an external vector in selections is ambiguous.
-ℹ Use `all_of(sub_names)` instead of `sub_names` to silence this message.
-ℹ See &lt;https://tidyselect.r-lib.org/reference/faq-external-vector.html&gt;.
-This message is displayed once per session.</code></pre>
-<p>Covariace matrix of traits</p>
-<pre class="r"><code>library(corrplot)</code></pre>
-<pre><code>corrplot 0.84 loaded</code></pre>
-<pre class="r"><code>covy_sub = cov(dat_1_sub)
-corrplot(covy_sub, method=&#39;color&#39;, type=&#39;upper&#39;, tl.col=&quot;black&quot;, tl.srt=45, is.corr = FALSE)</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-10-1">
-Past versions of unnamed-chunk-10-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-10-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-10-1.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>D2_sub = stats::mahalanobis(dat_1_sub, center=0, cov=covy_sub)
-dat_sub_select = dat_1[D2_sub &lt; qchisq(0.01, df=16, lower.tail = F),]</code></pre>
-<p>There are 248979 individuals.</p>
+<p>The Mahalanobis distance follows a Chi-Square distribution with df = 16. We compute the 99.9%-Quantile of the Chi-Square distribution with 16 degrees of freedomm and we remove samples with Mahalanobis distance greater than the distance.</p>
+<pre class="r"><code>dat_select = dat_1[D2 &lt; qchisq(0.01, df=16, lower.tail = F),]</code></pre>
+<p>There are 248980 individuals.</p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1560,7 +1205,7 @@ dat_sub_select = dat_1[D2_sub &lt; qchisq(0.01, df=16, lower.tail = F),]</code><
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.6.3 (2020-02-29)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Catalina 10.15.7
+Running under: macOS  10.16
 
 Matrix products: default
 BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
@@ -1576,16 +1221,15 @@ other attached packages:
 [1] corrplot_0.84     dplyr_1.0.2       data.table_1.13.2 workflowr_1.6.2  
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5       pillar_1.4.6     compiler_3.6.3   later_1.1.0.1   
- [5] git2r_0.27.1     tools_3.6.3      digest_0.6.27    evaluate_0.14   
- [9] lifecycle_0.2.0  tibble_3.0.4     pkgconfig_2.0.3  rlang_0.4.8     
-[13] cli_2.1.0        rstudioapi_0.11  yaml_2.2.1       xfun_0.19       
-[17] stringr_1.4.0    knitr_1.30       generics_0.1.0   fs_1.5.0        
-[21] vctrs_0.3.4      rprojroot_1.3-2  tidyselect_1.1.0 glue_1.4.2      
-[25] R6_2.5.0         fansi_0.4.1      rmarkdown_2.5    purrr_0.3.4     
-[29] magrittr_1.5     whisker_0.4      backports_1.1.10 promises_1.1.1  
-[33] ellipsis_0.3.1   htmltools_0.5.0  assertthat_0.2.1 httpuv_1.5.4    
-[37] stringi_1.5.3    crayon_1.3.4    </code></pre>
+ [1] Rcpp_1.0.5       rstudioapi_0.11  whisker_0.4      knitr_1.30      
+ [5] magrittr_1.5     tidyselect_1.1.0 R6_2.5.0         rlang_0.4.8     
+ [9] stringr_1.4.0    tools_3.6.3      xfun_0.19        git2r_0.27.1    
+[13] htmltools_0.5.0  ellipsis_0.3.1   rprojroot_1.3-2  yaml_2.2.1      
+[17] digest_0.6.27    tibble_3.0.4     lifecycle_0.2.0  crayon_1.3.4    
+[21] purrr_0.3.4      later_1.1.0.1    vctrs_0.3.4      promises_1.1.1  
+[25] fs_1.5.0         glue_1.4.2       evaluate_0.14    rmarkdown_2.5   
+[29] stringi_1.5.3    compiler_3.6.3   pillar_1.4.6     generics_0.1.0  
+[33] backports_1.2.0  httpuv_1.5.4     pkgconfig_2.0.3 </code></pre>
 </div>
 </div>
 

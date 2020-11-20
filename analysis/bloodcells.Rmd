@@ -2,6 +2,9 @@
 title: "UKBiobank Blood Cell"
 author: "Yuxin Zou"
 date: "10/26/2020"
+output: 
+  workflowr::wflow_html:
+    code_folding: hide
 ---
 
 The UkB blood cell traits are
@@ -38,6 +41,11 @@ PheID | Abbrev    | Phenotype                                  | Cell type      
 30290 | HLRperc   | High light scatter reticulocyte percentage | Immature red cell  | Measured
 30300 | HLRcount  | High light scatter reticulocyte count      | Immature red cell  | (HLRperc/100) × RBCcount
 
+To prepare the phenotype data, we need to remove samples with abnormal observations. Since we will jointly model blood cell traits using multivariate normal distribution, we want to discard outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly derived phenotypes. We use 16 phenotypes.
+
+```{r}
+trait_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count", "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "MSCV", "HLR_perc")
+```
 
 We filtered individuals with following criteria:
 
@@ -57,11 +65,14 @@ We filtered individuals with following criteria:
     
     leukemia, lymphoma, bone marrow transplant, chemotherapy, myelodysplastic syndrome, anemia, HIV, end-stage kidney disease, dialysis, cirrhosis, multiple myeloma, lymphocytic leukemia, myeloid leukemia, polycythaemia vera, haemochromatosis
 
-Load UKBiobank Blood Cell traits (individuals are filtered using [script](../scripts/get_bloodcells.R))
+8. Identify outliers in multivariate normal.
+
+
+Load UKBiobank Blood Cell traits (individuals are filtered using [script](../scripts/get_bloodcells.R) before line 121).
 ```{r, message=FALSE}
 library(data.table)
 library(dplyr)
-dat = fread('data/bloodcounts_V1.csv')
+dat = fread('data/bloodcells1.csv')
 class(dat) <- "data.frame"
 ```
 There are `r nrow(dat)` individuals.
@@ -69,96 +80,66 @@ There are `r nrow(dat)` individuals.
 Check distribution for each trait:
 ```{r}
 par(mfrow=c(2,3))
-for(i in 16:44){
-  hist(dat[,i], breaks = 100, main=colnames(dat)[i], xlab='x')
-}
-```
-
-Distributions for trait with small observartions:
-```{r}
-par(mfrow=c(2,3))
 hist(dat$WBC_count[dat$WBC_count < 20], breaks = 100, main=paste0('WBC_count ', sum(dat$WBC_count > 20), ' inds > 20'), xlab='x')
-hist(dat$Lymphocyte_count[dat$Lymphocyte_count < 8], breaks = 100, main=paste0('Lymphocyte_count ', sum(dat$Lymphocyte_count > 8), ' inds > 8'), xlab='x')
-hist(dat$Monocyte_count[dat$Monocyte_count < 2], breaks = 100, main=paste0('Monocyte_count ', sum(dat$Monocyte_count > 2), ' inds > 2'), xlab='x')
-hist(dat$Eosinophill_count[dat$Eosinophill_count < 1], breaks = 100, main=paste0('Eosinophill_count ', sum(dat$Eosinophill_count > 1), ' inds > 1'), xlab='x')
-hist(dat$Eosinophill_perc[dat$Eosinophill_perc < 10], breaks = 100, main=paste0('Eosinophill_perc ', sum(dat$Eosinophill_perc > 10), ' inds > 10'), xlab='x')
-hist(dat$Basophill_count[dat$Basophill_count < 0.5], breaks = 100, main=paste0('Basophill_count ', sum(dat$Basophill_count > 0.5), ' inds > 0.5'), xlab='x')
-hist(dat$Basophill_perc[dat$Basophill_perc < 2], breaks = 100, main=paste0('Basophill_perc ', sum(dat$Basophill_perc > 2), ' inds > 2'), xlab='x')
-hist(dat$Reticulocyte_count[dat$Reticulocyte_count < 0.2], breaks = 100, main=paste0('Reticulocyte_count ', sum(dat$Reticulocyte_count > 0.2), ' inds > 0.2'), xlab='x')
-hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc < 4], breaks = 100, main=paste0('Reticulocyte_perc ', sum(dat$Reticulocyte_perc > 4), ' inds > 4'), xlab='x')
-hist(dat$HLR_count[dat$HLR_count < 0.1], breaks = 100, main=paste0('HLR_count ', sum(dat$HLR_count > 0.1), ' inds > 0.1'), xlab='x')
-hist(dat$HLR_perc[dat$HLR_perc < 2], breaks = 100, main=paste0('HLR_perc ', sum(dat$HLR_perc > 2), ' inds > 2'), xlab='x')
-```
-
-## Basophill
-
-Basophils count is the proportion of ( basophils / 100 ) x white blood cell count.
-
-```{r, fig.width=5, fig.height=5}
-Basophils_count = dat$Basophill_perc * dat$WBC_count / 100
-{plot(Basophils_count, dat$Basophill_count, ylab='UKB Basophill count')
-abline(0,1)}
-```
-
-There are `r sum(Basophils_count==0)` 0's in computed Basophils_count, but there are `r sum(dat$Basophill_count ==0)` 0's in UKB Basophils count.
-
-```{r}
-hist(Basophils_count[Basophils_count < 0.5], breaks = 100, main=paste0('Derived Basophils_count ', sum(Basophils_count > 0.5), ' inds > 0.5'), xlab='x')
-```
-There are rounding errors in derived count traits.
-
-We recompute all derived traits.
-```{r}
-dat$Haematocrit = (dat$MCV * dat$RBC_count)/10
-dat$MCH = (dat$Haemoglobin/dat$RBC_count) * 10
-dat$MCHC = (dat$Haemoglobin/dat$Haematocrit)*100
-dat$MPV = (dat$Plateletcrit/dat$Platelet_count) * 10000
-dat$Lymphocyte_count = (dat$Lymphocyte_perc * dat$WBC_count)/100
-dat$Monocyte_count = (dat$Monocyte_perc * dat$WBC_count)/100
-dat$Eosinophill_count = (dat$Eosinophill_perc * dat$WBC_count)/100
-dat$Basophill_count = (dat$Basophill_perc * dat$WBC_count)/100
-dat$Neutrophill_count = (dat$Neutrophill_perc * dat$WBC_count)/100
-dat$Reticulocyte_count = (dat$Reticulocyte_perc * dat$RBC_count)/100
-dat$HLR_count = (dat$HLR_perc * dat$RBC_count)/100
-dat$IRF = dat$HLR_perc/dat$Reticulocyte_perc
+hist(dat$RBC_count, main='RBC_count', xlab='x', breaks = 100)
+hist(dat$Haemoglobin, main='Haemoglobin', xlab='x', breaks = 100)
+hist(dat$MCV, main='MCV', xlab='x', breaks = 100)
+hist(dat$RDW[dat$RDW < 20], main=paste0('RDW ', sum(dat$RDW > 20), ' inds > 20'), xlab='x', breaks = 100)
+hist(dat$Platelet_count, main='Platelet_count', xlab='x', breaks = 100)
+hist(dat$Plateletcrit, main='Plateletcrit', xlab='x', breaks = 100)
+hist(dat$PDW, main='PDW', xlab='x', breaks = 50)
+hist(dat$Lymphocyte_perc, main='Lymphocyte_perc', xlab='x', breaks = 100)
+hist(dat$Monocyte_perc[dat$Monocyte_perc < 20], main=paste0('Monocyte_perc ', sum(dat$Monocyte_perc > 20), ' inds > 20'), xlab='x', breaks = 100)
+hist(dat$Neutrophill_perc, main='Neutrophill_perc', xlab='x', breaks = 100)
+hist(dat$Eosinophill_perc[dat$Eosinophill_perc < 10], main=paste0('Eosinophill_perc ', sum(dat$Eosinophill_perc > 10), ' inds > 10'), xlab='x', breaks = 100)
+hist(dat$Basophill_perc[dat$Basophill_perc < 4], main=paste0('Basophill_perc ', sum(dat$Basophill_perc > 4), ' inds > 4'), xlab='x', breaks = 50)
+hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc < 4], main=paste0('Reticulocyte_perc ', sum(dat$Reticulocyte_perc > 4), ' inds > 4'), xlab='x', breaks = 50)
+hist(dat$MSCV, main='MSCV', xlab='x', breaks = 100)
+hist(dat$HLR_perc[dat$HLR_perc < 2], main=paste0('HLR_perc ', sum(dat$HLR_perc > 2), ' inds > 2'), xlab='x', breaks = 50)
 ```
 
 Inverse normalization for each trait:
 ```{r}
 dat_1 = dat
-for(i in 16:44){
+for(i in 16:31){
   dat_1[,i] = qnorm((rank(dat_1[,i],na.last="keep")-0.5)/sum(!is.na(dat_1[,i])))
 }
 ```
 
 ```{r}
 par(mfrow=c(2,3))
-for(i in 16:44){
+for(i in 16:31){
   hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab='x')
 }
 ```
 
 ## Identify Outliers
 
-Since we will jointly model these traits using multivariate normal distribution, we want to find outliers in multivariate normal, instead of univariate normal. There are derived phenotypes which depend on several measured phenotype. To simplify the problem, we discard directly calculated phenotypes. We use 16 phenotypes.
-
 ```{r}
-sub_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count", "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "MSCV", "HLR_perc")
-dat_1_sub = dat_1 %>% select(sub_names)
+trait_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count", "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc", "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc", "Reticulocyte_perc", "MSCV", "HLR_perc")
+dat_1_traits = dat_1 %>% select(all_of(trait_names))
 ```
 
 Covariace matrix of traits
 ```{r}
 library(corrplot)
-covy_sub = cov(dat_1_sub)
-corrplot(covy_sub, method='color', type='upper', tl.col="black", tl.srt=45, is.corr = FALSE)
+covy = cov(dat_1_traits)
+corrplot(covy, method='color', type='upper', tl.col="black", tl.srt=45, is.corr = FALSE)
 ```
 
+Measure Mahalanobis distance
 ```{r}
-D2_sub = stats::mahalanobis(dat_1_sub, center=0, cov=covy_sub)
-dat_sub_select = dat_1[D2_sub < qchisq(0.01, df=16, lower.tail = F),]
+D2 = stats::mahalanobis(dat_1_traits, center=0, cov=covy) # squared Mahalanobis distance
+{hist(D2[D2 < 60], breaks = 100, main=paste0('Mahalanobis distance: ', sum(D2 > 60), ' inds D2 > 60'),  xlab='D2')
+abline(v=qchisq(0.01, df=16, lower.tail = F))}
 ```
 
-There are `r nrow(dat_sub_select)` individuals.
+The Mahalanobis distance follows a Chi-Square distribution with df = 16. We compute the 99.9%-Quantile of the Chi-Square
+distribution with 16 degrees of freedomm and we remove samples with Mahalanobis distance greater than the distance.
+```{r}
+dat_select = dat_1[D2 < qchisq(0.01, df=16, lower.tail = F),]
+```
+
+There are `r nrow(dat_select)` individuals.
 
 
