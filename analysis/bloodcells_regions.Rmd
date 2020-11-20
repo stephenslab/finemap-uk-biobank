@@ -28,7 +28,7 @@ For each phenotype, regions for fine-mapping are defined by greedily starting wi
 
 When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.
 
-```{r}
+```{r, message=FALSE}
 library(data.table)
 library(dplyr)
 pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count",
@@ -71,7 +71,7 @@ colnames(gwas_HLR_perc)[1] = 'CHR'
 gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
 gwas_HLR_perc = gwas_HLR_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
 gwas_HLR_perc.sub = gwas_HLR_perc %>% filter(CHR == 3, POS >= 46234573, POS <=52207799)
-plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)')
+plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)', main='HLR_perc')
 ```
 
 For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 8888 SNPs.
@@ -81,7 +81,7 @@ colnames(gwas_Reticulocyte_perc)[1] = 'CHR'
 gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
 gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
 gwas_Reticulocyte_perc.sub = gwas_Reticulocyte_perc %>% filter(CHR == 3, POS >= 48155661, POS <=53703263)
-plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)')
+plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)', main='Reticulocyte_perc')
 ```
 
 For PDW, the maximum region is at CHR 8 from 7838230 to 12078200, which includes 16605 SNPs.
@@ -91,7 +91,7 @@ colnames(gwas_PDW)[1] = 'CHR'
 gwas_PDW$P = as.numeric(gwas_PDW$P)
 gwas_PDW = gwas_PDW %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
 gwas_PDW.sub = gwas_PDW %>% filter(CHR == 8, POS >= 7838230, POS <=12078200)
-plot(gwas_PDW.sub$POS, gwas_PDW.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)')
+plot(gwas_PDW.sub$POS, gwas_PDW.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)', main='PDW')
 ```
 
 Select regions across phenotype:
@@ -132,7 +132,6 @@ There are `r nrow(res.final)` regoins in total, 68 regions with length greater t
 
 The region with maximum length and maximum number of SNPs:
 ```{r}
-par(mfrow=c(3,1))
 gwas_HLR_perc.max = gwas_HLR_perc %>% filter(CHR == 17, POS >= 39754910, POS <=48484411)
 plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab='CHR 17 POS', ylab='-log10(p)', main='HLR_perc')
 gwas_Reticulocyte_perc.max = gwas_Reticulocyte_perc %>% filter(CHR == 17, POS >= 39754910, POS <=48484411)
