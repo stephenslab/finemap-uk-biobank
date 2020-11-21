@@ -68,7 +68,7 @@ We filtered individuals with following criteria:
 8. Identify outliers in multivariate normal.
 
 
-Load UKBiobank Blood Cell traits (individuals are filtered using [script](../scripts/get_bloodcells.R) before line 121).
+Load UKBiobank Blood Cell traits (individuals are filtered using [script](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/get_bloodcells.R) before line 121).
 ```{r, message=FALSE}
 library(data.table)
 library(dplyr)
