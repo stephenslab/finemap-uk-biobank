@@ -443,16 +443,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree885829c34d3c1f49e845d9f9ffe179c6885e346btargetblank885829ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/885829c34d3c1f49e845d9f9ffe179c6885e346b" target="_blank">885829c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee3da525d8a7ae88186fdceb59e00c50146ae0592targetblanke3da525a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e3da525d8a7ae88186fdceb59e00c50146ae0592" target="_blank">e3da525</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree885829c34d3c1f49e845d9f9ffe179c6885e346btargetblank885829ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee3da525d8a7ae88186fdceb59e00c50146ae0592targetblanke3da525a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/885829c34d3c1f49e845d9f9ffe179c6885e346b" target="_blank">885829c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e3da525d8a7ae88186fdceb59e00c50146ae0592" target="_blank">e3da525</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -511,6 +511,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/e3da525d8a7ae88186fdceb59e00c50146ae0592/analysis/bloodcells_regions.Rmd" target="_blank">e3da525</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-22
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/61d98d4541b92eed6674b9b0ae9325e3469acf07/docs/bloodcells_regions.html" target="_blank">61d98d4</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -685,6 +719,8 @@ wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
 <p>When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.</p>
 <pre class="r"><code>library(data.table)
 library(dplyr)
+library(kableExtra)
+library(knitr)
 pheno_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;,
                 &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;,
                 &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;,
@@ -709,12 +745,6 @@ for(trait in pheno_names){
   trait_regions[[trait]] = region_r
 }</code></pre>
 <p>Summary of region length for each phenotype before selecting regions across traits:</p>
-<pre class="r"><code>library(kableExtra)</code></pre>
-<pre><code>
-Attaching package: &#39;kableExtra&#39;</code></pre>
-<pre><code>The following object is masked from &#39;package:dplyr&#39;:
-
-    group_rows</code></pre>
 <pre class="r"><code>for(trait in pheno_names){
   tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
   rownames(tb) = c(&#39;region_length&#39;, &#39;region_max_log10p&#39;)
@@ -1694,7 +1724,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] kableExtra_1.3.1  dplyr_1.0.2       data.table_1.13.2 workflowr_1.6.2  
+[1] knitr_1.30        kableExtra_1.3.1  dplyr_1.0.2       data.table_1.13.2
+[5] workflowr_1.6.2  
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.5        highr_0.8         pillar_1.4.6      compiler_3.6.3   
@@ -1702,12 +1733,12 @@ loaded via a namespace (and not attached):
  [9] viridisLite_0.3.0 evaluate_0.14     lifecycle_0.2.0   tibble_3.0.4     
 [13] pkgconfig_2.0.3   rlang_0.4.8       rstudioapi_0.11   yaml_2.2.1       
 [17] xfun_0.19         xml2_1.3.2        stringr_1.4.0     httr_1.4.2       
-[21] knitr_1.30        generics_0.1.0    fs_1.5.0          vctrs_0.3.4      
-[25] webshot_0.5.2     rprojroot_1.3-2   tidyselect_1.1.0  glue_1.4.2       
-[29] R6_2.5.0          rmarkdown_2.5     purrr_0.3.4       magrittr_1.5     
-[33] whisker_0.4       scales_1.1.1      backports_1.2.0   promises_1.1.1   
-[37] ellipsis_0.3.1    htmltools_0.5.0   rvest_0.3.6       colorspace_1.4-1 
-[41] httpuv_1.5.4      stringi_1.5.3     munsell_0.5.0     crayon_1.3.4     </code></pre>
+[21] generics_0.1.0    fs_1.5.0          vctrs_0.3.4       webshot_0.5.2    
+[25] rprojroot_1.3-2   tidyselect_1.1.0  glue_1.4.2        R6_2.5.0         
+[29] rmarkdown_2.5     purrr_0.3.4       magrittr_1.5      whisker_0.4      
+[33] scales_1.1.1      backports_1.2.0   promises_1.1.1    ellipsis_0.3.1   
+[37] htmltools_0.5.0   rvest_0.3.6       colorspace_1.4-1  httpuv_1.5.4     
+[41] stringi_1.5.3     munsell_0.5.0     crayon_1.3.4     </code></pre>
 </div>
 
 
