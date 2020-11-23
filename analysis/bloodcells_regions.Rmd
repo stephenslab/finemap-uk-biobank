@@ -7,6 +7,10 @@ output:
     code_folding: hide
 ---
 
+```{r setup, include=FALSE}
+options(kableExtra.html.bsTable = T)
+```
+
 There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is [get_bloodcells](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/get_bloodcells.R). The filtering steps are also described [here](bloodcells.html)
 
 For genotype data, variants with imputation score (INFO) > 0.9, MAF > 1% are included in association studies.
@@ -62,11 +66,12 @@ for(trait in pheno_names){
 ```
 
 Summary of region length for each phenotype before selecting regions across traits:
-```{r}
+```{r, results = "asis"}
 for(trait in pheno_names){
   tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
   rownames(tb) = c('region_length', 'region_max_log10p')
-  round(tb,3) %>% kbl(caption = paste0(trait, ': ', nrow(trait_regions[[trait]]), ' regions')) %>% kable_styling() %>% print
+  tb = round(tb,3) %>% kbl(caption = paste0(trait, ': ', nrow(trait_regions[[trait]]), ' regions')) %>% kable_styling()
+  cat(tb)
   cat("\n")
 }
 ```
@@ -129,10 +134,10 @@ res.final$snpsnum = snpsnum
 ```
 
 Summary of regions:
-```{r}
+```{r, results = "asis"}
 tb = rbind(summary(res.final$length), summary(res.final$snpsnum),  summary(res.final$logp))
 rownames(tb) = c('region_length', 'region_num_snps', 'region_max_log10p')
-round(tb,3) %>% kbl(caption = paste0(nrow(res.final), ' regions')) %>% kable_styling() %>% print
+round(tb,3)  %>% kbl(caption = paste0(nrow(res.final), ' regions')) %>% kable_styling()
 ```
 
 There are `r nrow(res.final)` regoins in total, 68 regions with length greater than 2Mb, 84 regions contain greater than 5000 SNPs.
