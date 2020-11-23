@@ -40,7 +40,7 @@ pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet
 ```{r}
 trait_regions = list()
 for(trait in pheno_names){
-  # reg = fread(paste0('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions/', trait, '_regions'))
+  # region = fread(paste0('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions/', trait, '_regions'))
   region = fread(paste0('~/Desktop/ukb-bloodcells/regions_raw/', trait, '_regions'))
   region = region %>% arrange(desc(logp))
   region_r = c()
@@ -72,6 +72,7 @@ for(trait in pheno_names){
 
 For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 9572 SNPs.
 ```{r}
+# gwas_HLR_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_HLR_perc')
 gwas_HLR_perc = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_HLR_perc')
 colnames(gwas_HLR_perc)[1] = 'CHR'
 gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
@@ -82,6 +83,7 @@ plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab='CHR 3 POS', ylab='-log
 
 For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 8888 SNPs.
 ```{r}
+# gwas_Reticulocyte_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_Reticulocyte_perc')
 gwas_Reticulocyte_perc = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_Reticulocyte_perc')
 colnames(gwas_Reticulocyte_perc)[1] = 'CHR'
 gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
@@ -92,6 +94,7 @@ plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab='CHR 
 
 For PDW, the maximum region is at CHR 8 from 7838230 to 12078200, which includes 16605 SNPs.
 ```{r}
+# gwas_PDW = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_PDW')
 gwas_PDW = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_PDW')
 colnames(gwas_PDW)[1] = 'CHR'
 gwas_PDW$P = as.numeric(gwas_PDW$P)
@@ -142,6 +145,7 @@ plot(gwas_Reticulocyte_perc.max$POS, gwas_Reticulocyte_perc.max$logp, xlab='CHR 
 gwas_PDW.max = gwas_PDW %>% filter(CHR == 17, POS >= 39754910, POS <=48484411)
 plot(gwas_PDW.max$POS, gwas_PDW.max$logp, xlab='CHR 17 POS', ylab='-log10(p)', main='PDW')
 
+# gwas_Lymphocyte_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_Lymphocyte_perc')
 gwas_Lymphocyte_perc = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_Lymphocyte_perc')
 colnames(gwas_Lymphocyte_perc)[1] = 'CHR'
 gwas_Lymphocyte_perc$P = as.numeric(gwas_Lymphocyte_perc$P)
