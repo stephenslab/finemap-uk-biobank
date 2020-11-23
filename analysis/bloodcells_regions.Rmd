@@ -7,11 +7,11 @@ output:
     code_folding: hide
 ---
 
-There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is [get_bloodcells](../scripts/get_bloodcells.R). The filtering steps are also described [here](bloodcells.html).
+There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is [get_bloodcells](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/get_bloodcells.R). The filtering steps are also described [here](bloodcells.html)
 
 For genotype data, variants with imputation score (INFO) > 0.9, MAF > 1% are included in association studies.
 
-The script to run GWAS is [GWAS](../scripts/plink_gwas.sh)
+The script to run GWAS is [GWAS](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/plink_gwas.sh)
 
 For each phenotype, regions for fine-mapping are defined by greedily starting with the most significantly associated SNP, including SNPs within a window of 500kb centered at the SNP, until we include all significant SNPs (p < 5e-8). We merge ovelapping regions. We exclude HLA region (chr6: 25Mb - 36Mb). The steps are
 
@@ -50,9 +50,9 @@ for(trait in pheno_names){
       next
     }
     tmp = region.chr %>% group_by(g = cumsum(cummax(lag(end, default = first(end))) < start)) %>%
-      summarise(start = first(start), end = max(end), .groups = 'drop') %>% 
+      summarise(start = first(start), end = max(end), logp = max(logp),.groups = 'drop') %>% 
       mutate(length = end - start) %>%
-      mutate(CHR = i) %>% select(CHR, start, end, length)
+      mutate(CHR = i) %>% select(CHR, start, end, length, logp)
     region_r = rbind(region_r, tmp)
   }
   trait_regions[[trait]] = region_r
@@ -61,7 +61,13 @@ for(trait in pheno_names){
 
 Summary of region length for each phenotype before selecting regions across traits:
 ```{r}
-lapply(trait_regions, function(x) summary(x$length))
+library(kableExtra)
+for(trait in pheno_names){
+  tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
+  rownames(tb) = c('region_length', 'region_max_log10p')
+  round(tb,3) %>% kbl(caption = paste0(trait, ': ', nrow(trait_regions[[trait]]), ' regions')) %>% kable_styling() %>% print
+  cat("\n")
+}
 ```
 
 For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 9572 SNPs.
@@ -104,9 +110,9 @@ for(i in 1:22){
     next
   }
   tmp = tb.chr %>% group_by(g = cumsum(cummax(lag(end, default = first(end))) < start)) %>%
-    summarise(start = first(start), end = max(end), .groups = 'drop') %>% 
+    summarise(start = first(start), end = max(end), logp = max(logp), .groups = 'drop') %>% 
     mutate(length = end - start) %>%
-    mutate(CHR = i) %>% select(CHR, start, end, length)
+    mutate(CHR = i) %>% select(CHR, start, end, length, logp)
   res.final = rbind(res.final, tmp)
 }
 snpsnum = c()
@@ -118,14 +124,11 @@ for(i in 1:nrow(res.final)){
 res.final$snpsnum = snpsnum
 ```
 
-Summary of region length:
+Summary of regions:
 ```{r}
-summary(res.final$length)
-```
-
-Summary of SNP number for each region:
-```{r}
-summary(res.final$snpsnum)
+tb = rbind(summary(res.final$length), summary(res.final$snpsnum),  summary(res.final$logp))
+rownames(tb) = c('region_length', 'region_num_snps', 'region_max_log10p')
+round(tb,3) %>% kbl(caption = paste0(nrow(res.final), ' regions')) %>% kable_styling() %>% print
 ```
 
 There are `r nrow(res.final)` regoins in total, 68 regions with length greater than 2Mb, 84 regions contain greater than 5000 SNPs.
