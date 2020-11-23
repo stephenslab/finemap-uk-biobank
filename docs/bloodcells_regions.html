@@ -27,6 +27,10 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
 <script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -352,7 +356,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-22
+<strong>Last updated:</strong> 2020-11-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -443,16 +447,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee3da525d8a7ae88186fdceb59e00c50146ae0592targetblanke3da525a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e3da525d8a7ae88186fdceb59e00c50146ae0592" target="_blank">e3da525</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree73424088b44648679f89d0bce9c2b177b1ce6685targetblank7342408a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/73424088b44648679f89d0bce9c2b177b1ce6685" target="_blank">7342408</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktreee3da525d8a7ae88186fdceb59e00c50146ae0592targetblanke3da525a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree73424088b44648679f89d0bce9c2b177b1ce6685targetblank7342408a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/e3da525d8a7ae88186fdceb59e00c50146ae0592" target="_blank">e3da525</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/73424088b44648679f89d0bce9c2b177b1ce6685" target="_blank">7342408</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -511,6 +515,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/73424088b44648679f89d0bce9c2b177b1ce6685/analysis/bloodcells_regions.Rmd" target="_blank">7342408</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-23
+</td>
+<td>
+wflow_publish(&quot;analysis/bloodcells_regions.Rmd&quot;)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/2bb79f6dbebf6933787c920c5065319db7f9d388/docs/bloodcells_regions.html" target="_blank">2bb79f6</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -748,553 +786,1242 @@ for(trait in pheno_names){
 <pre class="r"><code>for(trait in pheno_names){
   tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
   rownames(tb) = c(&#39;region_length&#39;, &#39;region_max_log10p&#39;)
-  round(tb,3) %&gt;% kbl(caption = paste0(trait, &#39;: &#39;, nrow(trait_regions[[trait]]), &#39; regions&#39;)) %&gt;% kable_styling() %&gt;% print
+  tb = round(tb,3) %&gt;% kbl(caption = paste0(trait, &#39;: &#39;, nrow(trait_regions[[trait]]), &#39; regions&#39;)) %&gt;% kable_styling()
+  cat(tb)
   cat(&quot;\n&quot;)
 }</code></pre>
-<pre><code>&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;WBC_count: 280 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 378854.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 610315.389 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2301820.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.327 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.531e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 10.807 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 15.286 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 14.601 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 213.266 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;RBC_count: 310 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 653220.6 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 755004.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2940124 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.307e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.779e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 11.363 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 18.728 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Haemoglobin: 250 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 301703.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 611650.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3251867.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.302 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.249e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 10.408 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 17.123 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 16.425 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 261.853 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;MCV: 326 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 670089.4 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 772562.750 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2920824 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.312e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.576e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 13.151 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.175 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;RDW: 275 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 275738.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 650422 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 4089364 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.309 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.108e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.833 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 24.55 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Platelet_count: 397 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 270883.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 678599.6 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 766174.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3646000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.324 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.018e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.161 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.916 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Plateletcrit: 382 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 270883.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 640938.8 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 754987.500 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3593140 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.317 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.826e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 11.431 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 19.293 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;PDW: 299 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 268602.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 650832 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 751519.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 4239970 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.318 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.975e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.738 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.975 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Lymphocyte_perc: 232 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 378854.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 621718.961 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 753623.00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2239954.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.325 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.048e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 11.351 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 16.049 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 16.54 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 152.602 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Monocyte_perc: 262 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 310142.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.00e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 659465.2 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 751945.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3864804 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.361 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.85e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.112 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.705 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Neutrophill_perc: 218 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 368127.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 612052.165 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2208916.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.303 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.403e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 10.917 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 15.978 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 16.034 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 193.111 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Eosinophill_perc: 277 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 397874.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 656940.123 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 750663.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3994646.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.328 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.148e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 13.378 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 20.676 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 20.883 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 212.968 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Basophill_perc: 85 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 561068.212 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 1748896.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.367e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.567e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 11.392 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 17.352 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 16.739 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 134.511 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;Reticulocyte_perc: 237 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 303607.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 653925.3 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 753414.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5547602 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.302 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.534e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.249 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 20.093 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;MSCV: 285 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 272793.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 656840.8 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 754786.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3254290 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.328 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.262e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.434 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.282 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;HLR_perc: 246 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 381586.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5.000e+05 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 674728.8 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 768513.250 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 5973226 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.304 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8.853e+00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 12.103 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 19.311 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+WBC_count: 280 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+378854.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+610315.389
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+2301820.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.327
+</td>
+<td style="text-align:right;">
+8.531e+00
+</td>
+<td style="text-align:right;">
+10.807
+</td>
+<td style="text-align:right;">
+15.286
+</td>
+<td style="text-align:right;">
+14.601
+</td>
+<td style="text-align:right;">
+213.266
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+RBC_count: 310 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+653220.6
+</td>
+<td style="text-align:right;">
+755004.000
+</td>
+<td style="text-align:right;">
+2940124
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.307e+00
+</td>
+<td style="text-align:right;">
+8.779e+00
+</td>
+<td style="text-align:right;">
+11.363
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+18.728
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Haemoglobin: 250 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+301703.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+611650.000
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+3251867.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.302
+</td>
+<td style="text-align:right;">
+8.249e+00
+</td>
+<td style="text-align:right;">
+10.408
+</td>
+<td style="text-align:right;">
+17.123
+</td>
+<td style="text-align:right;">
+16.425
+</td>
+<td style="text-align:right;">
+261.853
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+MCV: 326 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+670089.4
+</td>
+<td style="text-align:right;">
+772562.750
+</td>
+<td style="text-align:right;">
+2920824
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.312e+00
+</td>
+<td style="text-align:right;">
+9.576e+00
+</td>
+<td style="text-align:right;">
+13.151
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.175
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+RDW: 275 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+275738.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+650422
+</td>
+<td style="text-align:right;">
+500000.00
+</td>
+<td style="text-align:right;">
+4089364
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.309
+</td>
+<td style="text-align:right;">
+9.108e+00
+</td>
+<td style="text-align:right;">
+12.833
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+24.55
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Platelet_count: 397 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+270883.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+678599.6
+</td>
+<td style="text-align:right;">
+766174.000
+</td>
+<td style="text-align:right;">
+3646000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.324
+</td>
+<td style="text-align:right;">
+9.018e+00
+</td>
+<td style="text-align:right;">
+12.161
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.916
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Plateletcrit: 382 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+270883.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+640938.8
+</td>
+<td style="text-align:right;">
+754987.500
+</td>
+<td style="text-align:right;">
+3593140
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.317
+</td>
+<td style="text-align:right;">
+8.826e+00
+</td>
+<td style="text-align:right;">
+11.431
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+19.293
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+PDW: 299 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+268602.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+650832
+</td>
+<td style="text-align:right;">
+751519.000
+</td>
+<td style="text-align:right;">
+4239970
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.318
+</td>
+<td style="text-align:right;">
+8.975e+00
+</td>
+<td style="text-align:right;">
+12.738
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.975
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Lymphocyte_perc: 232 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+378854.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+621718.961
+</td>
+<td style="text-align:right;">
+753623.00
+</td>
+<td style="text-align:right;">
+2239954.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.325
+</td>
+<td style="text-align:right;">
+9.048e+00
+</td>
+<td style="text-align:right;">
+11.351
+</td>
+<td style="text-align:right;">
+16.049
+</td>
+<td style="text-align:right;">
+16.54
+</td>
+<td style="text-align:right;">
+152.602
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Monocyte_perc: 262 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+310142.000
+</td>
+<td style="text-align:right;">
+5.00e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+659465.2
+</td>
+<td style="text-align:right;">
+751945.000
+</td>
+<td style="text-align:right;">
+3864804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.361
+</td>
+<td style="text-align:right;">
+8.85e+00
+</td>
+<td style="text-align:right;">
+12.112
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.705
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Neutrophill_perc: 218 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+368127.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+612052.165
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+2208916.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.303
+</td>
+<td style="text-align:right;">
+8.403e+00
+</td>
+<td style="text-align:right;">
+10.917
+</td>
+<td style="text-align:right;">
+15.978
+</td>
+<td style="text-align:right;">
+16.034
+</td>
+<td style="text-align:right;">
+193.111
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Eosinophill_perc: 277 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+397874.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+656940.123
+</td>
+<td style="text-align:right;">
+750663.000
+</td>
+<td style="text-align:right;">
+3994646.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.328
+</td>
+<td style="text-align:right;">
+9.148e+00
+</td>
+<td style="text-align:right;">
+13.378
+</td>
+<td style="text-align:right;">
+20.676
+</td>
+<td style="text-align:right;">
+20.883
+</td>
+<td style="text-align:right;">
+212.968
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Basophill_perc: 85 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+561068.212
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+1748896.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.367e+00
+</td>
+<td style="text-align:right;">
+8.567e+00
+</td>
+<td style="text-align:right;">
+11.392
+</td>
+<td style="text-align:right;">
+17.352
+</td>
+<td style="text-align:right;">
+16.739
+</td>
+<td style="text-align:right;">
+134.511
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Reticulocyte_perc: 237 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+303607.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+653925.3
+</td>
+<td style="text-align:right;">
+753414.000
+</td>
+<td style="text-align:right;">
+5547602
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.302
+</td>
+<td style="text-align:right;">
+8.534e+00
+</td>
+<td style="text-align:right;">
+12.249
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+20.093
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+MSCV: 285 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+272793.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+656840.8
+</td>
+<td style="text-align:right;">
+754786.000
+</td>
+<td style="text-align:right;">
+3254290
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.328
+</td>
+<td style="text-align:right;">
+9.262e+00
+</td>
+<td style="text-align:right;">
+12.434
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.282
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+HLR_perc: 246 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+381586.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+674728.8
+</td>
+<td style="text-align:right;">
+768513.250
+</td>
+<td style="text-align:right;">
+5973226
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.304
+</td>
+<td style="text-align:right;">
+8.853e+00
+</td>
+<td style="text-align:right;">
+12.103
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+19.311
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
 <p>For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 9572 SNPs.</p>
 <pre class="r"><code># gwas_HLR_perc = fread(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_HLR_perc&#39;)
 gwas_HLR_perc = fread(&#39;~/Desktop/ukb-bloodcells/bloodcells_gwas_HLR_perc&#39;)
@@ -1490,50 +2217,107 @@ res.final$snpsnum = snpsnum</code></pre>
 <p>Summary of regions:</p>
 <pre class="r"><code>tb = rbind(summary(res.final$length), summary(res.final$snpsnum),  summary(res.final$logp))
 rownames(tb) = c(&#39;region_length&#39;, &#39;region_num_snps&#39;, &#39;region_max_log10p&#39;)
-round(tb,3) %&gt;% kbl(caption = paste0(nrow(res.final), &#39; regions&#39;)) %&gt;% kable_styling() %&gt;% print</code></pre>
-<pre><code>&lt;table class=&quot;table&quot; style=&quot;margin-left: auto; margin-right: auto;&quot;&gt;
-&lt;caption&gt;972 regions&lt;/caption&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style=&quot;text-align:left;&quot;&gt;   &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Min. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 1st Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Median &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Mean &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; 3rd Qu. &lt;/th&gt;
-   &lt;th style=&quot;text-align:right;&quot;&gt; Max. &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_length &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 307855.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 500000.00 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 658060.500 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 932085.792 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 1057863.250 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 8729501 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_num_snps &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 1512.50 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2015.000 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 2641.288 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 3146.250 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 21219 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style=&quot;text-align:left;&quot;&gt; region_max_log10p &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 7.328 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 9.94 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 15.255 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; 31.907 &lt;/td&gt;
-   &lt;td style=&quot;text-align:right;&quot;&gt; Inf &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;</code></pre>
+round(tb,3)  %&gt;% kbl(caption = paste0(nrow(res.final), &#39; regions&#39;)) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+972 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+307855.000
+</td>
+<td style="text-align:right;">
+500000.00
+</td>
+<td style="text-align:right;">
+658060.500
+</td>
+<td style="text-align:right;">
+932085.792
+</td>
+<td style="text-align:right;">
+1057863.250
+</td>
+<td style="text-align:right;">
+8729501
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_num_snps
+</td>
+<td style="text-align:right;">
+21.000
+</td>
+<td style="text-align:right;">
+1512.50
+</td>
+<td style="text-align:right;">
+2015.000
+</td>
+<td style="text-align:right;">
+2641.288
+</td>
+<td style="text-align:right;">
+3146.250
+</td>
+<td style="text-align:right;">
+21219
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.328
+</td>
+<td style="text-align:right;">
+9.94
+</td>
+<td style="text-align:right;">
+15.255
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+31.907
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
 <p>There are 972 regoins in total, 68 regions with length greater than 2Mb, 84 regions contain greater than 5000 SNPs.</p>
 <p>The region with maximum length and maximum number of SNPs:</p>
 <pre class="r"><code>gwas_HLR_perc.max = gwas_HLR_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
