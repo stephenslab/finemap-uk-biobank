@@ -31,6 +31,8 @@ When we select region across traits, we include all regions from each pheotype a
 ```{r, message=FALSE}
 library(data.table)
 library(dplyr)
+library(kableExtra)
+library(knitr)
 pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count",
                 "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc",
                 "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc",
@@ -61,7 +63,6 @@ for(trait in pheno_names){
 
 Summary of region length for each phenotype before selecting regions across traits:
 ```{r}
-library(kableExtra)
 for(trait in pheno_names){
   tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
   rownames(tb) = c('region_length', 'region_max_log10p')
