@@ -35,18 +35,6 @@ for( trait in pheno_names){
     dat.na[which(dat.na$CHR == signal$CHR & dat.na$POS <= signal$end & dat.na$POS >= signal$start),] = NA
   }
 
-#  res.final = c()
-#  for(i in 1:22){
-#    res.chr = res %>% filter(CHR == i) %>% arrange(start)
-#    if(nrow(res.chr) == 0){
-#      next
-#    }
-#    tmp = res.chr %>% group_by(g = cumsum(cummax(lag(end, default = first(end))) < start)) %>%
-#      summarise(start = first(start), end = max(end)) %>% mutate(length = end - start) %>%
-#      mutate(CHR = i) %>% select(CHR, start, end, length)
-#    res.final = rbind(res.final, tmp)
-#  }
-
   fwrite(res, out.file, quote = FALSE, col.names=T, row.names = FALSE, sep = "\t")
 }
 
