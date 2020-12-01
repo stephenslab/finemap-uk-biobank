@@ -39,3 +39,18 @@ are as follows:
    ```
    scripts/prepare.region.sh 3 140.8e6 141.8e6 ZBTB38
    ```
+
+## Current analysis pipeline for UK Biobank Blood Cells data
+
+1. **Prepare phenotype data.** Run R script
+   [get_bloodcells.R](scripts/get_bloodcells.R) to prepare a CSV file containing
+   the phenotype and covariate data from the UK Biobank source
+   files.
+
+2. **Run GWAS.** Run [plink_gwas.sh](scripts/plink_gwas.sh) and [gwas_results.sh](scripts/gwas_results.sh) to get GWAS results.
+
+3. **Get fine-mapping regions.** Run R script [get_bloodcells_trait_regions.R](scripts/get_bloodcells_trait_regions.R) to get regions for each trait. Run R script [get_bloodcells_regions.R](scripts/get_bloodcells_regions.R) to combine overlapping regions for each trait and across traits.
+
+4. **Prepare genotype data, LD and z scores for each region.** Run [get_bloodcells_region_genotype_ld.sh](scripts/get_bloodcells_region_genotype_ld.sh) to get genotype data and LD for each region. Run R script [get_bloodcells_zscores.R](scripts/get_bloodcells_zscores.R) to get z scores and XtY for each region.
+
+
