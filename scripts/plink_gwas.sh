@@ -15,17 +15,17 @@ idfile=/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/bloodcells
 genofile=/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/genotypes/bloodcells_chr${CHR}
 
 # Get variant IDs with information score
-# zcat /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_mfi_chr${CHR}_v3.txt.gz | awk '{if ($8 != "NA" && $8 > 0.9) {print $2}}' | sort | uniq > /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/ukb_mfi_chr${CHR}_info0.9.txt 
+zcat /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_mfi_chr${CHR}_v3.txt.gz | awk '{if ($8 != "NA" && $8 > 0.9) {print $2}}' | sort | uniq > /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/ukb_mfi_chr${CHR}_info0.9.txt 
 
 # Get genotype 
-# plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample \
-#        --bgen /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr${CHR}_v3.bgen \
-#        --chr $CHR \
-#        --keep $idfile \
-#        --extract /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/ukb_mfi_chr${CHR}_info0.9.txt \
-#        --maf 0.01 minor \
-#        --snps-only --max-alleles 2 --rm-dup exclude-all \
-#        --make-pgen --out $genofile
+plink2 --sample /gpfs/data/xhe-lab/uk-biobank/data/genotypes/ukb27386_imp_v3_s487324.sample \
+       --bgen /gpfs/data/pierce-lab/uk-biobank-genotypes/ukb_imp_chr${CHR}_v3.bgen \
+       --chr $CHR \
+       --keep $idfile \
+       --extract /gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/ukb_mfi_chr${CHR}_info0.9.txt \
+       --maf 0.01 minor \
+       --snps-only --max-alleles 2 --rm-dup exclude-all \
+       --make-pgen --out $genofile
 
 # GWAS
 plink2 --pfile $genofile --glm hide-covar no-x-sex omit-ref \
