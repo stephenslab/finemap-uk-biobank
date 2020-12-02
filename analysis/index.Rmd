@@ -34,3 +34,7 @@ The following files are for multi-trait fine-mapping using mvSuSiE.
 * [UKB blood cell traits](bloodcells.html)
 
     [Blood cell regions](bloodcells_regions.html)
+    
+    [Blood cell priors](bloodcells_priors.html)
+    
+    
