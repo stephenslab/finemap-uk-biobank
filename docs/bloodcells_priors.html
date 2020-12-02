@@ -448,21 +448,24 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree8bc123155dcf00e13f796beffe7d1c605bd33b3ftargetblank8bc1231a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/8bc123155dcf00e13f796beffe7d1c605bd33b3f" target="_blank">8bc1231</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3dccaeaa3750809c1483397e371e6aa186c7c084targetblank3dccaeaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3dccaeaa3750809c1483397e371e6aa186c7c084" target="_blank">3dccaea</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree8bc123155dcf00e13f796beffe7d1c605bd33b3ftargetblank8bc1231a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3dccaeaa3750809c1483397e371e6aa186c7c084targetblank3dccaeaa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/8bc123155dcf00e13f796beffe7d1c605bd33b3f" target="_blank">8bc1231</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3dccaeaa3750809c1483397e371e6aa186c7c084" target="_blank">3dccaea</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
+Ignored files:
+    Ignored:    analysis/figure/
+
 Untracked files:
     Untracked:  output/BloodCells.flash.model.rds
 
@@ -508,6 +511,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3dccaeaa3750809c1483397e371e6aa186c7c084/analysis/bloodcells_priors.Rmd" target="_blank">3dccaea</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+<td>
+wflow_publish(“analysis/bloodcells_priors.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/98263914d9f19afcfb77fde23f05468ed915bd0c/docs/bloodcells_priors.html" target="_blank">9826391</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/8bc123155dcf00e13f796beffe7d1c605bd33b3f/analysis/bloodcells_priors.Rmd" target="_blank">8bc1231</a>
 </td>
 <td>
@@ -538,20 +575,16 @@ library(mashr)</code></pre>
 <pre class="r"><code>regions = fread(&#39;/project2/mstephens/yuxin/ukb-bloodcells/regions.csv&#39;)
 z.strong = c()
 z.random = c()
+set.seed(2020)
 for (i in 1:nrow(regions)){
   dat = readRDS(paste0(&#39;/project2/mstephens/yuxin/ukb-bloodcells/zscores/bloodcells_chr&#39;,
                        regions$CHR[i], &#39;.&#39;, regions$start[i], &#39;.&#39;, regions$end[i],&#39;.z.rds&#39;))
   z = dat$Z
   strong.id = which.max(apply(abs(z), 1, max))
   z.strong = rbind(z.strong, z[strong.id, ])
-  if (strong.id == 1) {
-    sample_idx = 2:nrow(z)
-  } else if (strong.id == nrow(z)) {
-    sample_idx = 1:(strong.id - 1)
-  } else {
-    sample_idx = c(1:(strong.id - 1), (strong.id + 1):nrow(z))
-  }
-  random_idx = sample(sample_idx, 3, replace = F)
+  
+  null.id = which(apply(abs(z), 1, max) &lt; 2)
+  random_idx = sample(null.id, 1, replace = F)
   z.random = rbind(z.random, z[random_idx,])
 }</code></pre>
 <ol start="2" style="list-style-type: decimal">
@@ -568,6 +601,43 @@ for(i in 1:6){
           las = 2, main = paste0(&quot;EigenVector &quot;, i, &#39; pve: &#39;, round(res.svd$d[i]^2/sum(res.svd$d^2), 3)))
 }</code></pre>
 <p><img src="figure/bloodcells_priors.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
+Past versions of unnamed-chunk-3-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/98263914d9f19afcfb77fde23f05468ed915bd0c/docs/figure/bloodcells_priors.Rmd/unnamed-chunk-3-1.png" target="_blank">9826391</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <ol start="3" style="list-style-type: decimal">
 <li>FLASH</li>
 </ol>
@@ -656,9 +726,86 @@ for(i in 1:11){
           las = 2, main = paste0(&quot;Flash factor &quot;, i, &quot; pve: &quot;, round(mod$model$pve[i], 2)),
           col.main = ifelse(i %in% nonunique_effects_id, &#39;red&#39;, &#39;black&#39;))
 }</code></pre>
-<p><img src="figure/bloodcells_priors.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells_priors.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="t"><code>Ulist = c(res, U.pca, list(&quot;XX&quot; = cov(z.strong)))
-saveRDS(&#39;output/BloodCells.flash.pca.ulist.rds&#39;)</code></pre>
+<p><img src="figure/bloodcells_priors.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/98263914d9f19afcfb77fde23f05468ed915bd0c/docs/figure/bloodcells_priors.Rmd/unnamed-chunk-5-1.png" target="_blank">9826391</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/bloodcells_priors.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/98263914d9f19afcfb77fde23f05468ed915bd0c/docs/figure/bloodcells_priors.Rmd/unnamed-chunk-5-2.png" target="_blank">9826391</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>Ulist = c(res, U.pca, list(&quot;XX&quot; = cov(z.strong)))
+z.random.cov = cov(z.random)
+saveRDS(Ulist, &#39;output/BloodCells.flash.pca.ulist.rds&#39;)
+saveRDS(z.random.cov, &#39;output/BloodCells.znullcov.rds&#39;)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
