@@ -27,6 +27,8 @@
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
 <script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 <link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
 <!-- Add a small amount of space between sections. -->
@@ -352,7 +354,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-20
+<strong>Last updated:</strong> 2020-12-01
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -388,7 +390,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it's best to always run the code in an empty environment.</p>
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
 </div>
 </div>
 </div>
@@ -443,16 +445,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3d72c3ee016c2deb1946f81b37e29c4fa65a21f3targetblank3d72c3ea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3d72c3ee016c2deb1946f81b37e29c4fa65a21f3" target="_blank">3d72c3e</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9d831991542804f9bc8c1e08172e35fd5a8ce284targetblank9d83199a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9d831991542804f9bc8c1e08172e35fd5a8ce284" target="_blank">9d83199</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree3d72c3ee016c2deb1946f81b37e29c4fa65a21f3targetblank3d72c3ea" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree9d831991542804f9bc8c1e08172e35fd5a8ce284targetblank9d83199a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/3d72c3ee016c2deb1946f81b37e29c4fa65a21f3" target="_blank">3d72c3e</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/9d831991542804f9bc8c1e08172e35fd5a8ce284" target="_blank">9d83199</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -463,6 +465,7 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.Rhistory
+    Ignored:    data/.DS_Store
     Ignored:    scripts/.DS_Store
 
 Untracked files:
@@ -471,12 +474,11 @@ Untracked files:
     Untracked:  data/susie_ss_input_sex.rds
 
 Unstaged changes:
-    Modified:   analysis/bloodcells_regions.Rmd
     Modified:   analysis/compare_result_more.Rmd
 
 </code></pre>
 <p>
-Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
 </p>
 </div>
 </div>
@@ -487,7 +489,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in th
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/bloodcells.Rmd</code>) and HTML (<code>docs/bloodcells.html</code>) files. If you've configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/bloodcells.Rmd</code>) and HTML (<code>docs/bloodcells.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -516,6 +518,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9d831991542804f9bc8c1e08172e35fd5a8ce284/analysis/bloodcells.Rmd" target="_blank">9d83199</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-01
+</td>
+<td>
+wflow_publish(“analysis/bloodcells.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/c99025ad3b9ebbbe4e452e7eae3d2603ef754db7/docs/bloodcells.html" target="_blank">c99025a</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-20
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/3d72c3ee016c2deb1946f81b37e29c4fa65a21f3/analysis/bloodcells.Rmd" target="_blank">3d72c3e</a>
 </td>
 <td>
@@ -525,7 +561,7 @@ zouyuxin
 2020-11-20
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -559,7 +595,7 @@ zouyuxin
 2020-11-20
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -593,7 +629,7 @@ zouyuxin
 2020-11-20
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -627,7 +663,7 @@ zouyuxin
 2020-11-20
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -661,7 +697,7 @@ zouyuxin
 2020-11-18
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -695,7 +731,7 @@ zouyuxin
 2020-11-02
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -729,7 +765,7 @@ zouyuxin
 2020-11-02
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -763,7 +799,7 @@ zouyuxin
 2020-11-02
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -797,7 +833,7 @@ zouyuxin
 2020-11-02
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 <tr>
@@ -831,7 +867,7 @@ zouyuxin
 2020-10-27
 </td>
 <td>
-wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
+wflow_publish(“analysis/bloodcells.Rmd”)
 </td>
 </tr>
 </tbody>
@@ -842,226 +878,530 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 </div>
 </div>
 <p>The UkB blood cell traits are</p>
-<table>
-<colgroup>
-<col width="7%" />
-<col width="12%" />
-<col width="45%" />
-<col width="21%" />
-<col width="15%" />
-</colgroup>
+<pre class="r"><code>library(kableExtra)
+library(knitr)
+PheID = seq(30000, 30300, by=10)
+PheID = PheID[-which(PheID %in% c(30170,30230))]
+Abbrev = c(&#39;WBCcount&#39;, &#39;RBCcount&#39;, &#39;HGB&#39;, &#39;HCT&#39;, &#39;MCV&#39;, &#39;MCH&#39;, &#39;MCHC&#39;, &#39;RDW&#39;, &#39;PLTcount&#39;, &#39;PCT&#39;, &#39;MPV&#39;, &#39;PDW&#39;, &#39;LYMPHcount&#39;, &#39;MONOcount&#39;, &#39;NEUTcount&#39;, &#39;EOcount&#39;, &#39;BASOcount&#39;, &#39;LYMPHperc&#39;, &#39;MONOperc&#39;, &#39;NEUTperc&#39;, &#39;EOperc&#39;, &#39;BASOperc&#39;, &#39;RETperc&#39;, &#39;RETcount&#39;, &#39;MRV&#39;, &#39;MSCV&#39;, &#39;IRF&#39;, &#39;HLRperc&#39;, &#39;HLRcount&#39;)
+Phenotype = c(&#39;White blood cell count&#39;, &#39;Red blood cell count&#39;, &#39;Haemoglobin concentration&#39;, &#39;Haematocrit percentage&#39;, &#39;Mean corpuscular volume&#39;, &#39;Mean corpuscular haemoglobin&#39;, &#39;Mean corpuscular haemoglobin concentration&#39;, &#39;Red blood cell distribution width&#39;, &#39;Platelet count&#39;, &#39;Platelet crit&#39;, &#39;Mean platelet (thrombocyte) volume&#39;, &#39;Platelet distribution width&#39;, &#39;Lymphocyte count&#39;, &#39;Monocyte count&#39;, &#39;Neutrophill count&#39;, &#39;Eosinophill count&#39;, &#39;Basophill count&#39;, &#39;Lymphocyte percentage&#39;, &#39;Monocyte percentage&#39;, &#39;Neutrophill percentage&#39;, &#39;Eosinophill percentage&#39;, &#39;Basophill percentage&#39;, &#39;Reticulocyte percentage&#39;, &#39;Reticulocyte count&#39;, &#39;Mean reticulocyte volume&#39;, &#39;Mean sphered cell volume&#39;, &#39;Immature reticulocyte fraction&#39;, &#39;High light scatter reticulocyte percentage&#39;, &#39;High light scatter reticulocyte count&#39;)
+Cell_Type = c(&#39;Compound white cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Mature red cell&#39;, &#39;Platelet&#39;, &#39;Platelet&#39;, &#39;Platelet&#39;, &#39;Platelet&#39;, &#39;Lymphoid white cell&#39;, &#39;Myeloid white cell&#39;, &#39;Myeloid white cell&#39;, &#39;Myeloid white cell&#39;, &#39;Myeloid white cell&#39;, &#39;Compound white cell&#39;, &#39;Compound white cell&#39;, &#39;Compound white cell&#39;, &#39;Compound white cell&#39;, &#39;Compound white cell&#39;, &#39;Immature red cell&#39;, &#39;Immature red cell&#39;, &#39;Immature red cell&#39;, &#39;Mature red cell&#39;, &#39;Immature red cell&#39;, &#39;Immature red cell&#39;, &#39;Immature red cell&#39;)
+Determination = c(&#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;(RBCcount x MCV) / 10&#39;, &#39;Measured&#39;, &#39;(hemoglobin/RBCcount) x 10&#39;, &#39;(haemoglobin/haematocrit) x 100&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;(PCT/PLTcount) x 10000&#39;, &#39;Measured&#39;, &#39;(LYMPHperc/100) x WBCcount&#39;, &#39;(MONOperc/100) x WBCcount&#39;, &#39;(NEUTperc/100) x WBCcount&#39;, &#39;(EOperc/100) x WBCcount&#39;, &#39;(BASOperc/100) x WBCcount&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;Measured&#39;, &#39;(RETperc/100) × RBCcount&#39;, &#39;MCV x (RETperc/100)&#39;, &#39;Measured&#39;, &#39;HLRcount/RETcount&#39;, &#39;Measured&#39;, &#39;(HLRperc/100) × RBCcount&#39;)
+
+Phenos = data.frame(PheID, Abbrev, Phenotype, Cell_Type, Determination)
+kbl(Phenos) %&gt;% kable_paper(&quot;striped&quot;, full_width = F) %&gt;% row_spec(which(Phenos$Determination == &#39;Measured&#39;), background = &quot;greenyellow&quot;)</code></pre>
+<table class=" lightable-paper lightable-striped" style='font-family: "Arial Narrow", arial, helvetica, sans-serif; width: auto !important; margin-left: auto; margin-right: auto;'>
 <thead>
-<tr class="header">
-<th>PheID</th>
-<th>Abbrev</th>
-<th>Phenotype</th>
-<th>Cell type</th>
-<th>Determination</th>
+<tr>
+<th style="text-align:right;">
+PheID
+</th>
+<th style="text-align:left;">
+Abbrev
+</th>
+<th style="text-align:left;">
+Phenotype
+</th>
+<th style="text-align:left;">
+Cell_Type
+</th>
+<th style="text-align:left;">
+Determination
+</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
-<td>30000</td>
-<td>WBCcount</td>
-<td>White blood cell count</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30000
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+WBCcount
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+White blood cell count
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30010</td>
-<td>RBCcount</td>
-<td>Red blood cell count</td>
-<td>Mature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30010
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+RBCcount
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Red blood cell count
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30020</td>
-<td>HGB</td>
-<td>Haemoglobin concentration</td>
-<td>Mature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30020
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+HGB
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Haemoglobin concentration
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30030</td>
-<td>HCT</td>
-<td>Haematocrit percentage</td>
-<td>Mature red cell</td>
-<td>(RBCcount x MCV) / 10</td>
+<tr>
+<td style="text-align:right;">
+30030
+</td>
+<td style="text-align:left;">
+HCT
+</td>
+<td style="text-align:left;">
+Haematocrit percentage
+</td>
+<td style="text-align:left;">
+Mature red cell
+</td>
+<td style="text-align:left;">
+(RBCcount x MCV) / 10
+</td>
 </tr>
-<tr class="odd">
-<td>30040</td>
-<td>MCV</td>
-<td>Mean corpuscular volume</td>
-<td>Mature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30040
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+MCV
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mean corpuscular volume
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30050</td>
-<td>MCH</td>
-<td>Mean corpuscular haemoglobin</td>
-<td>Mature red cell</td>
-<td>(hemoglobin/RBCcount) x 10</td>
+<tr>
+<td style="text-align:right;">
+30050
+</td>
+<td style="text-align:left;">
+MCH
+</td>
+<td style="text-align:left;">
+Mean corpuscular haemoglobin
+</td>
+<td style="text-align:left;">
+Mature red cell
+</td>
+<td style="text-align:left;">
+(hemoglobin/RBCcount) x 10
+</td>
 </tr>
-<tr class="odd">
-<td>30060</td>
-<td>MCHC</td>
-<td>Mean corpuscular haemoglobin concentration</td>
-<td>Mature red cell</td>
-<td>(haemoglobin/haematocrit) x 100</td>
+<tr>
+<td style="text-align:right;">
+30060
+</td>
+<td style="text-align:left;">
+MCHC
+</td>
+<td style="text-align:left;">
+Mean corpuscular haemoglobin concentration
+</td>
+<td style="text-align:left;">
+Mature red cell
+</td>
+<td style="text-align:left;">
+(haemoglobin/haematocrit) x 100
+</td>
 </tr>
-<tr class="even">
-<td>30070</td>
-<td>RDW</td>
-<td>Red blood cell distribution width</td>
-<td>Mature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30070
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+RDW
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Red blood cell distribution width
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30080</td>
-<td>PLTcount</td>
-<td>Platelet count</td>
-<td>Platelet</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30080
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+PLTcount
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet count
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30090</td>
-<td>PCT</td>
-<td>Platelet crit</td>
-<td>Platelet</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30090
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+PCT
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet crit
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30100</td>
-<td>MPV</td>
-<td>Mean platelet (thrombocyte) volume</td>
-<td>Platelet</td>
-<td>(PCT/PLTcount) x 10000</td>
+<tr>
+<td style="text-align:right;">
+30100
+</td>
+<td style="text-align:left;">
+MPV
+</td>
+<td style="text-align:left;">
+Mean platelet (thrombocyte) volume
+</td>
+<td style="text-align:left;">
+Platelet
+</td>
+<td style="text-align:left;">
+(PCT/PLTcount) x 10000
+</td>
 </tr>
-<tr class="even">
-<td>30110</td>
-<td>PDW</td>
-<td>Platelet distribution width</td>
-<td>Platelet</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30110
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+PDW
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet distribution width
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Platelet
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30120</td>
-<td>LYMPHcount</td>
-<td>Lymphocyte count</td>
-<td>Lymphoid white cell</td>
-<td>(LYMPHperc/100) x WBCcount</td>
+<tr>
+<td style="text-align:right;">
+30120
+</td>
+<td style="text-align:left;">
+LYMPHcount
+</td>
+<td style="text-align:left;">
+Lymphocyte count
+</td>
+<td style="text-align:left;">
+Lymphoid white cell
+</td>
+<td style="text-align:left;">
+(LYMPHperc/100) x WBCcount
+</td>
 </tr>
-<tr class="even">
-<td>30130</td>
-<td>MONOcount</td>
-<td>Monocyte count</td>
-<td>Myeloid white cell</td>
-<td>(MONOperc/100) x WBCcount</td>
+<tr>
+<td style="text-align:right;">
+30130
+</td>
+<td style="text-align:left;">
+MONOcount
+</td>
+<td style="text-align:left;">
+Monocyte count
+</td>
+<td style="text-align:left;">
+Myeloid white cell
+</td>
+<td style="text-align:left;">
+(MONOperc/100) x WBCcount
+</td>
 </tr>
-<tr class="odd">
-<td>30140</td>
-<td>NEUTcount</td>
-<td>Neutrophill count</td>
-<td>Myeloid white cell</td>
-<td>(NEUTperc/100) x WBCcount</td>
+<tr>
+<td style="text-align:right;">
+30140
+</td>
+<td style="text-align:left;">
+NEUTcount
+</td>
+<td style="text-align:left;">
+Neutrophill count
+</td>
+<td style="text-align:left;">
+Myeloid white cell
+</td>
+<td style="text-align:left;">
+(NEUTperc/100) x WBCcount
+</td>
 </tr>
-<tr class="even">
-<td>30150</td>
-<td>EOcount</td>
-<td>Eosinophill count</td>
-<td>Myeloid white cell</td>
-<td>(EOperc/100) x WBCcount</td>
+<tr>
+<td style="text-align:right;">
+30150
+</td>
+<td style="text-align:left;">
+EOcount
+</td>
+<td style="text-align:left;">
+Eosinophill count
+</td>
+<td style="text-align:left;">
+Myeloid white cell
+</td>
+<td style="text-align:left;">
+(EOperc/100) x WBCcount
+</td>
 </tr>
-<tr class="odd">
-<td>30160</td>
-<td>BASOcount</td>
-<td>Basophill count</td>
-<td>Myeloid white cell</td>
-<td>(BASOperc/100) x WBCcount</td>
+<tr>
+<td style="text-align:right;">
+30160
+</td>
+<td style="text-align:left;">
+BASOcount
+</td>
+<td style="text-align:left;">
+Basophill count
+</td>
+<td style="text-align:left;">
+Myeloid white cell
+</td>
+<td style="text-align:left;">
+(BASOperc/100) x WBCcount
+</td>
 </tr>
-<tr class="even">
-<td>30180</td>
-<td>LYMPHperc</td>
-<td>Lymphocyte percentage</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30180
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+LYMPHperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Lymphocyte percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30190</td>
-<td>MONOperc</td>
-<td>Monocyte percentage</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30190
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+MONOperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Monocyte percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30200</td>
-<td>NEUTperc</td>
-<td>Neutrophill percentage</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30200
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+NEUTperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Neutrophill percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30210</td>
-<td>EOperc</td>
-<td>Eosinophill percentage</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30210
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+EOperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Eosinophill percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30220</td>
-<td>BASOperc</td>
-<td>Basophill percentage</td>
-<td>Compound white cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30220
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+BASOperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Basophill percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Compound white cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30240</td>
-<td>RETperc</td>
-<td>Reticulocyte percentage</td>
-<td>Immature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30240
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+RETperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Reticulocyte percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Immature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="even">
-<td>30250</td>
-<td>RETcount</td>
-<td>Reticulocyte count</td>
-<td>Immature red cell</td>
-<td>(RETperc/100) × RBCcount</td>
+<tr>
+<td style="text-align:right;">
+30250
+</td>
+<td style="text-align:left;">
+RETcount
+</td>
+<td style="text-align:left;">
+Reticulocyte count
+</td>
+<td style="text-align:left;">
+Immature red cell
+</td>
+<td style="text-align:left;">
+(RETperc/100) × RBCcount
+</td>
 </tr>
-<tr class="odd">
-<td>30260</td>
-<td>MRV</td>
-<td>Mean reticulocyte volume</td>
-<td>Immature red cell</td>
-<td>MCV x (RETperc/100)</td>
+<tr>
+<td style="text-align:right;">
+30260
+</td>
+<td style="text-align:left;">
+MRV
+</td>
+<td style="text-align:left;">
+Mean reticulocyte volume
+</td>
+<td style="text-align:left;">
+Immature red cell
+</td>
+<td style="text-align:left;">
+MCV x (RETperc/100)
+</td>
 </tr>
-<tr class="even">
-<td>30270</td>
-<td>MSCV</td>
-<td>Mean sphered cell volume</td>
-<td>Mature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30270
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+MSCV
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mean sphered cell volume
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Mature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30280</td>
-<td>IRF</td>
-<td>Immature reticulocyte fraction</td>
-<td>Immature red cell</td>
-<td>HLRcount/RETcount</td>
+<tr>
+<td style="text-align:right;">
+30280
+</td>
+<td style="text-align:left;">
+IRF
+</td>
+<td style="text-align:left;">
+Immature reticulocyte fraction
+</td>
+<td style="text-align:left;">
+Immature red cell
+</td>
+<td style="text-align:left;">
+HLRcount/RETcount
+</td>
 </tr>
-<tr class="even">
-<td>30290</td>
-<td>HLRperc</td>
-<td>High light scatter reticulocyte percentage</td>
-<td>Immature red cell</td>
-<td>Measured</td>
+<tr>
+<td style="text-align:right;background-color: greenyellow !important;">
+30290
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+HLRperc
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+High light scatter reticulocyte percentage
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Immature red cell
+</td>
+<td style="text-align:left;background-color: greenyellow !important;">
+Measured
+</td>
 </tr>
-<tr class="odd">
-<td>30300</td>
-<td>HLRcount</td>
-<td>High light scatter reticulocyte count</td>
-<td>Immature red cell</td>
-<td>(HLRperc/100) × RBCcount</td>
+<tr>
+<td style="text-align:right;">
+30300
+</td>
+<td style="text-align:left;">
+HLRcount
+</td>
+<td style="text-align:left;">
+High light scatter reticulocyte count
+</td>
+<td style="text-align:left;">
+Immature red cell
+</td>
+<td style="text-align:left;">
+(HLRperc/100) × RBCcount
+</td>
 </tr>
 </tbody>
 </table>
@@ -1069,7 +1409,7 @@ wflow_publish(&quot;analysis/bloodcells.Rmd&quot;)
 <pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
 <p>We filtered individuals with following criteria:</p>
 <ol style="list-style-type: decimal">
-<li><p>Remove samples that are not marked as being &quot;White British&quot;.</p></li>
+<li><p>Remove samples that are not marked as being “White British”.</p></li>
 <li><p>Remove samples with missing values.</p></li>
 <li><p>Remove samples with mismatches between self-reported and genetic sex.</p></li>
 <li><p>Remove outliers defined by UK Biobank.</p></li>
@@ -1093,13 +1433,13 @@ hist(dat$Haemoglobin, main=&#39;Haemoglobin&#39;, xlab=&#39;x&#39;, breaks = 100
 hist(dat$MCV, main=&#39;MCV&#39;, xlab=&#39;x&#39;, breaks = 100)
 hist(dat$RDW[dat$RDW &lt; 20], main=paste0(&#39;RDW &#39;, sum(dat$RDW &gt; 20), &#39; inds &gt; 20&#39;), xlab=&#39;x&#39;, breaks = 100)
 hist(dat$Platelet_count, main=&#39;Platelet_count&#39;, xlab=&#39;x&#39;, breaks = 100)</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-1">
-Past versions of unnamed-chunk-3-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-4-1">
+Past versions of unnamed-chunk-4-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-3-1" class="collapse">
+<div id="fig-unnamed-chunk-4-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1118,7 +1458,7 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-1.png" target="_blank">1dbfe6c</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-4-1.png" target="_blank">1dbfe6c</a>
 </td>
 <td>
 zouyuxin
@@ -1129,7 +1469,7 @@ zouyuxin
 </tr>
 <tr>
 <td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-3-1.png" target="_blank">b6f3f56</a>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-4-1.png" target="_blank">b6f3f56</a>
 </td>
 <td>
 zouyuxin
@@ -1148,97 +1488,12 @@ hist(dat$Lymphocyte_perc, main=&#39;Lymphocyte_perc&#39;, xlab=&#39;x&#39;, brea
 hist(dat$Monocyte_perc[dat$Monocyte_perc &lt; 20], main=paste0(&#39;Monocyte_perc &#39;, sum(dat$Monocyte_perc &gt; 20), &#39; inds &gt; 20&#39;), xlab=&#39;x&#39;, breaks = 100)
 hist(dat$Neutrophill_perc, main=&#39;Neutrophill_perc&#39;, xlab=&#39;x&#39;, breaks = 100)
 hist(dat$Eosinophill_perc[dat$Eosinophill_perc &lt; 10], main=paste0(&#39;Eosinophill_perc &#39;, sum(dat$Eosinophill_perc &gt; 10), &#39; inds &gt; 10&#39;), xlab=&#39;x&#39;, breaks = 100)</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-2">
-Past versions of unnamed-chunk-3-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-3-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-2.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-3-2.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>hist(dat$Basophill_perc[dat$Basophill_perc &lt; 4], main=paste0(&#39;Basophill_perc &#39;, sum(dat$Basophill_perc &gt; 4), &#39; inds &gt; 4&#39;), xlab=&#39;x&#39;, breaks = 50)
 hist(dat$Reticulocyte_perc[dat$Reticulocyte_perc &lt; 4], main=paste0(&#39;Reticulocyte_perc &#39;, sum(dat$Reticulocyte_perc &gt; 4), &#39; inds &gt; 4&#39;), xlab=&#39;x&#39;, breaks = 50)
 hist(dat$MSCV, main=&#39;MSCV&#39;, xlab=&#39;x&#39;, breaks = 100)
 hist(dat$HLR_perc[dat$HLR_perc &lt; 2], main=paste0(&#39;HLR_perc &#39;, sum(dat$HLR_perc &gt; 2), &#39; inds &gt; 2&#39;), xlab=&#39;x&#39;, breaks = 50)</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-3-3">
-Past versions of unnamed-chunk-3-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-3-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-3-3.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
 <p>Inverse normalization for each trait:</p>
 <pre class="r"><code>dat_1 = dat
 for(i in 16:31){
@@ -1248,131 +1503,7 @@ for(i in 16:31){
 for(i in 16:31){
   hist(dat_1[,i], breaks = 50, main=colnames(dat_1)[i], xlab=&#39;x&#39;)
 }</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
-Past versions of unnamed-chunk-5-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-1.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-5-1.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
-Past versions of unnamed-chunk-5-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-2.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-3">
-Past versions of unnamed-chunk-5-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-5-3.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/bloodcells.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
 <div id="identify-outliers" class="section level2">
 <h2>Identify Outliers</h2>
 <pre class="r"><code>trait_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;, &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;, &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;, &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)
@@ -1382,70 +1513,6 @@ dat_1_traits = dat_1 %&gt;% select(all_of(trait_names))</code></pre>
 <pre><code>corrplot 0.84 loaded</code></pre>
 <pre class="r"><code>covy = cov(dat_1_traits)
 corrplot(covy, method=&#39;color&#39;, type=&#39;upper&#39;, tl.col=&quot;black&quot;, tl.srt=45, is.corr = FALSE)</code></pre>
-<p><img src="figure/bloodcells.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
-Past versions of unnamed-chunk-7-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-7-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1dbfe6cd3c606cc31c1cae664b19e5e6b90fd575/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">1dbfe6c</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-18
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">9e0d1c3</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-11-02
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-7-1.png" target="_blank">b6f3f56</a>
-</td>
-<td>
-zouyuxin
-</td>
-<td>
-2020-10-27
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Measure Mahalanobis distance</p>
-<pre class="r"><code>D2 = stats::mahalanobis(dat_1_traits, center=0, cov=covy) # squared Mahalanobis distance
-{hist(D2[D2 &lt; 60], breaks = 100, main=paste0(&#39;Mahalanobis distance: &#39;, sum(D2 &gt; 60), &#39; inds D2 &gt; 60&#39;),  xlab=&#39;D2&#39;)
-abline(v=qchisq(0.01, df=16, lower.tail = F))}</code></pre>
 <p><img src="figure/bloodcells.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-8-1">
@@ -1495,6 +1562,59 @@ zouyuxin
 </table>
 </div>
 </div>
+<p>Measure Mahalanobis distance</p>
+<pre class="r"><code>D2 = stats::mahalanobis(dat_1_traits, center=0, cov=covy) # squared Mahalanobis distance
+{hist(D2[D2 &lt; 60], breaks = 100, main=paste0(&#39;Mahalanobis distance: &#39;, sum(D2 &gt; 60), &#39; inds D2 &gt; 60&#39;),  xlab=&#39;D2&#39;)
+abline(v=qchisq(0.01, df=16, lower.tail = F))}</code></pre>
+<p><img src="figure/bloodcells.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-9-1">
+Past versions of unnamed-chunk-9-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/9e0d1c35f539bb6569c7426d6f4b87c5e27ff11c/docs/figure/bloodcells.Rmd/unnamed-chunk-9-1.png" target="_blank">9e0d1c3</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-11-02
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/b6f3f56adbe0792a241a2249268b5f5af2032836/docs/figure/bloodcells.Rmd/unnamed-chunk-9-1.png" target="_blank">b6f3f56</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-10-27
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The Mahalanobis distance follows a Chi-Square distribution with df = 16. We compute the 99.9%-Quantile of the Chi-Square distribution with 16 degrees of freedomm and we remove samples with Mahalanobis distance greater than the distance.</p>
 <pre class="r"><code>dat_select = dat_1[D2 &lt; qchisq(0.01, df=16, lower.tail = F),]</code></pre>
 <p>There are 248980 individuals.</p>
@@ -1506,13 +1626,13 @@ zouyuxin
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 3.6.3 (2020-02-29)
-Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS  10.16
+<pre><code>R version 4.0.3 (2020-10-10)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Big Sur 10.16
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -1521,18 +1641,21 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] corrplot_0.84     dplyr_1.0.2       data.table_1.13.2 workflowr_1.6.2  
+[1] corrplot_0.84     dplyr_1.0.2       data.table_1.13.2 knitr_1.30       
+[5] kableExtra_1.3.1  workflowr_1.6.2  
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.5       rstudioapi_0.11  whisker_0.4      knitr_1.30      
- [5] magrittr_1.5     tidyselect_1.1.0 R6_2.5.0         rlang_0.4.8     
- [9] stringr_1.4.0    tools_3.6.3      xfun_0.19        git2r_0.27.1    
-[13] htmltools_0.5.0  ellipsis_0.3.1   rprojroot_1.3-2  yaml_2.2.1      
-[17] digest_0.6.27    tibble_3.0.4     lifecycle_0.2.0  crayon_1.3.4    
-[21] purrr_0.3.4      later_1.1.0.1    vctrs_0.3.4      promises_1.1.1  
-[25] fs_1.5.0         glue_1.4.2       evaluate_0.14    rmarkdown_2.5   
-[29] stringi_1.5.3    compiler_3.6.3   pillar_1.4.6     generics_0.1.0  
-[33] backports_1.2.0  httpuv_1.5.4     pkgconfig_2.0.3 </code></pre>
+ [1] Rcpp_1.0.5        highr_0.8         pillar_1.4.7      compiler_4.0.3   
+ [5] later_1.1.0.1     git2r_0.27.1      tools_4.0.3       digest_0.6.27    
+ [9] evaluate_0.14     lifecycle_0.2.0   tibble_3.0.4      viridisLite_0.3.0
+[13] pkgconfig_2.0.3   rlang_0.4.9       rstudioapi_0.13   yaml_2.2.1       
+[17] xfun_0.19         stringr_1.4.0     httr_1.4.2        xml2_1.3.2       
+[21] generics_0.1.0    fs_1.5.0          vctrs_0.3.5       tidyselect_1.1.0 
+[25] rprojroot_2.0.2   webshot_0.5.2     glue_1.4.2        R6_2.5.0         
+[29] rmarkdown_2.5     purrr_0.3.4       magrittr_2.0.1    whisker_0.4      
+[33] scales_1.1.1      promises_1.1.1    ellipsis_0.3.1    htmltools_0.5.0  
+[37] rvest_0.3.6       colorspace_2.0-0  httpuv_1.5.4      stringi_1.5.3    
+[41] munsell_0.5.0     crayon_1.3.4     </code></pre>
 </div>
 </div>
 
