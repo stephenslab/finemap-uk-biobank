@@ -19,20 +19,16 @@ library(mashr)
 regions = fread('/project2/mstephens/yuxin/ukb-bloodcells/regions.csv')
 z.strong = c()
 z.random = c()
+set.seed(2020)
 for (i in 1:nrow(regions)){
   dat = readRDS(paste0('/project2/mstephens/yuxin/ukb-bloodcells/zscores/bloodcells_chr',
                        regions$CHR[i], '.', regions$start[i], '.', regions$end[i],'.z.rds'))
   z = dat$Z
   strong.id = which.max(apply(abs(z), 1, max))
   z.strong = rbind(z.strong, z[strong.id, ])
-  if (strong.id == 1) {
-    sample_idx = 2:nrow(z)
-  } else if (strong.id == nrow(z)) {
-    sample_idx = 1:(strong.id - 1)
-  } else {
-    sample_idx = c(1:(strong.id - 1), (strong.id + 1):nrow(z))
-  }
-  random_idx = sample(sample_idx, 3, replace = F)
+  
+  null.id = which(apply(abs(z), 1, max) < 2)
+  random_idx = sample(null.id, 1, replace = F)
   z.random = rbind(z.random, z[random_idx,])
 }
 ```
@@ -143,8 +139,10 @@ for(i in 1:11){
 }
 ```
 
-```{t}
+```{r}
 Ulist = c(res, U.pca, list("XX" = cov(z.strong)))
-saveRDS('output/BloodCells.flash.pca.ulist.rds')
+z.random.cov = cov(z.random)
+saveRDS(Ulist, 'output/BloodCells.flash.pca.ulist.rds')
+saveRDS(z.random.cov, 'output/BloodCells.znullcov.rds')
 ```
 
