@@ -87,7 +87,6 @@ plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab='CHR 3 POS', ylab='-log
 For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 17661 SNPs.
 ```{r}
 gwas_Reticulocyte_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_Reticulocyte_perc')
-gwas_Reticulocyte_perc = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_Reticulocyte_perc')
 colnames(gwas_Reticulocyte_perc)[1] = 'CHR'
 gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
 gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
