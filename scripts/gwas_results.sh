@@ -1,6 +1,6 @@
 #!/bin/bash
 
-path='/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/'
+path='/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/'
 
 phenotypes=("WBC_count" "RBC_count" "Haemoglobin" "MCV" "RDW" "Platelet_count" "Plateletcrit" "PDW" "Lymphocyte_perc" "Monocyte_perc" "Neutrophill_perc" "Eosinophill_perc" "Basophill_perc" "Reticulocyte_perc" "MSCV" "HLR_perc")
 
