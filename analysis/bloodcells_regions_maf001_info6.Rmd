@@ -1,0 +1,145 @@
+---
+title: "Blood cells regions (with lower genotype criteria)"
+author: "Yuxin Zou"
+date: "12/6/2020"
+output: 
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+options(kableExtra.html.bsTable = T)
+```
+
+There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is [get_bloodcells](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/get_bloodcells.R). The filtering steps are also described [here](bloodcells.html)
+
+For genotype data, variants with imputation score (INFO) > 0.6, MAF > 0.1% are included in association studies.
+
+The script to run GWAS is [GWAS](https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/plink_gwas.sh)
+
+For each phenotype, regions for fine-mapping are defined by greedily starting with the most significantly associated SNP, including SNPs within a window of 500kb centered at the SNP, until we include all significant SNPs (p < 5e-8). We merge ovelapping regions. We exclude HLA region (chr6: 25Mb - 36Mb). The steps are
+
+1. Find the most significantly associated SNP.
+
+2. Choose region +- 250kb around the SNP.
+
+3. Find the next most significantly associated SNP ouside the selected regions.
+
+4. Choose region +- 250kb around the SNP.
+
+5. Merge regions if they overlap.
+...
+
+When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.
+
+```{r, message=FALSE}
+library(data.table)
+library(dplyr)
+library(kableExtra)
+library(knitr)
+pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet_count",
+                "Plateletcrit", "PDW", "Lymphocyte_perc", "Monocyte_perc",
+                "Neutrophill_perc", "Eosinophill_perc", "Basophill_perc",
+                "Reticulocyte_perc", "MSCV", "HLR_perc")
+```
+
+```{r}
+trait_regions = list()
+for(trait in pheno_names){
+  region = fread(paste0('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions_raw/', trait, '_regions'))
+  region = region %>% arrange(desc(logp))
+  region_r = c()
+  for(i in 1:22){
+    region.chr = region %>% filter(CHR == i) %>% arrange(start)
+    if(nrow(region.chr) == 0){
+      next
+    }
+    tmp = region.chr %>% group_by(g = cumsum(cummax(lag(end, default = first(end))) < start)) %>%
+      summarise(start = first(start), end = max(end), logp = max(logp),.groups = 'drop') %>% 
+      mutate(length = end - start) %>%
+      mutate(CHR = i) %>% select(CHR, start, end, length, logp)
+    region_r = rbind(region_r, tmp)
+  }
+  trait_regions[[trait]] = region_r
+}
+```
+
+Summary of region length for each phenotype before selecting regions across traits:
+```{r, results = "asis"}
+for(trait in pheno_names){
+  tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
+  rownames(tb) = c('region_length', 'region_max_log10p')
+  tb = round(tb,3) %>% kbl(caption = paste0(trait, ': ', nrow(trait_regions[[trait]]), ' regions')) %>% kable_styling()
+  cat(tb)
+  cat("\n")
+}
+```
+
+For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 18225 SNPs.
+```{r}
+gwas_HLR_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/bloodcells_gwas_HLR_perc')
+colnames(gwas_HLR_perc)[1] = 'CHR'
+gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
+gwas_HLR_perc = gwas_HLR_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
+gwas_HLR_perc.sub = gwas_HLR_perc %>% filter(CHR == 3, POS >= 46234573, POS <=52207799)
+plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)', main='HLR_perc')
+```
+For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 17661 SNPs.
+```{r}
+gwas_Reticulocyte_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_Reticulocyte_perc')
+gwas_Reticulocyte_perc = fread('~/Desktop/ukb-bloodcells/bloodcells_gwas_Reticulocyte_perc')
+colnames(gwas_Reticulocyte_perc)[1] = 'CHR'
+gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
+gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
+gwas_Reticulocyte_perc.sub = gwas_Reticulocyte_perc %>% filter(CHR == 3, POS >= 48155661, POS <=53703263)
+plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab='CHR 3 POS', ylab='-log10(p)', main='Reticulocyte_perc')
+```
+
+Select regions across phenotype:
+```{r}
+tb = bind_rows(trait_regions, .id = "column_label")
+res.final = c()
+for(i in 1:22){
+  tb.chr = tb %>% filter(CHR == i) %>% arrange(start)
+  if(nrow(tb.chr) == 0){
+    next
+  }
+  tmp = tb.chr %>% group_by(g = cumsum(cummax(lag(end, default = first(end))) < start)) %>%
+    summarise(start = first(start), end = max(end), logp = max(logp), .groups = 'drop') %>% 
+    mutate(length = end - start) %>%
+    mutate(CHR = i) %>% select(CHR, start, end, length, logp)
+  res.final = rbind(res.final, tmp)
+}
+snpsnum = c()
+for(i in 1:nrow(res.final)){
+  snpsnum = c(snpsnum, gwas_HLR_perc %>% filter(CHR == res.final$CHR[i],
+                                           POS >= res.final$start[i], 
+                                           POS <= res.final$end[i]) %>% nrow )
+}
+res.final$snpsnum = snpsnum
+```
+
+Summary of regions:
+```{r, results = "asis"}
+tb = rbind(summary(res.final$length), summary(res.final$snpsnum),  summary(res.final$logp))
+rownames(tb) = c('region_length', 'region_num_snps', 'region_max_log10p')
+round(tb,3)  %>% kbl(caption = paste0(nrow(res.final), ' regions')) %>% kable_styling()
+```
+
+There are `r nrow(res.final)` regoins in total, 80 regions with length greater than 2Mb, 70 regions contain more than 10000 SNPs, 292 regions contain more than 5000 SNPs.
+
+The region with maximum length and maximum number of SNPs:
+```{r}
+gwas_HLR_perc.max = gwas_HLR_perc %>% filter(CHR == 17, POS >= 39754910, POS <=48484411)
+plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab='CHR 17 POS', ylab='-log10(p)', main='HLR_perc')
+
+gwas_Lymphocyte_perc = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/bloodcells_gwas_Lymphocyte_perc')
+colnames(gwas_Lymphocyte_perc)[1] = 'CHR'
+gwas_Lymphocyte_perc$P = as.numeric(gwas_Lymphocyte_perc$P)
+gwas_Lymphocyte_perc = gwas_Lymphocyte_perc %>% select(CHR, POS, T_STAT, P) %>% mutate(logp = -log10(P))
+gwas_Lymphocyte_perc.max = gwas_Lymphocyte_perc %>% filter(CHR == 17, POS >= 39754910, POS <=48484411)
+plot(gwas_Lymphocyte_perc.max$POS, gwas_Lymphocyte_perc.max$logp, xlab='CHR 17 POS', ylab='-log10(p)', main='Lymphocyte_perc')
+```
+
+
+
