@@ -41,7 +41,7 @@ for(i in 1:22){
   res.final = rbind(res.final, tmp)
 }
 
-gwas_PDW = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_PDW')
+gwas_PDW = fread('/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/bloodcells_gwas_PDW')
 colnames(gwas_PDW)[1] = 'CHR'
 gwas_PDW$P = as.numeric(gwas_PDW$P)
 gwas_PDW = gwas_PDW %>% mutate(logp = -log10(P))
@@ -55,5 +55,5 @@ for(i in 1:nrow(res.final)){
 res.final$snpsnum = snpsnum
 
 fwrite(res.final, '/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions/regions.csv', quote=FALSE,
-sep='\t', row.names=FALSE)
+sep='\t', row.names=FALSE, col.names=FALSE)
 

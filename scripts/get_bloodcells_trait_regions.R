@@ -7,7 +7,7 @@ pheno_names = c("WBC_count", "RBC_count", "Haemoglobin", "MCV", "RDW", "Platelet
 
 for( trait in pheno_names){
   dat.file <-
-    file.path("/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/",
+    file.path("/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/",
               paste0("bloodcells_gwas_", trait))
   out.file <- file.path("/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions_raw/",
                         paste0(trait, '_regions'))
