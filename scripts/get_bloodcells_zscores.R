@@ -67,7 +67,7 @@ maf <- read.delim(paste0(genotype_dir, 'bloodcells_chr',
 maf = maf %>% mutate(maf = pmin(ALT_FREQS, 1-ALT_FREQS)) %>% select(ID, maf)
 pos = inner_join(pos, maf, by='ID')
 
-saveRDS(list(LD = paste0('bloodcells.chr', chr, '.', start, '.', end,'.matrix'),
+saveRDS(list(LD = paste0('bloodcells_chr', chr, '.', start, '.', end,'.matrix'),
              XtY = XtY, n = nrow(Y), pos=pos, Z = zscores, XtXD = xtxdiag), 
         paste0(output_dir, 'bloodcells_chr',chr, '.', start, '.', end, '.z.rds'))
 
