@@ -88,8 +88,19 @@ saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), 'output/BloodCells.cov.
 ```{r ed, eval=FALSE}
 library(udr)
 fit.ed.S.y <- ud_fit(X = z.strong, U = Ulist, S = Ycov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-saveRDS(fit.ed.S.y, 'output/BloodCells.Ulist.ed.rds')
+fit.ed.S.y.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(Ycov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
+
+# fit.ed.S.z.cov <- ud_fit(X = z.strong, U = Ulist, S = z.random.cov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
+# fit.ed.S.z.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(z.random.cov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
+
+saveRDS(fit.ed.S.y, 'output/BloodCells.Ulist.Scov.ed.rds')
+saveRDS(fit.ed.S.y.cor, 'output/BloodCells.Ulist.Scor.ed.rds')
 ```
 
+ED weights:
+```{r}
+fit.ed = readRDS('output/BloodCells.Ulist.Scor.ed.rds')
+barplot(fit.ed$w, las=2, cex.names = 0.7)
+```
 
 
