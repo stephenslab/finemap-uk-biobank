@@ -11,18 +11,19 @@ output:
 library(data.table)
 library(flashr)
 library(mixsqp)
-library(mashr)
+library(udr)
 ```
 
 1. Extract 1 snp per region with the strongest signal
-```{r}
+```{r strongsignals}
 regions = fread('/project2/mstephens/yuxin/ukb-bloodcells/regions.csv')
+colnames(regions) = c('chr', 'start', 'end', 'length', 'maxlog10p', 'numsnps')
 z.strong = c()
 z.random = c()
 set.seed(2020)
 for (i in 1:nrow(regions)){
   dat = readRDS(paste0('/project2/mstephens/yuxin/ukb-bloodcells/zscores/bloodcells_chr',
-                       regions$CHR[i], '.', regions$start[i], '.', regions$end[i],'.z.rds'))
+                       regions$chr[i], '.', regions$start[i], '.', regions$end[i],'.z.rds'))
   z = dat$Z
   strong.id = which.max(apply(abs(z), 1, max))
   z.strong = rbind(z.strong, z[strong.id, ])
@@ -34,115 +35,61 @@ for (i in 1:nrow(regions)){
 ```
 
 2. PCA
-```{r}
-par(mfrow=c(2,3))
-res.svd = svd(z.strong,nv=6,nu=6)
+```{r pca}
+par(mfrow=c(1,3))
+res.svd = svd(z.strong,nv=3,nu=3)
 f = res.svd$v
+rownames(f) = colnames(z.strong)
 U.pca = mashr:::cov_from_factors(t(f), "PCA")
-d = diag(res.svd$d[1:6])
+d = diag(res.svd$d[1:3])
 U.pca = c(U.pca, list("tPCA"= f %*% d^2 %*% t(f)/nrow(z.strong)))
-for(i in 1:6){
+for(i in 1:3){
   barplot(f[,i], cex.names = 0.7,
           las = 2, main = paste0("EigenVector ", i, ' pve: ', round(res.svd$d[i]^2/sum(res.svd$d^2), 3)))
 }
 ```
 
 3. FLASH
-```{r, message=FALSE}
-my_init_fn <- function(Y, K = 1) {
-  ret = flashr:::udv_si(Y, K)
-  pos_sum = sum(ret$v[ret$v > 0]^2)
-  neg_sum = -sum(ret$v[ret$v < 0]^2)
-  if (neg_sum > pos_sum) {
-    return(list(u = -ret$u, d = ret$d, v = -ret$v))
-  } else
-    return(ret)
-}
-
-flash_pipeline = function(data, ...) {
-  ## current state-of-the art
-  ## suggested by Jason Willwerscheid
-  ## cf: discussion section of
-  ## https://willwerscheid.github.io/MASHvFLASH/MASHvFLASHnn2.html
-  ebnm_fn = "ebnm_ash"
-  ebnm_param = list(l = list(mixcompdist = "normal",
-                             optmethod = "mixSQP"),
-                    f = list(mixcompdist = "+uniform",
-                             optmethod = "mixSQP"))
-  ##
-  fl_g <- flashr:::flash_greedy_workhorse(data,
-                                          var_type = "constant",
-                                          ebnm_fn = ebnm_fn,
-                                          ebnm_param = ebnm_param,
-                                          init_fn = "my_init_fn",
-                                          stopping_rule = "factors",
-                                          tol = 1e-3,
-                                          verbose_output = "odF")
-  fl_b <- flashr:::flash_backfit_workhorse(data,
-                                           f_init = fl_g,
-                                           var_type = "constant",
-                                           ebnm_fn = ebnm_fn,
-                                           ebnm_param = ebnm_param,
-                                           stopping_rule = "factors",
-                                           tol = 1e-3,
-                                           verbose_output = "odF")
-  return(fl_b)
-}
-
-cov_flash = function(z, non_singleton = FALSE, save_model = NULL, center = F) {
-  if(center){
-    z.center = apply(z, 2, function(x) x - mean(x))
-  }else{
-    z.center = as.matrix(z)
-  }
-  ## Only keep factors with at least two values greater than 1 / sqrt(n)
-  find_nonunique_effects <- function(fl) {
-    thresh <- 1/sqrt(ncol(fl$fitted_values))
-    vals_above_avg <- colSums(fl$ldf$f > thresh)
-    nonuniq_effects <- which(vals_above_avg > 1)
-    return(fl$ldf$f[, nonuniq_effects, drop = FALSE])
-  }
-  
-  fmodel = flash_pipeline(z.center)
-  if (non_singleton)
-    flash_f = find_nonunique_effects(fmodel)
-  else 
-    flash_f = fmodel$ldf$f
-  ## row.names(flash_f) = colnames(b)
-  if (!is.null(save_model)) saveRDS(list(model=fmodel, factors=flash_f), save_model)
-  if(ncol(flash_f) == 0){
-    U.flash = list("tFLASH" = t(fmodel$fitted_values) %*% fmodel$fitted_values / nrow(fmodel$fitted_values))
-  } else{
-    U.flash = c(mashr:::cov_from_factors(t(as.matrix(flash_f)), "FLASH"),
-                list("tFLASH" = t(fmodel$fitted_values) %*% fmodel$fitted_values / nrow(fmodel$fitted_values)))
-  }
-  return(U.flash)
-}
-
-res = cov_flash(z.strong, non_singleton = TRUE, center = F, save_model = 'output/BloodCells.flash.model.rds')
+```{r, message=FALSE, eval=FALSE}
+f.d = flash_set_data(as.matrix(z.strong))
+f = flashr::flash(f.d, greedy=TRUE, backfit = T)
+saveRDS(f, 'output/BloodCells.flash.model.rds')
 ```
 
-```{r}
-mod = readRDS('output/BloodCells.flash.model.rds')
+```{r flash}
+f = readRDS('output/BloodCells.flash.model.rds')
 nonunique_effects <- function(fl) {
     thresh <- 1/sqrt(ncol(fl$fitted_values))
     vals_above_avg <- colSums(fl$ldf$f > thresh)
     nonuniq_effects <- which(vals_above_avg > 1)
     return(nonuniq_effects)
 }
-nonunique_effects_id = nonunique_effects(mod$model)
+nonunique_effects_id = nonunique_effects(f)
 par(mfrow=c(2,3))
-for(i in 1:11){
-  barplot(mod$model$ldf$f[,i], cex.names = 0.7,
-          las = 2, main = paste0("Flash factor ", i, " pve: ", round(mod$model$pve[i], 2)),
-          col.main = ifelse(i %in% nonunique_effects_id, 'red', 'black'))
+for(i in 1:13){
+  barplot(f$ldf$f[,i], cex.names = 0.7,
+          las = 2, main = paste0("Flash factor ", i, " pve: ", round(f$pve[i], 2)))
 }
 ```
 
-```{r}
-Ulist = c(res, U.pca, list("XX" = cov(z.strong)))
+```{r ulist, eval=FALSE}
+U.flash = c(mashr:::cov_from_factors(t(as.matrix(f$ldf$f)), "FLASH"),
+                list("tFLASH" = t(f$fitted_values) %*% f$fitted_values / nrow(f$fitted_values)))
+
+Ulist = c(U.flash, U.pca, list("XX" = t(as.matrix(z.strong)) %*% as.matrix(z.strong) / nrow(z.strong)))
 z.random.cov = cov(z.random)
 saveRDS(Ulist, 'output/BloodCells.flash.pca.ulist.rds')
-saveRDS(z.random.cov, 'output/BloodCells.znullcov.rds')
+
+traits = fread('/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.txt')
+Ycov = cov(traits[,3:18])
+saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), 'output/BloodCells.cov.rds')
 ```
+
+```{r ed, eval=FALSE}
+library(udr)
+fit.ed.S.y <- ud_fit(X = z.strong, U = Ulist, S = Ycov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
+saveRDS(fit.ed.S.y, 'output/BloodCells.Ulist.ed.rds')
+```
+
+
 
