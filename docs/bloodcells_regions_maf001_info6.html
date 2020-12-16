@@ -1,0 +1,2067 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+<meta name="author" content="Yuxin Zou" />
+
+
+<title>Blood cells regions (with lower genotype criteria)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="site_libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">finemap-uk-biobank</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Blood cells regions (with lower genotype criteria)</h1>
+<h4 class="author"><em>Yuxin Zou</em></h4>
+<h4 class="date"><em>12/6/2020</em></h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-12-06
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>finemap-uk-biobank/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.1). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191114code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191114)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191114code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191114)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree6411a0625b669ea62eb785aa18402169bef31b17targetblank6411a06a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/6411a0625b669ea62eb785aa18402169bef31b17" target="_blank">6411a06</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree6411a0625b669ea62eb785aa18402169bef31b17targetblank6411a06a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/6411a0625b669ea62eb785aa18402169bef31b17" target="_blank">6411a06</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    analysis/figure/
+
+Untracked files:
+    Untracked:  scripts/bloodcells.steps.md
+    Untracked:  scripts/maf.R
+    Untracked:  scripts/mafinfo.R
+
+Unstaged changes:
+    Modified:   scripts/get_bloodcells_trait_regions.R
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/bloodcells_regions_maf001_info6.Rmd</code>) and HTML (<code>docs/bloodcells_regions_maf001_info6.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/6411a0625b669ea62eb785aa18402169bef31b17/analysis/bloodcells_regions_maf001_info6.Rmd" target="_blank">6411a06</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-06
+</td>
+<td>
+wflow_publish(“analysis/bloodcells_regions_maf001_info6.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/6c66186a84847a05f2ac309c790a8fcdbf944e68/analysis/bloodcells_regions_maf001_info6.Rmd" target="_blank">6c66186</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-06
+</td>
+<td>
+Create bloodcells_regions_maf001_info6.Rmd
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<p>There are 248,980 individuals of white British ancestries with 16 blood cells phenotypes. The script to prepare the phenotypes and covariates is <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/get_bloodcells.R">get_bloodcells</a>. The filtering steps are also described <a href="bloodcells.html">here</a></p>
+<p>For genotype data, variants with imputation score (INFO) &gt; 0.6, MAF &gt; 0.1% are included in association studies.</p>
+<p>The script to run GWAS is <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/master/scripts/plink_gwas.sh">GWAS</a></p>
+<p>For each phenotype, regions for fine-mapping are defined by greedily starting with the most significantly associated SNP, including SNPs within a window of 500kb centered at the SNP, until we include all significant SNPs (p &lt; 5e-8). We merge ovelapping regions. We exclude HLA region (chr6: 25Mb - 36Mb). The steps are</p>
+<ol style="list-style-type: decimal">
+<li><p>Find the most significantly associated SNP.</p></li>
+<li><p>Choose region +- 250kb around the SNP.</p></li>
+<li><p>Find the next most significantly associated SNP ouside the selected regions.</p></li>
+<li><p>Choose region +- 250kb around the SNP.</p></li>
+<li><p>Merge regions if they overlap. …</p></li>
+</ol>
+<p>When we select region across traits, we include all regions from each pheotype and merge overlapping regions. This produces some very large regions with more than 10000 SNPs.</p>
+<pre class="r"><code>library(data.table)
+library(dplyr)
+library(kableExtra)
+library(knitr)
+pheno_names = c(&quot;WBC_count&quot;, &quot;RBC_count&quot;, &quot;Haemoglobin&quot;, &quot;MCV&quot;, &quot;RDW&quot;, &quot;Platelet_count&quot;,
+                &quot;Plateletcrit&quot;, &quot;PDW&quot;, &quot;Lymphocyte_perc&quot;, &quot;Monocyte_perc&quot;,
+                &quot;Neutrophill_perc&quot;, &quot;Eosinophill_perc&quot;, &quot;Basophill_perc&quot;,
+                &quot;Reticulocyte_perc&quot;, &quot;MSCV&quot;, &quot;HLR_perc&quot;)</code></pre>
+<pre class="r"><code>trait_regions = list()
+for(trait in pheno_names){
+  region = fread(paste0(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/regions_raw/&#39;, trait, &#39;_regions&#39;))
+  region = region %&gt;% arrange(desc(logp))
+  region_r = c()
+  for(i in 1:22){
+    region.chr = region %&gt;% filter(CHR == i) %&gt;% arrange(start)
+    if(nrow(region.chr) == 0){
+      next
+    }
+    tmp = region.chr %&gt;% group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;%
+      summarise(start = first(start), end = max(end), logp = max(logp),.groups = &#39;drop&#39;) %&gt;% 
+      mutate(length = end - start) %&gt;%
+      mutate(CHR = i) %&gt;% select(CHR, start, end, length, logp)
+    region_r = rbind(region_r, tmp)
+  }
+  trait_regions[[trait]] = region_r
+}</code></pre>
+<p>Summary of region length for each phenotype before selecting regions across traits:</p>
+<pre class="r"><code>for(trait in pheno_names){
+  tb = rbind(summary(trait_regions[[trait]]$length), summary(trait_regions[[trait]]$logp))
+  rownames(tb) = c(&#39;region_length&#39;, &#39;region_max_log10p&#39;)
+  tb = round(tb,3) %&gt;% kbl(caption = paste0(trait, &#39;: &#39;, nrow(trait_regions[[trait]]), &#39; regions&#39;)) %&gt;% kable_styling()
+  cat(tb)
+  cat(&quot;\n&quot;)
+}</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+WBC_count: 292 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+358597.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+616867.616
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+2372028.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.327
+</td>
+<td style="text-align:right;">
+8.519e+00
+</td>
+<td style="text-align:right;">
+10.812
+</td>
+<td style="text-align:right;">
+15.411
+</td>
+<td style="text-align:right;">
+14.804
+</td>
+<td style="text-align:right;">
+213.266
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+RBC_count: 318 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+333545.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+653697.2
+</td>
+<td style="text-align:right;">
+754540.250
+</td>
+<td style="text-align:right;">
+3375036
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.307
+</td>
+<td style="text-align:right;">
+8.763e+00
+</td>
+<td style="text-align:right;">
+11.279
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+18.508
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Haemoglobin: 256 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+385285.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+615744.65
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+3251867.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.302
+</td>
+<td style="text-align:right;">
+8.272e+00
+</td>
+<td style="text-align:right;">
+10.299
+</td>
+<td style="text-align:right;">
+17.05
+</td>
+<td style="text-align:right;">
+16.347
+</td>
+<td style="text-align:right;">
+261.853
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+MCV: 335 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.00
+</td>
+<td style="text-align:right;">
+677738.8
+</td>
+<td style="text-align:right;">
+781996.000
+</td>
+<td style="text-align:right;">
+2920824
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.303e+00
+</td>
+<td style="text-align:right;">
+9.609e+00
+</td>
+<td style="text-align:right;">
+13.19
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.207
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+RDW: 280 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+352293.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+660592
+</td>
+<td style="text-align:right;">
+751597.250
+</td>
+<td style="text-align:right;">
+4089364
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.309
+</td>
+<td style="text-align:right;">
+8.976e+00
+</td>
+<td style="text-align:right;">
+12.738
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+24.206
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Platelet_count: 404 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+347438.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+694188.9
+</td>
+<td style="text-align:right;">
+769307.250
+</td>
+<td style="text-align:right;">
+4622708
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.324
+</td>
+<td style="text-align:right;">
+9.067e+00
+</td>
+<td style="text-align:right;">
+12.122
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.742
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Plateletcrit: 387 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+296565.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+668189.6
+</td>
+<td style="text-align:right;">
+762096.500
+</td>
+<td style="text-align:right;">
+4144063
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.317
+</td>
+<td style="text-align:right;">
+8.932e+00
+</td>
+<td style="text-align:right;">
+11.455
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+19.365
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+PDW: 302 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+327279.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+671565.3
+</td>
+<td style="text-align:right;">
+755901.2
+</td>
+<td style="text-align:right;">
+4239970
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.318
+</td>
+<td style="text-align:right;">
+8.972e+00
+</td>
+<td style="text-align:right;">
+12.679
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+24.2
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Lymphocyte_perc: 237 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+442725.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+627500.270
+</td>
+<td style="text-align:right;">
+754628.000
+</td>
+<td style="text-align:right;">
+2239954.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.325
+</td>
+<td style="text-align:right;">
+9.074e+00
+</td>
+<td style="text-align:right;">
+11.341
+</td>
+<td style="text-align:right;">
+16.363
+</td>
+<td style="text-align:right;">
+17.019
+</td>
+<td style="text-align:right;">
+152.602
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Monocyte_perc: 280 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+359265.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+674078.3
+</td>
+<td style="text-align:right;">
+757106.500
+</td>
+<td style="text-align:right;">
+3506298
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.357
+</td>
+<td style="text-align:right;">
+8.681e+00
+</td>
+<td style="text-align:right;">
+11.777
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.638
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Neutrophill_perc: 225 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+442725.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+628331.853
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+2208916.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.303
+</td>
+<td style="text-align:right;">
+8.458e+00
+</td>
+<td style="text-align:right;">
+11.027
+</td>
+<td style="text-align:right;">
+16.193
+</td>
+<td style="text-align:right;">
+16.381
+</td>
+<td style="text-align:right;">
+193.111
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Eosinophill_perc: 285 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+399122.000
+</td>
+<td style="text-align:right;">
+5.00e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+669949.154
+</td>
+<td style="text-align:right;">
+750962.000
+</td>
+<td style="text-align:right;">
+3994646.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.328
+</td>
+<td style="text-align:right;">
+9.09e+00
+</td>
+<td style="text-align:right;">
+13.004
+</td>
+<td style="text-align:right;">
+20.376
+</td>
+<td style="text-align:right;">
+20.883
+</td>
+<td style="text-align:right;">
+212.968
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Basophill_perc: 88 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.00
+</td>
+<td style="text-align:right;">
+589399.318
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+2576368.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.364e+00
+</td>
+<td style="text-align:right;">
+8.368e+00
+</td>
+<td style="text-align:right;">
+11.48
+</td>
+<td style="text-align:right;">
+17.159
+</td>
+<td style="text-align:right;">
+16.718
+</td>
+<td style="text-align:right;">
+134.511
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+Reticulocyte_perc: 246 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+282465.000
+</td>
+<td style="text-align:right;">
+5.00e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+662615.8
+</td>
+<td style="text-align:right;">
+753719.250
+</td>
+<td style="text-align:right;">
+5547602
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.302
+</td>
+<td style="text-align:right;">
+8.39e+00
+</td>
+<td style="text-align:right;">
+11.687
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+19.669
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+MSCV: 290 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+373852.000
+</td>
+<td style="text-align:right;">
+5.00e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+671368
+</td>
+<td style="text-align:right;">
+759403.000
+</td>
+<td style="text-align:right;">
+3368512
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.328
+</td>
+<td style="text-align:right;">
+9.27e+00
+</td>
+<td style="text-align:right;">
+12.339
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+21.431
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+HLR_perc: 252 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+404815.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+500000.000
+</td>
+<td style="text-align:right;">
+687238
+</td>
+<td style="text-align:right;">
+775889.250
+</td>
+<td style="text-align:right;">
+5973226
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.304
+</td>
+<td style="text-align:right;">
+8.818e+00
+</td>
+<td style="text-align:right;">
+12.009
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+19.187
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<p>For HLR_perc, the maximum region is at CHR 3 from 46234573 to 52207799, which includes 18225 SNPs.</p>
+<pre class="r"><code>gwas_HLR_perc = fread(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/bloodcells_gwas_HLR_perc&#39;)
+colnames(gwas_HLR_perc)[1] = &#39;CHR&#39;
+gwas_HLR_perc$P = as.numeric(gwas_HLR_perc$P)
+gwas_HLR_perc = gwas_HLR_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_HLR_perc.sub = gwas_HLR_perc %&gt;% filter(CHR == 3, POS &gt;= 46234573, POS &lt;=52207799)
+plot(gwas_HLR_perc.sub$POS, gwas_HLR_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions_maf001_info6.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /> For Reticulocyte_perc, the maximum region is at CHR 3 from 48155661 to 53703263, which includes 17661 SNPs.</p>
+<pre class="r"><code>gwas_Reticulocyte_perc = fread(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas/bloodcells_gwas_Reticulocyte_perc&#39;)
+colnames(gwas_Reticulocyte_perc)[1] = &#39;CHR&#39;
+gwas_Reticulocyte_perc$P = as.numeric(gwas_Reticulocyte_perc$P)
+gwas_Reticulocyte_perc = gwas_Reticulocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_Reticulocyte_perc.sub = gwas_Reticulocyte_perc %&gt;% filter(CHR == 3, POS &gt;= 48155661, POS &lt;=53703263)
+plot(gwas_Reticulocyte_perc.sub$POS, gwas_Reticulocyte_perc.sub$logp, xlab=&#39;CHR 3 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Reticulocyte_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions_maf001_info6.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>Select regions across phenotype:</p>
+<pre class="r"><code>tb = bind_rows(trait_regions, .id = &quot;column_label&quot;)
+res.final = c()
+for(i in 1:22){
+  tb.chr = tb %&gt;% filter(CHR == i) %&gt;% arrange(start)
+  if(nrow(tb.chr) == 0){
+    next
+  }
+  tmp = tb.chr %&gt;% group_by(g = cumsum(cummax(lag(end, default = first(end))) &lt; start)) %&gt;%
+    summarise(start = first(start), end = max(end), logp = max(logp), .groups = &#39;drop&#39;) %&gt;% 
+    mutate(length = end - start) %&gt;%
+    mutate(CHR = i) %&gt;% select(CHR, start, end, length, logp)
+  res.final = rbind(res.final, tmp)
+}
+snpsnum = c()
+for(i in 1:nrow(res.final)){
+  snpsnum = c(snpsnum, gwas_HLR_perc %&gt;% filter(CHR == res.final$CHR[i],
+                                           POS &gt;= res.final$start[i], 
+                                           POS &lt;= res.final$end[i]) %&gt;% nrow )
+}
+res.final$snpsnum = snpsnum</code></pre>
+<p>Summary of regions:</p>
+<pre class="r"><code>tb = rbind(summary(res.final$length), summary(res.final$snpsnum),  summary(res.final$logp))
+rownames(tb) = c(&#39;region_length&#39;, &#39;region_num_snps&#39;, &#39;region_max_log10p&#39;)
+round(tb,3)  %&gt;% kbl(caption = paste0(nrow(res.final), &#39; regions&#39;)) %&gt;% kable_styling()</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<caption>
+975 regions
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Min.
+</th>
+<th style="text-align:right;">
+1st Qu.
+</th>
+<th style="text-align:right;">
+Median
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+<th style="text-align:right;">
+3rd Qu.
+</th>
+<th style="text-align:right;">
+Max.
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+region_length
+</td>
+<td style="text-align:right;">
+411728.000
+</td>
+<td style="text-align:right;">
+5.000e+05
+</td>
+<td style="text-align:right;">
+686115.000
+</td>
+<td style="text-align:right;">
+961074.882
+</td>
+<td style="text-align:right;">
+1094505.000
+</td>
+<td style="text-align:right;">
+8729501
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_num_snps
+</td>
+<td style="text-align:right;">
+93.000
+</td>
+<td style="text-align:right;">
+2.630e+03
+</td>
+<td style="text-align:right;">
+3514.000
+</td>
+<td style="text-align:right;">
+4776.238
+</td>
+<td style="text-align:right;">
+5718.000
+</td>
+<td style="text-align:right;">
+36605
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+region_max_log10p
+</td>
+<td style="text-align:right;">
+7.322
+</td>
+<td style="text-align:right;">
+9.868e+00
+</td>
+<td style="text-align:right;">
+14.952
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+33.395
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+</tr>
+</tbody>
+</table>
+<p>There are 975 regoins in total, 80 regions with length greater than 2Mb, 70 regions contain more than 10000 SNPs, 292 regions contain more than 5000 SNPs.</p>
+<p>The region with maximum length and maximum number of SNPs:</p>
+<pre class="r"><code>gwas_HLR_perc.max = gwas_HLR_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_HLR_perc.max$POS, gwas_HLR_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;HLR_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions_maf001_info6.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>gwas_Lymphocyte_perc = fread(&#39;/gpfs/data/stephens-lab/finemap-uk-biobank/data/raw/BloodCells/gwas_maf001_info6/bloodcells_gwas_Lymphocyte_perc&#39;)
+colnames(gwas_Lymphocyte_perc)[1] = &#39;CHR&#39;
+gwas_Lymphocyte_perc$P = as.numeric(gwas_Lymphocyte_perc$P)
+gwas_Lymphocyte_perc = gwas_Lymphocyte_perc %&gt;% select(CHR, POS, T_STAT, P) %&gt;% mutate(logp = -log10(P))
+gwas_Lymphocyte_perc.max = gwas_Lymphocyte_perc %&gt;% filter(CHR == 17, POS &gt;= 39754910, POS &lt;=48484411)
+plot(gwas_Lymphocyte_perc.max$POS, gwas_Lymphocyte_perc.max$logp, xlab=&#39;CHR 17 POS&#39;, ylab=&#39;-log10(p)&#39;, main=&#39;Lymphocyte_perc&#39;)</code></pre>
+<p><img src="figure/bloodcells_regions_maf001_info6.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.0 (2018-04-23)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: Red Hat Enterprise Linux Server release 6.7 (Santiago)
+
+Matrix products: default
+BLAS: /gpfs/apps/haswell/software/gcc-6.2.0/R/3.5.0/lib64/R/lib/libRblas.so
+LAPACK: /gpfs/apps/haswell/software/gcc-6.2.0/R/3.5.0/lib64/R/lib/libRlapack.so
+
+locale:
+[1] C
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] knitr_1.21        kableExtra_1.3.1  dplyr_0.8.3       data.table_1.12.0
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.2        highr_0.7         compiler_3.5.0   
+ [4] pillar_1.3.1      later_0.7.5       git2r_0.26.1     
+ [7] workflowr_1.6.1   tools_3.5.0       digest_0.6.22    
+[10] viridisLite_0.3.0 evaluate_0.12     tibble_2.0.1     
+[13] pkgconfig_2.0.3   rlang_0.4.1       rstudioapi_0.9.0 
+[16] yaml_2.2.0        xfun_0.4          stringr_1.3.1    
+[19] httr_1.4.0        xml2_1.2.0        fs_1.3.1         
+[22] webshot_0.5.1     rprojroot_1.3-2   tidyselect_0.2.5 
+[25] glue_1.3.1        R6_2.4.0          rmarkdown_1.11   
+[28] purrr_0.3.0       magrittr_1.5      whisker_0.3-2    
+[31] backports_1.1.5   scales_1.0.0      promises_1.0.1   
+[34] htmltools_0.3.6   assertthat_0.2.1  rvest_0.3.2      
+[37] colorspace_1.4-1  httpuv_1.4.5.1    stringi_1.2.4    
+[40] munsell_0.5.0     crayon_1.3.4     </code></pre>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
