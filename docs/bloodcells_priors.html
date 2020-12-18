@@ -357,7 +357,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-12-16
+<strong>Last updated:</strong> 2020-12-18
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -448,31 +448,28 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree235a17c15ecf1dfa19869e2d36d8487652e4b977targetblank235a17ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/235a17c15ecf1dfa19869e2d36d8487652e4b977" target="_blank">235a17c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree63aa212f63312d7743993b005fbf944f75ab4166targetblank63aa212a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/63aa212f63312d7743993b005fbf944f75ab4166" target="_blank">63aa212</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree235a17c15ecf1dfa19869e2d36d8487652e4b977targetblank235a17ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabfinemapukbiobanktree63aa212f63312d7743993b005fbf944f75ab4166targetblank63aa212a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/235a17c15ecf1dfa19869e2d36d8487652e4b977" target="_blank">235a17c</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/finemap-uk-biobank/tree/63aa212f63312d7743993b005fbf944f75ab4166" target="_blank">63aa212</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
-Untracked files:
-    Untracked:  output/BloodCells.Ulist.Scor.ed.rds
-    Untracked:  output/BloodCells.Ulist.Scov.ed.rds
-    Untracked:  output/BloodCells.Ulist.ed.rds
-    Untracked:  output/BloodCells.cov.rds
+Ignored files:
+    Ignored:    analysis/figure/
 
 Unstaged changes:
-    Modified:   output/BloodCells.flash.model.rds
-    Modified:   output/BloodCells.flash.pca.ulist.rds
-    Deleted:    output/BloodCells.znullcov.rds
+    Modified:   output/BloodCells.Ulist.Scor.ed.rds
+    Modified:   output/BloodCells.Ulist.Scov.ed.rds
+    Modified:   output/BloodCells.cov.rds
 
 </code></pre>
 <p>
@@ -511,6 +508,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/63aa212f63312d7743993b005fbf944f75ab4166/analysis/bloodcells_priors.Rmd" target="_blank">63aa212</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-18
+</td>
+<td>
+wflow_publish(“analysis/bloodcells_priors.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/finemap-uk-biobank/1f7ba20014ba482f7341c5b08824f4167a29f640/docs/bloodcells_priors.html" target="_blank">1f7ba20</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-16
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -852,13 +883,13 @@ Ulist = c(U.flash, U.pca, list(&quot;XX&quot; = t(as.matrix(z.strong)) %*% as.ma
 z.random.cov = cov(z.random)
 saveRDS(Ulist, &#39;output/BloodCells.flash.pca.ulist.rds&#39;)
 
-traits = fread(&#39;/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.txt&#39;)
+traits = fread(&#39;/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.resid.txt&#39;)
 Ycov = cov(traits[,3:18])
 saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), &#39;output/BloodCells.cov.rds&#39;)</code></pre>
 <pre class="r"><code>library(udr)
 fit.ed.S.y &lt;- ud_fit(X = z.strong, U = Ulist, S = Ycov, control = list(update.U = &quot;ed&quot;, maxiter=5000), verbose=FALSE)
 fit.ed.S.y.cor &lt;- ud_fit(X = z.strong, U = Ulist, S = cov2cor(Ycov), control = list(update.U = &quot;ed&quot;, maxiter=5000), verbose=FALSE)
-
+# 
 # fit.ed.S.z.cov &lt;- ud_fit(X = z.strong, U = Ulist, S = z.random.cov, control = list(update.U = &quot;ed&quot;, maxiter=5000), verbose=FALSE)
 # fit.ed.S.z.cor &lt;- ud_fit(X = z.strong, U = Ulist, S = cov2cor(z.random.cov), control = list(update.U = &quot;ed&quot;, maxiter=5000), verbose=FALSE)
 
@@ -890,6 +921,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/finemap-uk-biobank/blob/1f7ba20014ba482f7341c5b08824f4167a29f640/docs/figure/bloodcells_priors.Rmd/unnamed-chunk-3-1.png" target="_blank">1f7ba20</a>
+</td>
+<td>
+zouyuxin
+</td>
+<td>
+2020-12-16
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/finemap-uk-biobank/blob/0b2539931261d494087c179b09f6de199b796a8f/docs/figure/bloodcells_priors.Rmd/unnamed-chunk-3-1.png" target="_blank">0b25399</a>
