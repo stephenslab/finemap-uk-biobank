@@ -80,7 +80,7 @@ Ulist = c(U.flash, U.pca, list("XX" = t(as.matrix(z.strong)) %*% as.matrix(z.str
 z.random.cov = cov(z.random)
 saveRDS(Ulist, 'output/BloodCells.flash.pca.ulist.rds')
 
-traits = fread('/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.txt')
+traits = fread('/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.resid.txt')
 Ycov = cov(traits[,3:18])
 saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), 'output/BloodCells.cov.rds')
 ```
@@ -89,7 +89,7 @@ saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), 'output/BloodCells.cov.
 library(udr)
 fit.ed.S.y <- ud_fit(X = z.strong, U = Ulist, S = Ycov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
 fit.ed.S.y.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(Ycov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-
+# 
 # fit.ed.S.z.cov <- ud_fit(X = z.strong, U = Ulist, S = z.random.cov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
 # fit.ed.S.z.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(z.random.cov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
 
