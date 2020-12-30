@@ -50,7 +50,7 @@ for(i in 1:3){
 ```
 
 3. FLASH
-```{r, message=FALSE, eval=FALSE}
+```{r, message=FALSE}
 f.d = flash_set_data(as.matrix(z.strong))
 f = flashr::flash(f.d, greedy=TRUE, backfit = T)
 saveRDS(f, 'output/BloodCells.flash.model.rds')
@@ -72,29 +72,24 @@ for(i in 1:13){
 }
 ```
 
-```{r ulist, eval=FALSE}
+```{r ulist}
 U.flash = c(mashr:::cov_from_factors(t(as.matrix(f$ldf$f)), "FLASH"),
                 list("tFLASH" = t(f$fitted_values) %*% f$fitted_values / nrow(f$fitted_values)))
 
 Ulist = c(U.flash, U.pca, list("XX" = t(as.matrix(z.strong)) %*% as.matrix(z.strong) / nrow(z.strong)))
-z.random.cov = cov(z.random)
 saveRDS(Ulist, 'output/BloodCells.flash.pca.ulist.rds')
-
+z.random.cov = cov(z.random)
 traits = fread('/project2/mstephens/yuxin/ukb-bloodcells/bloodcells.pheno.resid.txt')
 Ycov = cov(traits[,3:18])
 saveRDS(list(z.random.cov = z.random.cov, Y.cov = Ycov), 'output/BloodCells.cov.rds')
 ```
 
-```{r ed, eval=FALSE}
+```{r ed}
 library(udr)
-fit.ed.S.y <- ud_fit(X = z.strong, U = Ulist, S = Ycov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-fit.ed.S.y.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(Ycov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-# 
-# fit.ed.S.z.cov <- ud_fit(X = z.strong, U = Ulist, S = z.random.cov, control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-# fit.ed.S.z.cor <- ud_fit(X = z.strong, U = Ulist, S = cov2cor(z.random.cov), control = list(update.U = "ed", maxiter=5000), verbose=FALSE)
-
-saveRDS(fit.ed.S.y, 'output/BloodCells.Ulist.Scov.ed.rds')
-saveRDS(fit.ed.S.y.cor, 'output/BloodCells.Ulist.Scor.ed.rds')
+f0 = ud_init(X = as.matrix(z.strong), V = cov2cor(Ycov), U_scaled = list(), U_unconstrained = Ulist, n_rank1=0)
+res = ud_fit(f0, control = list(unconstrained.update = "ed", resid.update = 'none', maxiter=5000, minval=1e-12),
+    verbose=FALSE)
+saveRDS(res, 'output/BloodCells.Ulist.Scor.ed.rds')
 ```
 
 ED weights:
